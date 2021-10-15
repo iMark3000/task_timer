@@ -1,0 +1,6 @@
+venv/
+helper_scripts/
+.idea/
+__pycache__/
+.pytest_cache/
+*.db
