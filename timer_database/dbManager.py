@@ -1,21 +1,16 @@
 import sqlite3
+from typing import Tuple, List
 
 from utils.settings import TIMER_DB_PATH
-
-
-#  TODO: What is the best way for setting up a database in a package?
 
 
 class DbManager:
 
     def __init__(self):
         self.db_path = TIMER_DB_PATH
-        self.conn = None
-        self.cur = None
 
     def dbConnect(self):
-        self.conn = sqlite3.connect(self.db_path)
-        self.cur = self.conn.cursor()
+        return sqlite3.connect(self.db_path)
 
 
 class DbQuery(DbManager):
@@ -32,40 +27,70 @@ class DbQuery(DbManager):
 
 class DbUpdate(DbManager):
 
-    def add_project(self, data: tuple) -> None:
-        #  tuple needs to be a string and an int
-        self.dbConnect()
+    def create_project(self, data: tuple) -> None:
+        conn = self.dbConnect()
+        cur = conn.cursor()
         sql_statement = """INSERT INTO projects(name,status) VALUES(?,?)"""
-        self.cur.execute(sql_statement, data)
-        self.conn.commit()
-        self.conn.close()
+        cur.execute(sql_statement, data)
+        conn.commit()
+        conn.close()
+
+    def get_all_projects(self) -> List[Tuple]:
+        conn = self.dbConnect()
+        cur = conn.cursor()
+        cur.execute("SELECT * FROM projects")
+        result = cur.fetchall()
+        conn.close()
+        return result
+
+    def fetch_project(self, project_id: tuple) -> tuple:
+        conn = self.dbConnect()
+        cur = conn.cursor()
+        cur.execute("SELECT * FROM projects WHERE id=?", project_id)
+        result = cur.fetchone()
+        conn.close()
+        return result
 
     def del_project(self):
         pass
 
-    def add_logs(self, data: tuple) -> None:
+    def create_session(self, data: tuple) -> None:
+        #  Tuple needs to be int and two datetime objects
+        conn = self.dbConnect()
+        cur = conn.cursor()
+        sql_statement = """INSERT INTO sessions(project_id,start_date,end_date) VALUES(?,?,?)"""
+        cur.execute(sql_statement, data)
+        conn.commit()
+        conn.close()
+        return cur.lastrowid
+
+    def fetch_session(self, session_id: tuple) -> tuple:
+        conn = self.dbConnect()
+        cur = conn.cursor()
+        cur.execute("SELECT * FROM projects WHERE id=?", session_id)
+        result = cur.fetchone()
+        conn.close()
+        return result
+
+    def close_session(self, data: tuple) -> None:
+        # Param - (end_date, id)
+        conn = self.dbConnect()
+        cur = conn.cursor()
+        sql_statement = """UPDATE session SET end_date = ? WHERE id = ?"""
+        cur.execute(sql_statement, data)
+        conn.commit()
+        conn.close()
+
+    def create_time_log(self, data: tuple) -> None:
         #  Tuple needs to be int and two date objects
-        self.dbConnect()
+        conn = self.dbConnect()
+        cur = conn.cursor()
         sql_statement = """INSERT INTO time_log(session_id,start_timestamp,end_timestamp) VALUES(?,?,?)"""
-        self.cur.execute(sql_statement, data)
-        self.conn.commit()
-        self.conn.close()
+        cur.execute(sql_statement, data)
+        conn.commit()
+        conn.close()
 
     def update_logs(self):
-        pass
-
-    def add_session(self, data: tuple) -> None:
-        #  Tuple needs to be int and two datetime objects
-        self.dbConnect()
-        sql_statement = """INSERT INTO sessions(project_id,start_date,end_date) VALUES(?,?,?)"""
-        self.cur.execute(sql_statement, data)
-        self.conn.commit()
-        self.conn.close()
-
-    def update_session(self):
-        pass
-
-    def get_session_id(self):
         pass
 
     def check_for_project(self):

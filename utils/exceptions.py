@@ -26,5 +26,10 @@ class TooManyNumsTimeFormatError(TimeError):
 class NonNumberTimeFormatError(TimeError):
     pass
 
+
 class NoProjectNameProvided(Exception):
+    pass
+
+
+class UnexpectedNameArgument(Exception):
     pass

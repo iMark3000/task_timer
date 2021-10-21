@@ -10,6 +10,10 @@ class Command(ABC):
     def get_command_type(self):
         pass
 
+    @abstractmethod
+    def get_command_name(self):
+        pass
+
 
 class LogCommand(Command):
 
@@ -19,6 +23,9 @@ class LogCommand(Command):
 
     def get_command_type(self):
         return self.command
+
+    def get_command_name(self):
+        return self.command.name
 
     def get_command_time(self):
         return self.time
@@ -40,6 +47,20 @@ class StartCommand(LogCommand):
     def validate_sequence(self, previous_command):
         if previous_command != InputType.NO_SESSION:
             raise CommandSequenceError(f"Stop current session first before starting new Session")
+
+
+class FetchCommand(LogCommand):
+
+    def __init__(self, command: InputType, name, time):
+        self.name = name
+        super().__init__(command, time)
+
+    def get_project_name(self):
+        return self.name
+
+    def validate_sequence(self, previous_command):
+        if previous_command != InputType.NO_SESSION:
+            raise CommandSequenceError(f"Unable to fetch project with Session in progress")
 
 
 class PauseCommand(LogCommand):
@@ -76,6 +97,12 @@ class StopCommand(LogCommand):
 
 
 class QueryCommand(Command):
+
+    def __init__(self, command: InputType):
+        self.command = command
+
+
+class ProjectsCommand(QueryCommand):
     pass
 
 
