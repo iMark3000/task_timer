@@ -1,6 +1,6 @@
 import json
 from datetime import datetime
-from typing import Dict, Union
+from typing import Union
 
 from utils.settings import SESSION_JSON_PATH
 from utils.command_enums import InputType
@@ -8,89 +8,82 @@ from utils.command_enums import InputType
 
 class Session:
     """
-    This class loads saved sessions data stored in json file and updates
+    This class holds data loaded from the current_session json file and updates
     the data as needed.
+
+    Session objects are instantiated by the create_session() method.
     """
 
-    JSON_PATH = SESSION_JSON_PATH
+    def __init__(self, data) -> None:
+        self._project_name = data['_project_name']
+        self._last_command = data['_last_command']
+        self._session_id = data["_session_id"]
+        self._session_start_time = data["_session_start_time"]
+        self._last_command_time = data["_last_command_time"]
 
-    def __init__(self):
-        self._session_data = self._load_json_file()
-        self._project_name = self._session_data['_project_name']
-        self._last_command = self._session_data['_last_command']
-        self._session_id = self._session_data["_session_id"]
-        self._session_start_time = self._session_data["_session_start_time"]
-        self._last_command_time = self._session_data["_last_command_time"]
-
-    def _load_json_file(self) -> Dict:
-        """Loads data from json file"""
-        with open(self.__class__.JSON_PATH) as file:
-            data = json.load(file)
-        return data['session']
-
-    def get_project_name(self):
+    def get_project_name(self) -> Union[str, None]:
         if self._project_name == 'None':
             return None
         else:
             return self._project_name
 
-    def update_project_name(self, name):
+    def update_project_name(self, name) -> None:
         if self._project_name == 'None' or name == 'None':
             self._project_name = name
         else:
             pass  # Todo: Create Exception to raise?
 
-    def get_session_id(self):
+    def get_session_id(self) -> Union[str, int, None]:
         if self._session_id == 'None':
             return None
         else:
             return self._session_id
 
-    def update_session_id(self, sid):
-        if self._session_id == 'None':
+    def update_session_id(self, sid: Union[int, str]) -> None:
+        if self._session_id == 'None' or sid == 'None':
             self._session_id = sid
         else:
             pass  # Todo: Create Exception to raise?
 
-    def get_session_start_time(self):
+    def get_session_start_time(self) -> Union[datetime, None]:
         if self._session_start_time == 'None':
             return None
         else:
             return DateTimeConverter(self._session_start_time).get_datetime_obj()
 
-    def update_session_start_time(self, start_time):
-        if self._session_start_time == 'None':
+    def update_session_start_time(self, start_time: Union[str, datetime]) -> None:
+        if self._session_start_time == 'None' or start_time == 'None':
             self._session_start_time = DateTimeConverter(start_time).get_datetime_str()
         else:
             pass  # Todo: Create Exception to raise?
 
-    def get_last_command_str(self):
+    def get_last_command_str(self) -> Union[str, None]:
         if self._last_command == 'NO_SESSION':
             return None
         else:
             return self._last_command.upper()
 
-    def get_last_command_enum(self):
+    def get_last_command_enum(self) -> Union[InputType, None]:
         if self._last_command == 'NO_SESSION':
             return None
         else:
             return InputType[self._last_command.upper()]
 
-    def update_last_command(self, last_command):
+    def update_last_command(self, last_command) -> None:
         self._last_command = last_command
 
-    def get_last_command_time(self):
+    def get_last_command_time(self) -> Union[datetime, None]:
         if self._last_command_time == 'None':
             return None
         else:
             return DateTimeConverter(self._last_command_time).get_datetime_obj()
 
-    def update_last_command_time(self, last_command_time: datetime):
+    def update_last_command_time(self, last_command_time: datetime) -> None:
         self._last_command_time = DateTimeConverter(last_command_time).get_datetime_str()
 
-    def get_session_data(self) -> dict:
+    def export_session_data(self) -> dict:
         attrs = vars(self)
-        return {k: v for k, v in attrs.items() if k != '_session_data'}
+        return {k: v for k, v in attrs.items()}
 
 
 class DateTimeConverter:
@@ -141,23 +134,29 @@ class DateTimeConverter:
         return self.date_string
 
 
-# TODO: Determine is the below func is still needed
-def reset_json_data() -> None:
-    """Helper method to reset JSON file when a session is stopped"""
-    session_data = dict()
-    session_data["last_command"] = "NO_SESSION"
-    session_data["project_name"] = "None"
-    session_data["session_id"] = "None"
-    session_data["session_start_time"] = "None"
-    session_data["last_command_time"] = "None"
+def create_session() -> Session:
+    """Helper func that loads session data from JSON file and creates Session obj"""
+    with open(SESSION_JSON_PATH, 'r') as file:
+        data = json.load(file)
+    return Session(data['session'])
+
+
+def write_session_data_to_json(session: Session) -> None:
+    """Helper func that writes session data to JSON file"""
+    session_data = session.export_session_data()
     data = {"session": session_data}
-    with open(SESSION_JSON_PATH) as file:
+    with open(SESSION_JSON_PATH, 'w') as file:
         json.dump(data, file, indent=2)
 
 
-def write_session_json_data(session: Session) -> None:
-    """Helper func that writes session data to JSON file"""
-    session_data = session.get_session_data()
+def reset_json_data() -> None:
+    """Helper method to reset JSON file when a session is stopped"""
+    session_data = dict()
+    session_data["_last_command"] = "NO_SESSION"
+    session_data["_project_name"] = "None"
+    session_data["_session_id"] = "None"
+    session_data["_session_start_time"] = "None"
+    session_data["_last_command_time"] = "None"
     data = {"session": session_data}
     with open(SESSION_JSON_PATH, 'w') as file:
         json.dump(data, file, indent=2)
