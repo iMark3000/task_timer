@@ -24,6 +24,14 @@ class DbQuery(DbManager):
     def query_time_period(self):
         pass
 
+    def fetch_project(self, project_id: tuple) -> tuple:
+        conn = self.dbConnect()
+        cur = conn.cursor()
+        cur.execute("SELECT * FROM projects WHERE id=?", project_id)
+        result = cur.fetchone()
+        conn.close()
+        return result
+
 
 class DbUpdate(DbManager):
 
@@ -43,19 +51,11 @@ class DbUpdate(DbManager):
         conn.close()
         return result
 
-    def fetch_project(self, project_id: tuple) -> tuple:
-        conn = self.dbConnect()
-        cur = conn.cursor()
-        cur.execute("SELECT * FROM projects WHERE id=?", project_id)
-        result = cur.fetchone()
-        conn.close()
-        return result
-
     def del_project(self):
         pass
 
     def create_session(self, data: tuple) -> None:
-        #  Tuple needs to be int and two datetime objects
+        #  Tuple needs to be int and one datetime objects
         conn = self.dbConnect()
         cur = conn.cursor()
         sql_statement = """INSERT INTO sessions(project_id,start_date,end_date) VALUES(?,?,?)"""
@@ -63,14 +63,6 @@ class DbUpdate(DbManager):
         conn.commit()
         conn.close()
         return cur.lastrowid
-
-    def fetch_session(self, session_id: tuple) -> tuple:
-        conn = self.dbConnect()
-        cur = conn.cursor()
-        cur.execute("SELECT * FROM projects WHERE id=?", session_id)
-        result = cur.fetchone()
-        conn.close()
-        return result
 
     def close_session(self, data: tuple) -> None:
         # Param - (end_date, id)

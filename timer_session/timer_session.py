@@ -16,6 +16,7 @@ class Session:
 
     def __init__(self, data) -> None:
         self._project_name = data['_project_name']
+        self._project_id = data['_project_id']
         self._last_command = data['_last_command']
         self._session_id = data["_session_id"]
         self._session_start_time = data["_session_start_time"]
@@ -27,9 +28,21 @@ class Session:
         else:
             return self._project_name
 
-    def update_project_name(self, name) -> None:
+    def update_project_name(self, name: str) -> None:
         if self._project_name == 'None' or name == 'None':
             self._project_name = name
+        else:
+            pass  # Todo: Create Exception to raise?
+
+    def get_project_id(self) -> Union[str, None]:
+        if self._project_id == 'None':
+            return None
+        else:
+            return self._project_id
+
+    def update_project_id(self, id: int) -> None:
+        if self._project_id == 'None' or id == 'None':  # TODO: Would there be a sitch where this would be updated to 'None'?
+            self._project_id = id
         else:
             pass  # Todo: Create Exception to raise?
 
@@ -154,6 +167,7 @@ def reset_json_data() -> None:
     session_data = dict()
     session_data["_last_command"] = "NO_SESSION"
     session_data["_project_name"] = "None"
+    session_data["_project_id"] = "None"
     session_data["_session_id"] = "None"
     session_data["_session_start_time"] = "None"
     session_data["_last_command_time"] = "None"

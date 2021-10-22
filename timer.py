@@ -2,11 +2,11 @@ import sys
 from collections import namedtuple
 from datetime import datetime
 
-from utils.exceptions import InvalidArgument
+from utils.exceptions import HandlerNotFound
 from utils.command_enums import InputType
 from utils.const import LOG_COMMANDS, QUERY_COMMANDS, STATUS_CHECK
 from utils.time_string_converter import TimeStringToDateTimeObj
-from timer_logic.command_factories import command_creator  # TODO: User Router
+from timer_logic.command_mediator import run_mediator
 
 
 LogArgs = namedtuple("LogArgs", "time name")
@@ -20,8 +20,8 @@ def intake(args):
         print('Argument needed.')  # Create a help?
     else:
         try:
-            command_creator(arg_parser(args[1:]))
-        except InvalidArgument as error:
+            run_mediator(arg_parser(args[1:]))
+        except HandlerNotFound as error:
             print(error)
 
 

@@ -3,6 +3,10 @@ class CommandSequenceError(Exception):
     pass
 
 
+class TimeSequenceError(Exception):
+    pass
+
+
 class InvalidArgument(Exception):
     pass
 
@@ -32,4 +36,8 @@ class NoProjectNameProvided(Exception):
 
 
 class UnexpectedNameArgument(Exception):
+    pass
+
+
+class HandlerNotFound(Exception):
     pass
