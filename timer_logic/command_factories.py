@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 
 from .commands import *
-from utils.const import LOG_COMMANDS
+from utils.const import LOG_COMMANDS, QUERY_COMMANDS, STATUS_MISC
 from utils.exceptions import NoProjectNameProvided
 
 
@@ -16,7 +16,6 @@ class LogCommandFactory(CommandAbstractFactory):
 
     def __init__(self, command_dict: dict):
         self.command = command_dict['command']
-        self.command_args = command_dict['command_args']
         self.command_time = command_dict['command_args'].time
         self.project_name = command_dict['command_args'].name
 
@@ -43,14 +42,33 @@ class LogCommandFactory(CommandAbstractFactory):
 
 class QueryCommandFactory(CommandAbstractFactory):
 
+    def __init__(self, command_dict: dict):
+        self.command = command_dict['command']
+
+
+class StatusMiscCommandFactory(CommandAbstractFactory):
+
+    def __init__(self, command_dict: dict):
+        self.command = command_dict['command']
+        self.project_id = command_dict['command_args'].project_id
+
     def create_command(self):
-        pass
+        if self.command == InputType.FETCH:
+            return FetchProject(self.command, self.project_id)
+        elif self.command == InputType.STATUS:
+            return StatusCheck(self.command)
 
 
 def command_factory_router(command_dict: dict):
     command = command_dict['command']
     if command in LOG_COMMANDS:
         command_obj = LogCommandFactory(command_dict).create_command()
+        return command_obj
+    elif command in QUERY_COMMANDS:
+        command_obj = QueryCommandFactory(command_dict).create_command()
+        return command_obj
+    elif command in STATUS_MISC:
+        command_obj = StatusMiscCommandFactory(command_dict).create_command()
         return command_obj
     else:
         print('You Are Here')

@@ -64,7 +64,7 @@ class ResumeCommand(LogCommand):
         if previous_command != InputType.PAUSE:
             if previous_command == InputType.NO_SESSION:
                 raise CommandSequenceError(f"No session in progress")
-            elif previous_command == InputType.RESUME:
+            elif previous_command == InputType.RESUME or previous_command == InputType.START:
                 raise CommandSequenceError(f"Session already in progress")
 
 
@@ -79,6 +79,16 @@ class StopCommand(LogCommand):
 
 
 class QueryCommand(Command):
+
+    def __init__(self, command: InputType):
+        super().__init__(command)
+
+
+class ProjectsCommand(QueryCommand):
+    pass
+
+
+class StatusMiscCommand(Command):
 
     def __init__(self, command: InputType):
         super().__init__(command)
@@ -99,9 +109,9 @@ class FetchProject(QueryCommand):
             raise CommandSequenceError("Unable to fetch project with Session in progress")
 
 
-class ProjectsCommand(QueryCommand):
-    pass
+class StatusCheck(StatusMiscCommand):
+
+    def __init__(self, command):
+        super().__init__(command)
 
 
-class GetStatus(QueryCommand):
-    pass
