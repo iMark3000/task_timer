@@ -37,15 +37,20 @@ def arg_parser(args: list) -> dict:
 
 def arg_named_tuple(command, command_args):
     if command in LOG_COMMANDS:
+        # TODO: Does the START command still require a name?
+        # TODO: No to the above...which should make the below easier.
         if len(command_args) == 1 and command == InputType.START:
             time = datetime.now()
             return LogArgs(name=command_args[0], time=time)
         elif len(command_args) == 1 and command != InputType.START:
             time = TimeStringToDateTimeObj(command_args[0]).get_datetime_obj()
             return LogArgs(time=time, name=None)
-        if len(command_args) == 2:
-            time = TimeStringToDateTimeObj(command_args[0]).get_datetime_obj()
-            return LogArgs(time=time, name=command_args[2])
+        elif len(command_args) == 2:
+            time = TimeStringToDateTimeObj(command_args[1]).get_datetime_obj()
+            return LogArgs(time=time, name=command_args[0])
+        elif len(command_args) == 0:
+            time = datetime.now()
+            return LogArgs(name=None, time=time)
     elif command in QUERY_COMMANDS:
         print("Error? Maybe. You haven't set up all the queries yet")
     elif command in STATUS_MISC:

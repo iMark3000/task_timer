@@ -31,7 +31,6 @@ class TimeStringToDateTimeObj:
         if self._check_for_pm(time):
             time = time.split('p')[0]
             self.pm = True
-            print('pm = true')
         if self._check_for_colon(time):
             self.hour, self.minute = time.split(':')
         else:
@@ -44,8 +43,8 @@ class TimeStringToDateTimeObj:
         try:
             self.hour = int(self.hour)
             self.minute = int(self.minute)
-        except ValueError as err:
-            raise NonNumberTimeFormatError("Non-numbers entered for time.")
+        except ValueError as e:
+            raise NonNumberTimeFormatError(f"Did you switch project name with time using the start command?")
 
         if self.pm:  # Todo: Figure hour why the multiple conditions were not working
             if self.hour < 12:
