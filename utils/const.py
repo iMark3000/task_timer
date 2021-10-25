@@ -5,4 +5,4 @@ LOG_COMMANDS = [InputType.NEW, InputType.START, InputType.PAUSE, InputType.RESUM
 
 QUERY_COMMANDS = [InputType.PROJECTS, InputType.REPORT]
 
-STATUS_CHECK = [InputType.STATUS]
+STATUS_MISC = [InputType.STATUS, InputType.FETCH]
