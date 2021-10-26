@@ -1,16 +1,16 @@
 
-class CommandSequenceError(Exception):
+class SequenceError(Exception):
+    pass
+
+class CommandSequenceError(SequenceError):
     pass
 
 
-class TimeSequenceError(Exception):
+class TimeSequenceError(SequenceError):
     pass
 
 
-class InvalidArgument(Exception):
-    pass
-
-
+# Time Parse Errors
 class TimeError(Exception):
     pass
 
@@ -31,13 +31,31 @@ class NonNumberTimeFormatError(TimeError):
     pass
 
 
-class NoProjectNameProvided(Exception):
+# Errors for command arg handling
+class CommandArgError(Exception):
     pass
 
 
-class UnexpectedNameArgument(Exception):
+class NoProjectNameProvided(CommandArgError):
     pass
 
 
+class UnexpectedNameArgument(CommandArgError):
+    pass
+
+
+class RequiredArgMissing(CommandArgError):
+    pass
+
+
+class InvalidArgument(CommandArgError):
+    pass
+
+
+class TooManyCommandArgs(CommandArgError):
+    pass
+
+
+# Error for Handler
 class HandlerNotFound(Exception):
     pass

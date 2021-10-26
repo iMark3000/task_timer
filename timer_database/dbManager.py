@@ -60,9 +60,10 @@ class DbUpdate(DbManager):
         cur = conn.cursor()
         sql_statement = """INSERT INTO sessions(project_id,start_date,end_date) VALUES(?,?,?)"""
         cur.execute(sql_statement, data)
+        session_id = cur.lastrowid
         conn.commit()
         conn.close()
-        return cur.lastrowid
+        return session_id
 
     def close_session(self, data: tuple) -> None:
         # Param - (end_date, id)
