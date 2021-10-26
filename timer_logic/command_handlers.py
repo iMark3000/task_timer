@@ -41,9 +41,9 @@ class LogCommandHandler(Handler):
         # Creating new session SPECIFIC TO START
         project = self.session.get_project_id()
         session_data = project, self.command.get_command_time(), None
-        session_id = DbUpdate.create_session(session_data)
+        session_id = DbUpdate().create_session(session_data)
         self.session.update_session_id(session_id)
-        self.session.update_session_start_time()
+        self.session.update_session_start_time(self.command.get_command_time())
         # UPDATE SESSION and WRITE TO JSON
         self.update_session()
 
