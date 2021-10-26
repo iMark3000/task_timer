@@ -94,7 +94,7 @@ class StatusMiscCommand(Command):
         super().__init__(command)
 
 
-class FetchProject(QueryCommand):
+class FetchProject(StatusMiscCommand):
 
     def __init__(self, command: InputType, project_id):
         self.project_id = project_id
@@ -114,4 +114,10 @@ class StatusCheck(StatusMiscCommand):
     def __init__(self, command):
         super().__init__(command)
 
+
+class NewCommand(StatusMiscCommand):
+
+    def __init__(self, command: InputType, project_id):
+        self.project_id = project_id
+        super().__init__(command)
 
