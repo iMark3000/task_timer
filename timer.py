@@ -15,13 +15,11 @@ def intake(args):
         command = InputType[args[1].upper()]
         command_args = args[2:]
         command_dict = arg_router(command, command_args)
+        run_mediator(command_dict)
     except KeyError (f"{args[0]} is not a command"):
         pass
     except (RequiredArgMissing, InvalidArgument, TooManyCommandArgs) as e:
         print(e)
-
-    try:
-        run_mediator(command_dict)
     except (HandlerNotFound, InvalidArgument) as error:
         print(error)
 

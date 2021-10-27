@@ -1,7 +1,9 @@
 from abc import ABC, abstractmethod
 
 from .commands import *
-from utils.const import LOG_COMMANDS, QUERY_COMMANDS, STATUS_MISC
+from utils.const import LOG_COMMANDS
+from utils.const import UTILITY_COMMANDS
+from utils.const import QUERY_COMMANDS
 from utils.exceptions import NoProjectNameProvided
 
 
@@ -46,15 +48,18 @@ class QueryCommandFactory(CommandAbstractFactory):
         self.command = command_dict['command']
 
 
-class StatusMiscCommandFactory(CommandAbstractFactory):
+class UtilityCommandFactory(CommandAbstractFactory):
 
     def __init__(self, command_dict: dict):
         self.command = command_dict['command']
         self.project_id = command_dict['command_args'].project_id
+        self.project_name = command_dict['command_args'].project_name
 
     def create_command(self):
         if self.command == InputType.FETCH:
             return FetchProject(self.command, self.project_id)
+        if self.command == InputType.NEW:
+            return NewCommand(self.command, self.project_new)
         elif self.command == InputType.STATUS:
             return StatusCheck(self.command)
 
@@ -67,8 +72,6 @@ def command_factory_router(command_dict: dict):
     elif command in QUERY_COMMANDS:
         command_obj = QueryCommandFactory(command_dict).create_command()
         return command_obj
-    elif command in STATUS_MISC:
-        command_obj = StatusMiscCommandFactory(command_dict).create_command()
+    elif command in UTILITY_COMMANDS:
+        command_obj = UtilityCommandFactory(command_dict).create_command()
         return command_obj
-    else:
-        print('You Are Here')

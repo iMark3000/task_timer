@@ -1,7 +1,7 @@
 from timer_session.timer_session import create_session
 from timer_logic.command_factories import command_factory_router
-from timer_logic.commands import LogCommand, QueryCommand, StatusMiscCommand
-from timer_logic.command_handlers import LogCommandHandler, QueryCommandHandler, StatusMiscHandler
+from timer_logic.commands import LogCommand, QueryCommand, UtilityCommand
+from timer_logic.command_handlers import LogCommandHandler, QueryCommandHandler, UtilityCommandHandler
 from utils.exceptions import HandlerNotFound
 from utils.exceptions import TimeSequenceError
 from utils.exceptions import CommandSequenceError
@@ -15,9 +15,9 @@ def run_mediator(command_dict: dict):
             LogCommandHandler(command_obj, session)
         elif isinstance(command_obj, QueryCommand):
             QueryCommandHandler(command_obj)
-        elif isinstance(command_obj, StatusMiscCommand):
+        elif isinstance(command_obj, UtilityCommand):
             session = create_session()
-            StatusMiscHandler(command_obj, session)
+            UtilityCommandHandler(command_obj, session)
         else:
             raise HandlerNotFound("Mediator was unable to find a handler for given command.")
     except (TimeSequenceError, CommandSequenceError) as e:

@@ -4,7 +4,7 @@ import datetime
 from typing import Union
 
 from timer_database.dbManager import DbUpdate, DbQuery
-from .commands import LogCommand, QueryCommand, StatusMiscCommand
+from .commands import LogCommand, QueryCommand, UtilityCommand
 from timer_session.timer_session import Session, write_session_data_to_json, reset_json_data
 from utils.exceptions import CommandSequenceError, TimeSequenceError
 from utils.command_enums import InputType
@@ -12,7 +12,7 @@ from utils.command_enums import InputType
 
 class Handler(ABC):
 
-    def __init__(self, command: Union[LogCommand, QueryCommand, StatusMiscCommand]):
+    def __init__(self, command: Union[LogCommand, QueryCommand, UtilityCommand]):
         self.command = command
 
 
@@ -89,9 +89,9 @@ class QueryCommandHandler(Handler):
         super().__init__(command)
 
 
-class StatusMiscHandler(Handler):
+class UtilityCommandHandler(Handler):
 
-    def __init__(self, command: StatusMiscCommand, session: Session):
+    def __init__(self, command: UtilityCommand, session: Session):
         self.session = session
         super().__init__(command)
         self.handle()
@@ -101,6 +101,8 @@ class StatusMiscHandler(Handler):
             self._fetch_project()
         elif self.command.get_command_type() == InputType.STATUS:
             self._status_check()
+        elif self.command.get_command_type() == InputType.NEW:
+            self._new_project()
 
     def _fetch_project(self):
         project_id = self.command.get_project_id()  # This works even though PyCharm disagrees
@@ -108,6 +110,11 @@ class StatusMiscHandler(Handler):
         project_name = results[1]
         self.session.update_project_id(project_id)
         self.session.update_project_name(project_name)
+
+    def _new_project(self):
+        tup = (self.command.get_command_name(), 1)
+        project = DbUpdate().create_project(tup)
+        print(f'{self.command.get_command_name()} [project] created!!!')
 
     def _status_check(self):
         if self.session.get_project_name() and self.session.get_last_command_str():

@@ -42,6 +42,7 @@ class DbUpdate(DbManager):
         cur.execute(sql_statement, data)
         conn.commit()
         conn.close()
+        return cur.lastrowid
 
     def get_all_projects(self) -> List[Tuple]:
         conn = self.dbConnect()

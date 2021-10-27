@@ -2,7 +2,7 @@ import pytest
 import pytest_mock
 import datetime
 
-from timer_logic.command_factories import LogCommandFactory, StatusMiscCommandFactory, command_factory_router
+from timer_logic.command_factories import LogCommandFactory, UtilityCommandFactory, command_factory_router
 from utils.command_enums import InputType
 from timer import LogArgs, StatusMiscArgs
 
@@ -46,7 +46,7 @@ def fetch_data():
 
 
 def test_fetch_project(fetch_data):
-    command_obj = StatusMiscCommandFactory(fetch_data).create_command()
+    command_obj = UtilityCommandFactory(fetch_data).create_command()
     assert command_obj.get_project_id() == 1
     assert command_obj.get_command_name() == 'FETCH'
     assert command_obj.get_command_type() == InputType.FETCH

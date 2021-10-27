@@ -54,3 +54,18 @@ def test_RESUME_command_sequence_validate():
         command.validate_sequence(InputType.START)
     with pytest.raises(Exception) as e:
         command.validate_sequence(InputType.RESUME)
+
+
+def test_FETCH_command():
+    project_id = 123
+    command = FetchProject(InputType.FETCH, project_id)
+    assert command.get_project_id() == project_id
+    assert command.get_command_name() == 'FETCH'
+
+
+def test_NEW_command():
+    project_name = 'Fish'
+    command = NewCommand(InputType.NEW, project_name)
+    assert command.get_project_name() == project_name
+    assert command.get_command_name() == 'NEW'
+

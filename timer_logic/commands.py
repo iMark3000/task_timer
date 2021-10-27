@@ -1,7 +1,6 @@
 from abc import ABC, abstractmethod
-import datetime
 
-from utils.exceptions import CommandSequenceError, TimeSequenceError
+from utils.exceptions import CommandSequenceError
 from utils.command_enums import InputType
 
 
@@ -42,6 +41,7 @@ class StartCommand(LogCommand):
 
     def validate_sequence(self, previous_command):
         if previous_command != InputType.NO_SESSION:
+            # TODO: How many different modules raise this error? Is it raised in the handler?
             raise CommandSequenceError(f"Stop current session first before starting new Session")
 
 
@@ -88,13 +88,13 @@ class ProjectsCommand(QueryCommand):
     pass
 
 
-class StatusMiscCommand(Command):
+class UtilityCommand(Command):
 
     def __init__(self, command: InputType):
         super().__init__(command)
 
 
-class FetchProject(StatusMiscCommand):
+class FetchProject(UtilityCommand):
 
     def __init__(self, command: InputType, project_id):
         self.project_id = project_id
@@ -109,15 +109,17 @@ class FetchProject(StatusMiscCommand):
             raise CommandSequenceError("Unable to fetch project with Session in progress")
 
 
-class StatusCheck(StatusMiscCommand):
+class StatusCheck(UtilityCommand):
 
     def __init__(self, command):
         super().__init__(command)
 
 
-class NewCommand(StatusMiscCommand):
+class NewCommand(UtilityCommand):
 
     def __init__(self, command: InputType, project_id):
         self.project_id = project_id
         super().__init__(command)
 
+    def get_project_name(self):
+        return self.project_id

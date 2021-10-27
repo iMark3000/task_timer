@@ -3,14 +3,14 @@ import datetime
 
 from timer_logic.arg_parse import LogCommandArgParser
 from timer_logic.arg_parse import StartCommandArgParser
-from timer_logic.arg_parse import StatusMiscArgParser
+from timer_logic.arg_parse import UtilityCommandArgParser
 from timer_logic.arg_parse import arg_router
+from timer_logic.arg_parse import UtilityArgs
 from utils.command_enums import InputType
 
 from utils.exceptions import RequiredArgMissing
 from utils.exceptions import InvalidArgument
 from utils.exceptions import TooManyCommandArgs
-
 
 
 @pytest.fixture
@@ -64,7 +64,7 @@ def test_StatusMiscParser_FETCH():
     command = InputType.FETCH
     project_id = '1234'
     args = [project_id]
-    result = StatusMiscArgParser(command, args).parse()
+    result = UtilityCommandArgParser(command, args).parse()
     assert result['command_args'].project_id == int(project_id)
 
 
@@ -112,6 +112,27 @@ def test_arg_router_FETCH_raise_invalidarg_err():
 
 def test_arg_router_FETCH_raise_req_arg_missing_err():
     command = InputType.FETCH
+    args = []
+    with pytest.raises(RequiredArgMissing) as e:
+        arg_router(command, args)
+
+
+def test_arg_router_NEW():
+    command = InputType.NEW
+    args = ['Cat12']
+    result = arg_router(command, args)
+    assert result['command_args'].project_name == 'Cat12'
+
+
+def test_arg_router_NEW_raise_invalidarg_err():
+    command = InputType.NEW
+    args = ['hi']
+    with pytest.raises(InvalidArgument) as e:
+        arg_router(command, args)
+
+
+def test_arg_router_NEW_raise_req_arg_missing_err():
+    command = InputType.NEW
     args = []
     with pytest.raises(RequiredArgMissing) as e:
         arg_router(command, args)
