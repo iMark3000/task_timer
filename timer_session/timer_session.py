@@ -4,6 +4,7 @@ from typing import Union
 
 from utils.settings import SESSION_JSON_PATH
 from utils.command_enums import InputType
+from utils.const import LOG_COMMANDS
 
 
 class Session:
@@ -40,9 +41,9 @@ class Session:
         else:
             return self._project_id
 
-    def update_project_id(self, id: int) -> None:
-        if self._project_id == 'None' or id == 'None':  # TODO: Would there be a sitch where this would be updated to 'None'?
-            self._project_id = id
+    def update_project_id(self, pid: int) -> None:
+        if self._project_id == 'None' or pid == 'None':  # TODO: Would there be a sitch where this would be updated to 'None'?
+            self._project_id = pid
         else:
             pass  # Todo: Create Exception to raise?
 
@@ -83,7 +84,8 @@ class Session:
             return InputType[self._last_command.upper()]
 
     def update_last_command(self, last_command) -> None:
-        self._last_command = last_command
+        if last_command in LOG_COMMANDS:
+            self._last_command = last_command
 
     def get_last_command_time(self) -> Union[datetime, None]:
         if self._last_command_time == 'None':

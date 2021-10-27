@@ -117,9 +117,9 @@ class StatusCheck(UtilityCommand):
 
 class NewCommand(UtilityCommand):
 
-    def __init__(self, command: InputType, project_id):
-        self.project_id = project_id
+    def __init__(self, command: InputType, project_name):
+        self.project_name = project_name
         super().__init__(command)
 
     def get_project_name(self):
-        return self.project_id
+        return self.project_name

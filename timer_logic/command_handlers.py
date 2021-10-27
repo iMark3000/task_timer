@@ -4,7 +4,7 @@ import datetime
 from typing import Union
 
 from timer_database.dbManager import DbUpdate, DbQuery
-from .commands import LogCommand, QueryCommand, UtilityCommand
+from .commands import *
 from timer_session.timer_session import Session, write_session_data_to_json, reset_json_data
 from utils.exceptions import CommandSequenceError, TimeSequenceError
 from utils.command_enums import InputType
@@ -75,12 +75,12 @@ class LogCommandHandler(Handler):
         start_log_time = self.session.get_last_command_time()
         end_log_time = self.command.get_command_time()
         log = session_id, start_log_time, end_log_time
-        DbUpdate.create_time_log(log)
+        DbUpdate().create_time_log(log)
 
     def close_session(self):
         session_id = self.session.get_session_id()
         data = datetime.date.today(), session_id
-        DbUpdate.close_session(data)
+        DbUpdate().close_session(data)
 
 
 class QueryCommandHandler(Handler):
@@ -91,7 +91,7 @@ class QueryCommandHandler(Handler):
 
 class UtilityCommandHandler(Handler):
 
-    def __init__(self, command: UtilityCommand, session: Session):
+    def __init__(self, command: Union[FetchProject, StatusCheck, NewCommand], session: Session):
         self.session = session
         super().__init__(command)
         self.handle()
@@ -105,20 +105,24 @@ class UtilityCommandHandler(Handler):
             self._new_project()
 
     def _fetch_project(self):
-        project_id = self.command.get_project_id()  # This works even though PyCharm disagrees
-        results = DbQuery.fetch_project(project_id)
+        project_id = (self.command.get_project_id(),)  # This works even though PyCharm disagrees
+        results = DbQuery().fetch_project(project_id)
+        print(results)
         project_name = results[1]
-        self.session.update_project_id(project_id)
+        print(project_name)
+        self.session.update_project_id(self.command.get_project_id())
+        print(self.command.get_project_id())
         self.session.update_project_name(project_name)
+        write_session_data_to_json(self.session)
 
     def _new_project(self):
-        tup = (self.command.get_command_name(), 1)
+        tup = (self.command.get_project_name(), 1)
         project = DbUpdate().create_project(tup)
-        print(f'{self.command.get_command_name()} [project] created!!!')
+        print(f'{self.command.get_project_name()} [ID: {project}] created!!!')
 
     def _status_check(self):
+        # Todo: This will need to be reworked later
         if self.session.get_project_name() and self.session.get_last_command_str():
-            # Todo: This will need to be reworked later
             print(f'Current project: {self.session.get_project_name()}')
             print(f'Session started on {self.session.get_session_start_time()}')
             print(f'Last command {self.session.get_last_command_str()} on {self.session.get_last_command_time()}')

@@ -59,7 +59,7 @@ class UtilityCommandFactory(CommandAbstractFactory):
         if self.command == InputType.FETCH:
             return FetchProject(self.command, self.project_id)
         if self.command == InputType.NEW:
-            return NewCommand(self.command, self.project_new)
+            return NewCommand(self.command, self.project_name)
         elif self.command == InputType.STATUS:
             return StatusCheck(self.command)
 
