@@ -48,10 +48,7 @@ class Session:
             return self._session_id
 
     def update_session_id(self, sid: Union[int, str]) -> None:
-        if self._session_id == 'None' or sid == 'None':
-            self._session_id = sid
-        else:
-            pass  # Todo: Create Exception to raise?
+        self._session_id = sid
 
     def get_session_start_time(self) -> Union[datetime, None]:
         if self._session_start_time == 'None':

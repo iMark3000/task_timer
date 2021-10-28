@@ -1,4 +1,4 @@
-import sqlite3
+from sqlite3 import IntegrityError
 from abc import ABC
 import datetime
 
@@ -32,7 +32,6 @@ class LogCommandHandler(Handler):
 
     def _validate_command(self):
         try:
-            print(self.session.get_last_command_enum())
             self.command.validate_sequence(self.session.get_last_command_enum())
         except CommandSequenceError as e:
             print(e)
@@ -58,8 +57,8 @@ class LogCommandHandler(Handler):
             self.session.update_session_start_time(self.command.get_command_time())
             # UPDATE SESSION and WRITE TO JSON
             self._update_session()
-        except sqlite3.IntegrityError:
-            print('No Project Queued up. You need to FETCH a project.')
+        except IntegrityError as e:
+            print(e)
 
     def _pause_command(self):
         # gather data and creating log for DB
@@ -109,8 +108,15 @@ class LogCommandHandler(Handler):
                 self._stop_command()
             else:
                 pass
+            self._display_command_summary()
         except (TimeSequenceError, CommandSequenceError) as e:
             print(e)
+
+    def _display_command_summary(self):
+        print(f'{self.command.get_command_name().capitalize()} {self.session.get_project_name()} session at '
+              f'{self.session.get_last_command_time()}')
+        if self.command.get_command_type() == InputType.STOP:
+            print('Queue has been cleared. Use FETCH to queue another project.')
 
 
 class QueryCommandHandler(Handler):
@@ -142,6 +148,7 @@ class UtilityCommandHandler(Handler):
         project_name = results[1]
         fetch_helper_func(self.session, project_name, self.command.get_project_id())
         write_session_data_to_json(self.session)
+        print(f'Fetched {self.session.get_project_name()} -- Now in queue')
 
     def _new_project(self):
         tup = (self.command.get_project_name(), 1)
