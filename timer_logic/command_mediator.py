@@ -12,12 +12,12 @@ def run_mediator(command_dict: dict):
     try:
         if isinstance(command_obj, LogCommand):
             session = create_session()
-            LogCommandHandler(command_obj, session)
+            LogCommandHandler(command_obj, session).handle()
         elif isinstance(command_obj, QueryCommand):
-            QueryCommandHandler(command_obj)
+            QueryCommandHandler(command_obj).handle()
         elif isinstance(command_obj, UtilityCommand):
             session = create_session()
-            UtilityCommandHandler(command_obj, session)
+            UtilityCommandHandler(command_obj, session).handle()
         else:
             raise HandlerNotFound("Mediator was unable to find a handler for given command.")
     except (TimeSequenceError, CommandSequenceError) as e:

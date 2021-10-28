@@ -70,7 +70,7 @@ class DbUpdate(DbManager):
         # Param - (end_date, id)
         conn = self.dbConnect()
         cur = conn.cursor()
-        sql_statement = """UPDATE session SET end_date = ? WHERE id = ?"""
+        sql_statement = """UPDATE sessions SET end_date = ? WHERE id = ?"""
         cur.execute(sql_statement, data)
         conn.commit()
         conn.close()

@@ -2,6 +2,7 @@
 class SequenceError(Exception):
     pass
 
+
 class CommandSequenceError(SequenceError):
     pass
 

@@ -51,7 +51,7 @@ class PauseCommand(LogCommand):
         super().__init__(command, time)
 
     def validate_sequence(self, previous_command):
-        if previous_command != InputType.START or previous_command != InputType.RESUME:
+        if previous_command != InputType.START and previous_command != InputType.RESUME:
             raise CommandSequenceError(f"Session already paused or no session in progress")
 
 
@@ -90,18 +90,22 @@ class ProjectsCommand(QueryCommand):
 
 class UtilityCommand(Command):
 
-    def __init__(self, command: InputType):
-        super().__init__(command)
-
-
-class FetchProject(UtilityCommand):
-
-    def __init__(self, command: InputType, project_id):
+    def __init__(self, command: InputType, project_id=None, project_name=None):
         self.project_id = project_id
+        self.project_name = project_name
         super().__init__(command)
 
     def get_project_id(self):
         return self.project_id
+
+    def get_project_name(self):
+        return self.project_name
+
+
+class FetchProject(UtilityCommand):
+
+    def __init__(self, command: InputType, project_id=None, project_name=None):
+        super().__init__(command, project_id, project_name)
 
     @staticmethod
     def validate_sequence(previous_command):
@@ -111,15 +115,11 @@ class FetchProject(UtilityCommand):
 
 class StatusCheck(UtilityCommand):
 
-    def __init__(self, command):
-        super().__init__(command)
+    def __init__(self, command: InputType, project_id=None, project_name=None):
+        super().__init__(command, project_id, project_name)
 
 
 class NewCommand(UtilityCommand):
 
-    def __init__(self, command: InputType, project_name):
-        self.project_name = project_name
-        super().__init__(command)
-
-    def get_project_name(self):
-        return self.project_name
+    def __init__(self, command: InputType, project_id=None, project_name=None):
+        super().__init__(command, project_id, project_name)

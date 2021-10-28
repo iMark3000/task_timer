@@ -5,6 +5,7 @@ from .exceptions import MinutesValueError
 from .exceptions import TooManyNumsTimeFormatError
 from .exceptions import NonNumberTimeFormatError
 
+
 class TimeStringToDateTimeObj:
 
     def __init__(self, t: str, date=None):

@@ -30,10 +30,7 @@ class Session:
             return self._project_name
 
     def update_project_name(self, name: str) -> None:
-        if self._project_name == 'None' or name == 'None':
-            self._project_name = name
-        else:
-            pass  # Todo: Create Exception to raise?
+        self._project_name = name
 
     def get_project_id(self) -> Union[str, None]:
         if self._project_id == 'None':
@@ -42,10 +39,7 @@ class Session:
             return self._project_id
 
     def update_project_id(self, pid: int) -> None:
-        if self._project_id == 'None' or pid == 'None':  # TODO: Would there be a sitch where this would be updated to 'None'?
-            self._project_id = pid
-        else:
-            pass  # Todo: Create Exception to raise?
+        self._project_id = pid
 
     def get_session_id(self) -> Union[str, int, None]:
         if self._session_id == 'None':
@@ -66,10 +60,7 @@ class Session:
             return DateTimeConverter(self._session_start_time).get_datetime_obj()
 
     def update_session_start_time(self, start_time: Union[str, datetime]) -> None:
-        if self._session_start_time == 'None' or start_time == 'None':
-            self._session_start_time = DateTimeConverter(start_time).get_datetime_str()
-        else:
-            pass  # Todo: Create Exception to raise?
+        self._session_start_time = DateTimeConverter(start_time).get_datetime_str()
 
     def get_last_command_str(self) -> Union[str, None]:
         if self._last_command == 'NO_SESSION':
@@ -78,14 +69,11 @@ class Session:
             return self._last_command.upper()
 
     def get_last_command_enum(self) -> Union[InputType, None]:
-        if self._last_command == 'NO_SESSION':
-            return None
-        else:
-            return InputType[self._last_command.upper()]
+        return InputType[self._last_command.upper()]
 
-    def update_last_command(self, last_command) -> None:
+    def update_last_command(self, last_command: InputType) -> None:
         if last_command in LOG_COMMANDS:
-            self._last_command = last_command
+            self._last_command = last_command.name
 
     def get_last_command_time(self) -> Union[datetime, None]:
         if self._last_command_time == 'None':
@@ -162,6 +150,15 @@ def write_session_data_to_json(session: Session) -> None:
     data = {"session": session_data}
     with open(SESSION_JSON_PATH, 'w') as file:
         json.dump(data, file, indent=2)
+
+
+def fetch_helper_func(session: Session, project_name: str, pid: int) -> None:
+    if session.get_last_command_enum() == InputType.NO_SESSION:
+        session.update_project_id(pid)
+        session.update_project_name(project_name)
+    else:
+        print(session.get_last_command_enum())
+        print('Session in progress, cannot fetch another project at this time.')  # Todo: Create Exception to raise?
 
 
 def reset_json_data() -> None:

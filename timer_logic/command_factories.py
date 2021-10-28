@@ -28,17 +28,14 @@ class LogCommandFactory(CommandAbstractFactory):
             return self._create_log_command()
 
     def _create_start_command(self):
-        if self.project_name:
-            return StartCommand(self.command, self.project_name, self.command_time)
-        else:
-            raise NoProjectNameProvided("Cannot start a project without a name")
+        return StartCommand(self.command, self.project_name, self.command_time)
 
     def _create_log_command(self):
         if self.command == InputType.RESUME:
             return ResumeCommand(self.command, self.command_time)
         elif self.command == InputType.PAUSE:
             return PauseCommand(self.command, self.command_time)
-        elif self.command == InputType.Stop:
+        elif self.command == InputType.STOP:
             return StopCommand(self.command, self.command_time)
 
 
@@ -46,6 +43,9 @@ class QueryCommandFactory(CommandAbstractFactory):
 
     def __init__(self, command_dict: dict):
         self.command = command_dict['command']
+
+    def create_command(self):
+        pass
 
 
 class UtilityCommandFactory(CommandAbstractFactory):
@@ -55,11 +55,11 @@ class UtilityCommandFactory(CommandAbstractFactory):
         self.project_id = command_dict['command_args'].project_id
         self.project_name = command_dict['command_args'].project_name
 
-    def create_command(self):
+    def create_command(self) -> UtilityCommand:
         if self.command == InputType.FETCH:
-            return FetchProject(self.command, self.project_id)
+            return FetchProject(self.command, project_id=self.project_id)
         if self.command == InputType.NEW:
-            return NewCommand(self.command, self.project_name)
+            return NewCommand(self.command, project_name=self.project_name)
         elif self.command == InputType.STATUS:
             return StatusCheck(self.command)
 
