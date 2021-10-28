@@ -1,7 +1,9 @@
 import sqlite3
+import os
 from typing import Tuple, List
 
 from utils.settings import TIMER_DB_PATH
+from utils.database_setup import run_db_setup
 
 
 class DbManager:
@@ -10,7 +12,11 @@ class DbManager:
         self.db_path = TIMER_DB_PATH
 
     def dbConnect(self):
-        return sqlite3.connect(self.db_path)
+        if os.path.exists(self.db_path):
+            return sqlite3.connect(self.db_path)
+        else:
+            run_db_setup(self.db_path)
+            return sqlite3.connect(self.db_path)
 
 
 class DbQuery(DbManager):
