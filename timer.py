@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 import sys
 
 from utils.command_enums import InputType

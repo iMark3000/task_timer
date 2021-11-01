@@ -17,7 +17,8 @@ def run_db_setup(path):
 			id integer PRIMARY Key, 
 			project_id integer NOT NULL, 
 			start_date date NOT NULL, 
-			end_date date, 
+			end_date date,
+			note TEXT, 
 			FOREIGN KEY (project_id) REFERENCES projects (id))"""
 	)
 	cur.execute(
@@ -25,7 +26,8 @@ def run_db_setup(path):
 			id integer PRIMARY Key, 
 			session_id integer NOT NULL, 
 			start_timestamp datetime NOT NULL, 
-			end_timestamp datetime NOT NULL, 
+			end_timestamp datetime NOT NULL,
+			note TEXT, 
 			FOREIGN KEY (session_id) REFERENCES sessions (id))"""
 	)
 	conn.commit()
