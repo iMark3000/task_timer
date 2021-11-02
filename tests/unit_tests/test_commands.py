@@ -1,6 +1,6 @@
 import pytest
 import datetime
-from timer_logic.commands import *
+from command_classes.commands import *
 from utils.command_enums import InputType
 
 

@@ -27,7 +27,8 @@ def run_db_setup(path):
 			session_id integer NOT NULL, 
 			start_timestamp datetime NOT NULL, 
 			end_timestamp datetime NOT NULL,
-			note TEXT, 
+			start_note TEXT,
+			end_note TEXT, 
 			FOREIGN KEY (session_id) REFERENCES sessions (id))"""
 	)
 	conn.commit()

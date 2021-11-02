@@ -1,11 +1,10 @@
 from sqlite3 import IntegrityError
-from abc import ABC
 import datetime
 
 from typing import Union
 
 from timer_database.dbManager import DbUpdate, DbQuery
-from .commands import *
+from command_classes.commands import *
 from timer_session.timer_session import Session
 from timer_session.timer_session import write_session_data_to_json
 from timer_session.timer_session import reset_json_data
@@ -16,9 +15,6 @@ from utils.command_enums import InputType
 
 class Handler(ABC):
 
-    def __init__(self, command: Union[LogCommand, QueryCommand, UtilityCommand]):
-        self.command = command
-
     @abstractmethod
     def handle(self):
         pass
@@ -26,13 +22,13 @@ class Handler(ABC):
 
 class LogCommandHandler(Handler):
 
-    def __init__(self, command: LogCommand, session: Session):
+    def __init__(self, command: Union[LogCommand, StartCommand], session: Session):
         self.session = session
-        super().__init__(command)
+        self.command = command
 
     def _validate_command(self):
         try:
-            self.command.validate_sequence(self.session.get_last_command_enum())
+            self.command.validate_sequence(self.session.last_command)
         except CommandSequenceError as e:
             print(e)
         try:
@@ -42,19 +38,20 @@ class LogCommandHandler(Handler):
 
     def _validate_command_time(self):
         # Todo: Time cannot be in future
-        if self.session.get_last_command_time():
-            if self.command.get_command_time() < self.session.get_last_command_time():
+        if self.session.last_command_time:
+            if self.command.get_command_time() < self.session.last_command_time:
                 raise TimeSequenceError('Error: New time is before old time')
 
     def _start_command(self):
         try:
             # Creating new session SPECIFIC TO START
-            project = self.session.get_project_id()
-            date = self.command.get_command_time().strftime('%Y-%m-%d')
-            session_data = project, date, None
+            project = self.session.project_id
+            date = self.command.get_command_time().strftime('%Y-%m-%d')  # ToDo - not a datetime object, refactor
+            note = self.command.get_session_note()
+            session_data = project, date, None, note
             session_id = DbUpdate().create_session(session_data)
-            self.session.update_session_id(session_id)
-            self.session.update_session_start_time(self.command.get_command_time())
+            self.session.session_id = session_id
+            self.session.session_start_time = self.command.get_command_time()
             # UPDATE SESSION and WRITE TO JSON
             self._update_session()
         except IntegrityError as e:
@@ -70,29 +67,33 @@ class LogCommandHandler(Handler):
         self._update_session()
 
     def _stop_command(self):
-        #  ToDo: Stop needs to be handled differently coming after PAUSE
         # gather data and creating log for DB
-        self._log_time_to_db()
+        if self.session.last_command != InputType.PAUSE:
+            self._log_time_to_db()
         # close session
         self._close_session()
         # reset json
         reset_json_data()
 
     def _update_session(self):
-        self.session.update_last_command(self.command.get_command_type())
-        self.session.update_last_command_time(self.command.get_command_time())
+        if self.command.get_log_note():
+            self.session.log_note = self.command.get_log_note()
+        self.session.last_command = self.command.get_command_type()
+        self.session.last_command_time = self.command.get_command_time()
         write_session_data_to_json(self.session)
 
     def _log_time_to_db(self):
-        session_id = self.session.get_session_id()
-        start_log_time = self.session.get_last_command_time()
+        session_id = self.session.session_id
+        start_log_time = self.session.last_command_time
         end_log_time = self.command.get_command_time()
-        log = session_id, start_log_time, end_log_time
+        start_note = self.session.log_note
+        end_note = self.command.get_log_note()
+        log = session_id, start_log_time, end_log_time, start_note, end_note
         DbUpdate().create_time_log(log)
 
     def _close_session(self):
-        session_id = self.session.get_session_id()
-        data = datetime.date.today(), session_id
+        session_id = self.session.session_id
+        data = datetime.today(), session_id
         DbUpdate().close_session(data)
 
     def handle(self):
@@ -113,8 +114,8 @@ class LogCommandHandler(Handler):
             print(e)
 
     def _display_command_summary(self):
-        print(f'{self.command.get_command_name().capitalize()} {self.session.get_project_name()} session at '
-              f'{self.session.get_last_command_time()}')
+        print(f'{self.command.get_command_name().capitalize()} {self.session.project_name} session at '
+              f'{self.session.last_command_time}')
         if self.command.get_command_type() == InputType.STOP:
             print('Queue has been cleared. Use FETCH to queue another project.')
 
@@ -132,7 +133,7 @@ class UtilityCommandHandler(Handler):
 
     def __init__(self, command: Union[FetchProject, StatusCheck, NewCommand], session: Session):
         self.session = session
-        super().__init__(command)
+        self.command = command
 
     def handle(self):
         if self.command.get_command_type() == InputType.FETCH:
@@ -148,7 +149,7 @@ class UtilityCommandHandler(Handler):
         project_name = results[1]
         fetch_helper_func(self.session, project_name, self.command.get_project_id())
         write_session_data_to_json(self.session)
-        print(f'Fetched {self.session.get_project_name()} -- Now in queue')
+        print(f'Fetched {self.session.project_name} -- Now in queue')
 
     def _new_project(self):
         tup = (self.command.get_project_name(), 1)
@@ -157,14 +158,12 @@ class UtilityCommandHandler(Handler):
 
     def _status_check(self):
         # Todo: This will need to be reworked later
-        if self.session.get_project_name() and self.session.get_last_command_str():
-            print(f'Current project: {self.session.get_project_name()}')
-            print(f'Session started on {self.session.get_session_start_time()}')
-            print(f'Last command {self.session.get_last_command_str()} on {self.session.get_last_command_time()}')
-        elif self.session.get_project_name():
-            print(f'Project Queued Up: {self.session.get_project_name()}')
+        if self.session.project_name and self.session.last_command != InputType.NO_SESSION:
+            print(f'Current project: {self.session.project_name}')
+            print(f'Session started on {self.session.session_start_time}')
+            print(f'Last command {self.session.last_command.name.upper()} on {self.session.last_command_time}')
+        elif self.session.project_name:
+            print(f'Project Queued Up: {self.session.project_name}')
             print(f'No session in progress')
         else:
             print('No project queued and no session in progress.')
-
-

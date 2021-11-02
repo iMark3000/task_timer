@@ -23,6 +23,7 @@ def intake(args):
 
 def pass_to_mediator(command_dict):
     try:
+        print(command_dict)
         run_mediator(command_dict)
     except (RequiredArgMissing, InvalidArgument, TooManyCommandArgs) as e:
         print(e)
