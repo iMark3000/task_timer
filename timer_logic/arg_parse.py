@@ -103,9 +103,7 @@ class LogCommandArgParser(CommandArgParser):
         if time_arg is not None:
             self.time = self.command_args.pop(time_arg)
 
-        print(self.command_args)
         self.log_note = self._parse_log_note()
-        print(f'NOTE: {self.log_note}')
         try:
             time = self._convert_to_date_time_obj()
             tup = LogArgs(name=None, time=time, log_note=self.log_note, session_note=None)
@@ -186,11 +184,8 @@ class StartCommandArgParser(LogCommandArgParser):
         if time_arg is not None:
             self.time = self.command_args.pop(time_arg)
 
-        print(f'Session NOTE: {self.session_note}')
         self.session_note = self._parse_session_note()
-        print(self.command_args)
         self.log_note = self._parse_log_note()
-        print(f'NOTE: {self.log_note}')
         try:
             time = self._convert_to_date_time_obj()
             tup = LogArgs(name=self.project_name, time=time,
