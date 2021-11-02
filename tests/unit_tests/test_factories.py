@@ -35,7 +35,7 @@ def test_log_factory_START(start_args):
     assert command_obj.get_command_type() == InputType.START
     assert command_obj.get_command_name() == 'START'
     assert command_obj.get_command_time() == datetime.datetime(2021, 10, 20, 5, 14, 33)
-    assert command_obj.get_project_name() == 'Fancy Pants Test'
+    assert command_obj.project_name() == 'Fancy Pants Test'
 
 
 @pytest.fixture
@@ -57,11 +57,11 @@ def test_command_factory_router_START(start_args):
     assert command_obj.get_command_type() == InputType.START
     assert command_obj.get_command_name() == 'START'
     assert command_obj.get_command_time() == datetime.datetime(2021, 10, 20, 5, 14, 33)
-    assert command_obj.get_project_name() == 'Fancy Pants Test'
+    assert command_obj.project_name() == 'Fancy Pants Test'
 
 
 def test_command_factory_router_FETCH(fetch_data):
     command_obj = command_factory_router(fetch_data)
-    assert command_obj.get_project_id() == 1
+    assert command_obj.project_id() == 1
     assert command_obj.get_command_name() == 'FETCH'
     assert command_obj.get_command_type() == InputType.FETCH

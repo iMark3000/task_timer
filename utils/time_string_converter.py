@@ -60,6 +60,7 @@ class TimeStringToDateTimeObj:
     def _construct_datetime_obj(self) -> None:
         self._time_string_parser()
         if self.date is None:
+            print('here')
             self._get_todays_date()
         else:
             self._date_string_parser()
@@ -140,5 +141,6 @@ class DateContainer:
                 try:
                     value = int(value)
                     self.__setattr__(att, value)
-                except ValueError:
+                except ValueError as e:
+                    print(e)
                     raise NonNumberTimeFormatError('Argument Identified as time: Non integers mixed with "/"')

@@ -62,10 +62,10 @@ class DbUpdate(DbManager):
         pass
 
     def create_session(self, data: tuple) -> None:
-        #  Tuple needs to be int and one datetime objects
+        #  data -> project_ind (int) start_time(datetime) end_time(None) note(str or None)
         conn = self.dbConnect()
         cur = conn.cursor()
-        sql_statement = """INSERT INTO sessions(project_id,start_date,end_date) VALUES(?,?,?)"""
+        sql_statement = """INSERT INTO sessions(project_id,start_date,end_date,note) VALUES(?,?,?,?)"""
         cur.execute(sql_statement, data)
         session_id = cur.lastrowid
         conn.commit()
@@ -85,7 +85,8 @@ class DbUpdate(DbManager):
         #  Tuple needs to be int and two date objects
         conn = self.dbConnect()
         cur = conn.cursor()
-        sql_statement = """INSERT INTO time_log(session_id,start_timestamp,end_timestamp) VALUES(?,?,?)"""
+        sql_statement = """INSERT INTO time_log(
+        session_id,start_timestamp,end_timestamp,start_note,end_note) VALUES(?,?,?,?,?)"""
         cur.execute(sql_statement, data)
         conn.commit()
         conn.close()

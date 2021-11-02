@@ -22,64 +22,82 @@ class Session:
         self._session_id = data["_session_id"]
         self._session_start_time = data["_session_start_time"]
         self._last_command_time = data["_last_command_time"]
+        self._last_command_log_note = data["_last_command_log_note"]
 
-    def get_project_name(self) -> Union[str, None]:
+    @property
+    def project_name(self) -> Union[str, None]:
         if self._project_name == 'None':
             return None
         else:
             return self._project_name
 
-    def update_project_name(self, name: str) -> None:
+    @project_name.setter
+    def project_name(self, name: str) -> None:
         self._project_name = name
 
-    def get_project_id(self) -> Union[str, None]:
+    @property
+    def project_id(self) -> Union[str, None]:
         if self._project_id == 'None':
             return None
         else:
             return self._project_id
 
-    def update_project_id(self, pid: int) -> None:
+    @project_id.setter
+    def project_id(self, pid: int) -> None:
         self._project_id = pid
 
-    def get_session_id(self) -> Union[str, int, None]:
+    @property
+    def session_id(self) -> Union[str, int, None]:
         if self._session_id == 'None':
             return None
         else:
             return self._session_id
 
-    def update_session_id(self, sid: Union[int, str]) -> None:
+    @session_id.setter
+    def session_id(self, sid: Union[int, str]) -> None:
         self._session_id = sid
 
-    def get_session_start_time(self) -> Union[datetime, None]:
+    @property
+    def session_start_time(self) -> Union[datetime, None]:
         if self._session_start_time == 'None':
             return None
         else:
             return DateTimeConverter(self._session_start_time).get_datetime_obj()
 
-    def update_session_start_time(self, start_time: Union[str, datetime]) -> None:
+    @session_start_time.setter
+    def session_start_time(self, start_time: Union[str, datetime]) -> None:
         self._session_start_time = DateTimeConverter(start_time).get_datetime_str()
 
-    def get_last_command_str(self) -> Union[str, None]:
-        if self._last_command == 'NO_SESSION':
-            return None
-        else:
-            return self._last_command.upper()
-
-    def get_last_command_enum(self) -> Union[InputType, None]:
+    @property
+    def last_command(self) -> InputType:
         return InputType[self._last_command.upper()]
 
-    def update_last_command(self, last_command: InputType) -> None:
+    @last_command.setter
+    def last_command(self, last_command: InputType) -> None:
         if last_command in LOG_COMMANDS:
             self._last_command = last_command.name
 
-    def get_last_command_time(self) -> Union[datetime, None]:
+    @property
+    def last_command_time(self) -> Union[datetime, None]:
         if self._last_command_time == 'None':
             return None
         else:
             return DateTimeConverter(self._last_command_time).get_datetime_obj()
 
-    def update_last_command_time(self, last_command_time: datetime) -> None:
+    @last_command_time.setter
+    def last_command_time(self, last_command_time: datetime) -> None:
         self._last_command_time = DateTimeConverter(last_command_time).get_datetime_str()
+        
+    @property
+    def log_note(self):
+        if self._last_command_log_note == 'None':
+            return None
+        else:
+            return self._last_command_log_note
+    
+    @log_note.setter
+    def log_note(self, note):
+        self._last_command_log_note = note
 
     def export_session_data(self) -> dict:
         attrs = vars(self)
@@ -125,7 +143,7 @@ class DateTimeConverter:
 
     @staticmethod
     def _convert_datetime_to_str(dt: datetime) -> str:
-        return dt.strftime("%x_%X")
+        return dt.strftime("%m/%d/%Y_%X")
 
     def get_datetime_obj(self) -> datetime:
         return self.date_obj
@@ -150,11 +168,11 @@ def write_session_data_to_json(session: Session) -> None:
 
 
 def fetch_helper_func(session: Session, project_name: str, pid: int) -> None:
-    if session.get_last_command_enum() == InputType.NO_SESSION:
-        session.update_project_id(pid)
-        session.update_project_name(project_name)
+    if session.last_command == InputType.NO_SESSION:
+        session.project_id = pid
+        session.project_name = project_name
     else:
-        print(session.get_last_command_enum())
+        print(session.last_command)
         print('Session in progress, cannot fetch another project at this time.')  # Todo: Create Exception to raise?
 
 
@@ -167,6 +185,7 @@ def reset_json_data() -> None:
     session_data["_session_id"] = "None"
     session_data["_session_start_time"] = "None"
     session_data["_last_command_time"] = "None"
+    session_data["_last_command_log_note"] = "None"
     data = {"session": session_data}
     with open(SESSION_JSON_PATH, 'w') as file:
         json.dump(data, file, indent=2)

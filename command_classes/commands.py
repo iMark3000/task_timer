@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from datetime import datetime
 
 from utils.exceptions import CommandSequenceError
 from utils.command_enums import InputType
@@ -18,12 +19,16 @@ class Command(ABC):
 
 class LogCommand(Command):
 
-    def __init__(self, command: InputType, time):
+    def __init__(self, command: InputType, time: datetime, log_note):
         self.time = time
+        self._log_note = log_note
         super().__init__(command)
 
     def get_command_time(self):
         return self.time
+
+    def get_log_note(self):
+        return self._log_note
 
     @abstractmethod
     def validate_sequence(self, previous_command: InputType):
@@ -32,12 +37,16 @@ class LogCommand(Command):
 
 class StartCommand(LogCommand):
 
-    def __init__(self, command: InputType, name, time):
+    def __init__(self, command: InputType, name: str, time: datetime, log_note: str, session_note: str):
         self.name = name
-        super().__init__(command, time)
+        self._session_note = session_note
+        super().__init__(command, time, log_note)
 
     def get_project_name(self):
         return self.name
+
+    def get_session_note(self):
+        return self._session_note
 
     def validate_sequence(self, previous_command):
         if previous_command != InputType.NO_SESSION:
@@ -47,8 +56,8 @@ class StartCommand(LogCommand):
 
 class PauseCommand(LogCommand):
 
-    def __init__(self, command: InputType, time):
-        super().__init__(command, time)
+    def __init__(self, command: InputType, time: datetime, log_note: str):
+        super().__init__(command, time, log_note)
 
     def validate_sequence(self, previous_command):
         if previous_command != InputType.START and previous_command != InputType.RESUME:
@@ -57,8 +66,11 @@ class PauseCommand(LogCommand):
 
 class ResumeCommand(LogCommand):
 
-    def __init__(self, command: InputType, time):
-        super().__init__(command, time)
+    def __init__(self, command: InputType, time, log_note: str):
+        super().__init__(command, time, log_note)
+
+    def log_note(self):
+        return self.log_note()
 
     def validate_sequence(self, previous_command):
         if previous_command != InputType.PAUSE:
@@ -70,8 +82,8 @@ class ResumeCommand(LogCommand):
 
 class StopCommand(LogCommand):
 
-    def __init__(self, command: InputType, time):
-        super().__init__(command, time)
+    def __init__(self, command: InputType, time, log_note: str):
+        super().__init__(command, time, log_note)
 
     def validate_sequence(self, previous_command):
         if previous_command == InputType.NO_SESSION:

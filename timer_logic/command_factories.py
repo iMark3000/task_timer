@@ -1,10 +1,7 @@
-from abc import ABC, abstractmethod
-
-from .commands import *
+from command_classes.commands import *
 from utils.const import LOG_COMMANDS
 from utils.const import UTILITY_COMMANDS
 from utils.const import QUERY_COMMANDS
-from utils.exceptions import NoProjectNameProvided
 
 
 class CommandAbstractFactory(ABC):
@@ -20,6 +17,8 @@ class LogCommandFactory(CommandAbstractFactory):
         self.command = command_dict['command']
         self.command_time = command_dict['command_args'].time
         self.project_name = command_dict['command_args'].name
+        self.log_note = command_dict['command_args'].log_note
+        self.session_note = command_dict['command_args'].session_note
 
     def create_command(self):
         if self.command == InputType.START:
@@ -28,15 +27,16 @@ class LogCommandFactory(CommandAbstractFactory):
             return self._create_log_command()
 
     def _create_start_command(self):
-        return StartCommand(self.command, self.project_name, self.command_time)
+        return StartCommand(self.command, self.project_name, self.command_time,
+                            self.log_note, self.session_note)
 
     def _create_log_command(self):
         if self.command == InputType.RESUME:
-            return ResumeCommand(self.command, self.command_time)
+            return ResumeCommand(self.command, self.command_time, self.log_note)
         elif self.command == InputType.PAUSE:
-            return PauseCommand(self.command, self.command_time)
+            return PauseCommand(self.command, self.command_time, self.log_note)
         elif self.command == InputType.STOP:
-            return StopCommand(self.command, self.command_time)
+            return StopCommand(self.command, self.command_time, self.log_note)
 
 
 class QueryCommandFactory(CommandAbstractFactory):
