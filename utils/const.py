@@ -1,3 +1,5 @@
+from string import ascii_lowercase
+
 from utils.command_enums import InputType
 
 #  TODO LOG is not included below
@@ -11,4 +13,4 @@ UTILITY_COMMANDS = [InputType.NEW, InputType.STATUS, InputType.FETCH]
 VALID_TIME_CHARACTERS = '1 2 3 4 5 6 7 8 9 0 p P . m M : a A'.split()
 
 # Alpha chars for name
-VALID_NAME_CHARACTERS = 'a b c d e f g h i j k l m n o p q r s t u v w x y z'.split()
+VALID_NAME_CHARACTERS = [char for char in ascii_lowercase]
