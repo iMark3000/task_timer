@@ -6,7 +6,7 @@ from .exceptions import TooManyNumsTimeFormatError
 from .exceptions import NonNumberTimeFormatError
 
 
-class TimeStringToDateTimeObj:
+class TimeDateStrToDateTimeObj:
 
     def __init__(self, t: str, date=None):
         self.time_str = t.lower()
@@ -60,7 +60,6 @@ class TimeStringToDateTimeObj:
     def _construct_datetime_obj(self) -> None:
         self._time_string_parser()
         if self.date is None:
-            print('here')
             self._get_todays_date()
         else:
             self._date_string_parser()

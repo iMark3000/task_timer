@@ -2,14 +2,19 @@ import sqlite3
 import os
 from typing import Tuple, List
 
-from utils.settings import TIMER_DB_PATH
+from utils.settings import TIMER_DB_PATH_PROD, TIMER_DB_PATH_TEST, TEST_ON
 from utils.database_setup import run_db_setup
+
+if TEST_ON:
+    db_path = TIMER_DB_PATH_TEST
+else:
+    db_path = TIMER_DB_PATH_PROD
 
 
 class DbManager:
 
     def __init__(self):
-        self.db_path = TIMER_DB_PATH
+        self.db_path = db_path
 
     def dbConnect(self):
         if os.path.exists(self.db_path):

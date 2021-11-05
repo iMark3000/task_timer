@@ -10,6 +10,7 @@ from utils.exceptions import RequiredArgMissing
 from utils.exceptions import InvalidArgument
 from utils.exceptions import TooManyCommandArgs
 from utils.exceptions import HandlerNotFound
+from utils.settings import TEST_ON
 
 
 def intake(args):
@@ -31,4 +32,6 @@ def pass_to_mediator(command_dict):
 
 
 if __name__ == '__main__':
+    if TEST_ON:
+        print('***USING TEST DB***')
     intake(sys.argv)

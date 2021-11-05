@@ -94,6 +94,15 @@ class QueryCommand(Command):
 
     def __init__(self, command: InputType):
         super().__init__(command)
+        self.dataset = None
+
+    @property
+    def dataset(self):
+        return self.dataset
+
+    @dataset.setter
+    def dataset(self, dataset):
+        self.dataset = dataset
 
 
 class ProjectsCommand(QueryCommand):

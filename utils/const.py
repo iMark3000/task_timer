@@ -5,7 +5,7 @@ from utils.command_enums import InputType
 #  TODO LOG is not included below
 LOG_COMMANDS = [InputType.START, InputType.PAUSE, InputType.RESUME, InputType.STOP]
 
-QUERY_COMMANDS = [InputType.PROJECTS, InputType.REPORT]
+QUERY_COMMANDS = [InputType.PROJECTS, InputType.REPORT, InputType.PROJECTS]
 
 UTILITY_COMMANDS = [InputType.NEW, InputType.STATUS, InputType.FETCH]
 

@@ -8,7 +8,7 @@ from utils.const import QUERY_COMMANDS
 from utils.const import UTILITY_COMMANDS
 from utils.const import VALID_TIME_CHARACTERS
 from utils.const import VALID_NAME_CHARACTERS
-from utils.time_string_converter import TimeStringToDateTimeObj
+from utils.time_string_converter import TimeDateStrToDateTimeObj
 
 from utils.exceptions import RequiredArgMissing
 from utils.exceptions import InvalidArgument
@@ -66,9 +66,9 @@ class LogCommandArgParser(CommandArgParser):
 
     def _convert_to_date_time_obj(self):
         if self.time and self.date:
-            datetime_obj = TimeStringToDateTimeObj(self.time, self.date).get_datetime_obj()
+            datetime_obj = TimeDateStrToDateTimeObj(self.time, self.date).get_datetime_obj()
         elif self.time:
-            datetime_obj = TimeStringToDateTimeObj(self.time).get_datetime_obj()
+            datetime_obj = TimeDateStrToDateTimeObj(self.time).get_datetime_obj()
         else:
             datetime_obj = datetime.now()
 
