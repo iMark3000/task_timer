@@ -1,4 +1,5 @@
 
+# Sequence Errors for Commands
 class SequenceError(Exception):
     pass
 
@@ -59,4 +60,17 @@ class TooManyCommandArgs(CommandArgError):
 
 # Error for Handler
 class HandlerNotFound(Exception):
+    pass
+
+
+# MISC
+class ConfigurationNotFound(Exception):
+    pass
+
+
+class UnknownPath(Exception):
+    pass
+
+
+class InvalidConfigArgument(Exception):
     pass

@@ -2,13 +2,13 @@ import sqlite3
 import os
 from typing import Tuple, List
 
-from utils.settings import TIMER_DB_PATH_PROD, TIMER_DB_PATH_TEST, TEST_ON
+from config.config_manager import ConfigFetch
 from utils.database_setup import run_db_setup
 
-if TEST_ON:
-    db_path = TIMER_DB_PATH_TEST
+if ConfigFetch().fetch('TEST_ON') == 'TRUE':
+    db_path = ConfigFetch().fetch('TIMER_DB_PATH_TEST')
 else:
-    db_path = TIMER_DB_PATH_PROD
+    db_path = ConfigFetch().fetch('TIMER_DB_PATH_PROD')
 
 
 class DbManager:

@@ -10,7 +10,7 @@ from utils.exceptions import RequiredArgMissing
 from utils.exceptions import InvalidArgument
 from utils.exceptions import TooManyCommandArgs
 from utils.exceptions import HandlerNotFound
-from utils.settings import TEST_ON
+from config.config_manager import ConfigFetch
 
 
 def intake(args):
@@ -32,6 +32,6 @@ def pass_to_mediator(command_dict):
 
 
 if __name__ == '__main__':
-    if TEST_ON:
+    if ConfigFetch().fetch('TEST_ON') == 'TRUE':
         print('***USING TEST DB***')
     intake(sys.argv)

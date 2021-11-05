@@ -58,7 +58,7 @@ class UtilityCommandFactory(CommandAbstractFactory):
     def create_command(self) -> UtilityCommand:
         if self.command == InputType.FETCH:
             return FetchProject(self.command, project_id=self.project_id)
-        if self.command == InputType.NEW:
+        elif self.command == InputType.NEW:
             return NewCommand(self.command, project_name=self.project_name)
         elif self.command == InputType.STATUS:
             return StatusCheck(self.command)

@@ -1,0 +1,9 @@
+[
+  {
+    "PROJECT_PATH": "/home/m/PycharmProjects/timer_log",
+    "SESSION_JSON_PATH": "timer_session/current_session.json",
+    "TIMER_DB_PATH_PROD": "timer_database/timerDatabase.db",
+    "TIMER_DB_PATH_TEST": "timer_database/TEST_timerDatabase.db",
+    "TEST_ON": "TRUE"
+  }
+]

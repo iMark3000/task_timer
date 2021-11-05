@@ -2,10 +2,11 @@ import json
 from datetime import datetime
 from typing import Union
 
-from utils.settings import SESSION_JSON_PATH
+from config.config_manager import ConfigFetch
 from utils.command_enums import InputType
 from utils.const import LOG_COMMANDS
 
+SESSION_JSON_PATH = ConfigFetch().fetch('SESSION_JSON_PATH')
 
 class Session:
     """

@@ -6,7 +6,7 @@ from utils.command_enums import InputType
 
 
 class Command(ABC):
-
+    """Abstract Base Class for all command classes"""
     def __init__(self, command: InputType):
         self.command = command
 
@@ -17,8 +17,11 @@ class Command(ABC):
         return self.command.name
 
 
-class LogCommand(Command):
+# ~~~~~~~~~~~LOG COMMAND FAMILY~~~~~~~~~~~~~~~~~~~~
+# Log Commands log time entries to the database
 
+class LogCommand(Command):
+    """Base Class for Log Commands"""
     def __init__(self, command: InputType, time: datetime, log_note):
         self.time = time
         self._log_note = log_note
@@ -90,6 +93,9 @@ class StopCommand(LogCommand):
             raise CommandSequenceError(f"No session in progress")
 
 
+# ~~~~~~~~~~~QUERY COMMAND FAMILY~~~~~~~~~~~~~~~~~~~~
+# Query commands query the database via the query module
+
 class QueryCommand(Command):
 
     def __init__(self, command: InputType):
@@ -105,28 +111,68 @@ class QueryCommand(Command):
         self.dataset = dataset
 
 
-class ProjectsCommand(QueryCommand):
+# ~~~~~~~~~~~UPDATE COMMAND FAMILY~~~~~~~~~~~~~~~~~~~~
+# Update commands update records in the database
+
+class UpdateCommand(Command):
     pass
 
 
+class DeactivateCommand(UpdateCommand):
+    pass
+
+
+class ReactivateCommand(UpdateCommand):
+    pass
+
+
+class EditNoteCommand(UpdateCommand):
+    pass
+
+
+class EditTimeCommand(UpdateCommand):
+    pass
+
+
+class MergeCommand(UpdateCommand):
+    pass
+
+
+class RenameCommand(UpdateCommand):
+    pass
+
+
+# ~~~~~~~~~~~UTILITY COMMAND FAMILY~~~~~~~~~~~~~~~~~~~~
+# Utility commands are helper commands that add
+# functionality or make small db queries but do not
+# update the database
+
 class UtilityCommand(Command):
 
-    def __init__(self, command: InputType, project_id=None, project_name=None):
-        self.project_id = project_id
-        self.project_name = project_name
+    def __init__(self, command: InputType):
         super().__init__(command)
 
-    def get_project_id(self):
-        return self.project_id
 
-    def get_project_name(self):
-        return self.project_name
+class ConfigCommand(UtilityCommand):
+    pass
+
+
+class ProjectsCommand(UtilityCommand):
+    pass
+
+
+class StatusCheck(UtilityCommand):
+
+    def __init__(self, command: InputType):
+        super().__init__(command)
 
 
 class FetchProject(UtilityCommand):
 
     def __init__(self, command: InputType, project_id=None, project_name=None):
-        super().__init__(command, project_id, project_name)
+        self.project_id = project_id
+        self.project_name = project_name
+        super().__init__(command)
 
     @staticmethod
     def validate_sequence(previous_command):
@@ -134,13 +180,13 @@ class FetchProject(UtilityCommand):
             raise CommandSequenceError("Unable to fetch project with Session in progress")
 
 
-class StatusCheck(UtilityCommand):
-
-    def __init__(self, command: InputType, project_id=None, project_name=None):
-        super().__init__(command, project_id, project_name)
-
-
 class NewCommand(UtilityCommand):
 
     def __init__(self, command: InputType, project_id=None, project_name=None):
-        super().__init__(command, project_id, project_name)
+        self.project_id = project_id
+        self.project_name = project_name
+        super().__init__(command)
+
+
+class SwitchCommand(UtilityCommand):
+    pass
