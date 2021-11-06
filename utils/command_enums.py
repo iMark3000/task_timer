@@ -12,8 +12,10 @@ class InputType(Enum):
     FETCH = auto()  # Fetches a project by an ID number to start session with
     DEACTIVATE = auto()  # Deactivates projects
     REACTIVATE = auto()  # Reactivates projects that been deactivated
+    RENAME = auto()
+    EDIT = auto()
     SWITCH = auto()  # Switches Queued Project...to use when multiples sessions feature is implemented
     MERGE = auto()  # Merges two projects (their sessions and logs) into one project
-    LOG = auto()
+    ADD_LOG = auto() # TODO: Will you actually implement this?
     REPORT = auto()
     NO_SESSION = auto() # Placeholder value for when no session is in progress

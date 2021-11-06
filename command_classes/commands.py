@@ -126,11 +126,7 @@ class ReactivateCommand(UpdateCommand):
     pass
 
 
-class EditNoteCommand(UpdateCommand):
-    pass
-
-
-class EditTimeCommand(UpdateCommand):
+class EditCommand(UpdateCommand):
     pass
 
 
@@ -174,6 +170,12 @@ class FetchProject(UtilityCommand):
         self.project_name = project_name
         super().__init__(command)
 
+    def get_project_name(self):
+        return self.project_name
+
+    def get_project_id(self):
+        return self.project_id
+
     @staticmethod
     def validate_sequence(previous_command):
         if previous_command != InputType.NO_SESSION:
@@ -186,6 +188,12 @@ class NewCommand(UtilityCommand):
         self.project_id = project_id
         self.project_name = project_name
         super().__init__(command)
+
+    def get_project_name(self):
+        return self.project_name
+
+    def get_project_id(self):
+        return self.project_id
 
 
 class SwitchCommand(UtilityCommand):

@@ -6,7 +6,8 @@ from config.config_manager import ConfigFetch
 from utils.command_enums import InputType
 from utils.const import LOG_COMMANDS
 
-SESSION_JSON_PATH = ConfigFetch().fetch('SESSION_JSON_PATH')
+SESSION_JSON_PATH = DB_PATH = ConfigFetch().fetch_current_env()['SESSION_PATH']
+
 
 class Session:
     """

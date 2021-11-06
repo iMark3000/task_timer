@@ -5,16 +5,13 @@ from typing import Tuple, List
 from config.config_manager import ConfigFetch
 from utils.database_setup import run_db_setup
 
-if ConfigFetch().fetch('TEST_ON') == 'TRUE':
-    db_path = ConfigFetch().fetch('TIMER_DB_PATH_TEST')
-else:
-    db_path = ConfigFetch().fetch('TIMER_DB_PATH_PROD')
+DB_PATH = ConfigFetch().fetch_current_env()['DB_PATH']
 
 
 class DbManager:
 
     def __init__(self):
-        self.db_path = db_path
+        self.db_path = DB_PATH
 
     def dbConnect(self):
         if os.path.exists(self.db_path):

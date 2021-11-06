@@ -1,7 +1,7 @@
 from timer_session.timer_session import create_session
-from timer_logic.command_factories import command_factory_router
+from timer_logic.factories.command_factories import command_factory_router
 from command_classes.commands import LogCommand, QueryCommand, UtilityCommand
-from timer_logic.command_handlers import LogCommandHandler, QueryCommandHandler, UtilityCommandHandler
+from timer_logic.handlers.command_handlers import LogCommandHandler, QueryCommandHandler, UtilityCommandHandler
 from utils.exceptions import HandlerNotFound
 from utils.exceptions import TimeSequenceError
 from utils.exceptions import CommandSequenceError

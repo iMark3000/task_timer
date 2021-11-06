@@ -3,7 +3,7 @@
 import sys
 
 from utils.command_enums import InputType
-from timer_logic.arg_parse import arg_router
+from timer_logic.arg_parsers.parse_router import arg_router
 from timer_logic.command_mediator import run_mediator
 
 from utils.exceptions import RequiredArgMissing
@@ -32,6 +32,6 @@ def pass_to_mediator(command_dict):
 
 
 if __name__ == '__main__':
-    if ConfigFetch().fetch('TEST_ON') == 'TRUE':
+    if ConfigFetch().fetch_test_status():
         print('***USING TEST DB***')
     intake(sys.argv)
