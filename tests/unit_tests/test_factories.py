@@ -1,7 +1,7 @@
 import pytest
 import datetime
 
-from timer_logic.factories.command_factories import LogCommandFactory, UtilityCommandFactory, command_factory_router
+from timer_logic.factories.utility_command_factory import LogCommandFactory, UtilityCommandFactory, command_factory_router
 from utils.command_enums import InputType
 from timer import LogArgs, StatusMiscArgs
 
