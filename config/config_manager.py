@@ -14,7 +14,8 @@ class ConfigManager:
 
     def config_data_loader(self):
         with open(self.CONFIG_FILE, 'r') as file:
-            self.config_data = json.load(file)
+            data = json.load(file)
+            self.config_data = data[0]
 
 
 class ConfigUpdater(ConfigManager):
@@ -36,9 +37,11 @@ class ConfigUpdater(ConfigManager):
                 print(f'{k}...{v}')
 
     def update(self, param: str, val: str) -> None:
-        if param.upper() == 'TEST_ON':
+        if param.upper() not in self.config_data.keys():
+            raise KeyError(f'{param} is not a configuration')
+        elif param.upper() == 'TEST_ON':
             if self._validate_test(val):
-                self.config_data[param] = val.upper()
+                self.config_data[param.upper()] = val.upper()
             else:
                 raise InvalidConfigArgument('Value must be TRUE or FALSE')
         elif param.upper() == "CONCURRENT_SESSIONS":

@@ -8,7 +8,7 @@ from utils.exceptions import RequiredArgMissing
 from utils.exceptions import InvalidArgument
 from utils.exceptions import TooManyCommandArgs
 
-UtilityArgs = namedtuple("StatusMiscArgs", "project_id project_name")
+UtilityArgs = namedtuple("UtilityArgs", "project_id project_name")
 
 
 class UtilityCommandArgParser(CommandArgParser):
@@ -19,19 +19,6 @@ class UtilityCommandArgParser(CommandArgParser):
 
     def __init__(self, command: InputType, command_args: list):
         super().__init__(command, command_args)
-
-    def _validate_number_of_args(self):
-        if len(self.command_args) == 0:
-            raise RequiredArgMissing(f'{self.command.name} command requires one argument: '
-                                     f'{self.utility_command_dict[self.command.name][0]}')
-        elif len(self.command_args) >= 2:
-            raise TooManyCommandArgs(f'{self.command.name} command takes only one argument: '
-                                     f'{self.utility_command_dict[self.command.name][0]}')
-        elif len(self.command_args) == 1:
-            if self.command == InputType.FETCH:
-                return self._fetch_args()
-            elif self.command == InputType.NEW:
-                return self._new_args()
 
     @staticmethod
     def _validate_name_char_count(name: str) -> bool:
@@ -75,7 +62,9 @@ class UtilityCommandArgParser(CommandArgParser):
             raise InvalidArgument('Project Names need a minimum of three alphabetic characters.')
 
     def parse(self) -> dict:
-        if self.command != InputType.STATUS:
-            return self._validate_number_of_args()
-        elif self.command == InputType.STATUS:
+        if self.command == InputType.STATUS:
             return self._status_args()
+        elif self.command == InputType.FETCH:
+            return self._fetch_args()
+        elif self.command == InputType.NEW:
+            return self._new_args()

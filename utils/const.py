@@ -19,7 +19,9 @@ QUERY_COMMANDS = [
 UTILITY_COMMANDS = [
     InputType.NEW,
     InputType.STATUS,
-    InputType.FETCH
+    InputType.FETCH,
+    InputType.SWITCH,
+    InputType.PROJECTS
 ]
 
 UPDATE_COMMANDS = [
@@ -28,6 +30,10 @@ UPDATE_COMMANDS = [
     InputType.EDIT,
     InputType.RENAME,
     InputType.MERGE
+]
+
+CONFIG_COMMANDS = [
+    InputType.CONFIG
 ]
 
 # For validating time entries in timer_logic.log_parse.py; Includes 'a' in case of 'am'

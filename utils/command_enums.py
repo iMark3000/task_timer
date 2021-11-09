@@ -10,6 +10,7 @@ class InputType(Enum):
     NEW = auto()    # Creates new project
     PROJECTS = auto()   # Gets a list of projects and their IDS -> add optional arg to filter by name
     FETCH = auto()  # Fetches a project by an ID number to start session with
+    CONFIG = auto()
     DEACTIVATE = auto()  # Deactivates projects
     REACTIVATE = auto()  # Reactivates projects that been deactivated
     RENAME = auto()

@@ -1,5 +1,7 @@
 from .command_handler_base_class import Handler
 
+from command_classes.commands import UpdateCommand
+
 
 class UpdateCommandHandler(Handler):
 

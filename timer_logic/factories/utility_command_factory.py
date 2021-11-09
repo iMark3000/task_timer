@@ -1,20 +1,18 @@
 
 from .command_factory_base_class import CommandAbstractFactory
 
-from command_classes.commands import *
+from command_classes.commands import UtilityCommand
+from command_classes.commands import NewCommand
+from command_classes.commands import FetchProject
+from command_classes.commands import StatusCheck
+from command_classes.commands import SwitchCommand
+from command_classes.commands import ProjectsCommand
 
-
-class QueryCommandFactory(CommandAbstractFactory):
-
-    def __init__(self, command_dict: dict):
-        self.command = command_dict['command']
-
-    def create_command(self):
-        pass
+from utils.command_enums import InputType
 
 
 class UtilityCommandFactory(CommandAbstractFactory):
-
+    # Todo: Tuple was changed, need to update these instance vars
     def __init__(self, command_dict: dict):
         self.command = command_dict['command']
         self.project_id = command_dict['command_args'].project_id

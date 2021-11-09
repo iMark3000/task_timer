@@ -3,6 +3,9 @@ from typing import Union
 from .command_handler_base_class import Handler
 from timer_database.dbManager import DbUpdate, DbQuery
 from command_classes.commands import *
+
+from config.config_manager import ConfigFetch
+from config.config_manager import ConfigUpdater
 from timer_session.timer_session import Session
 from timer_session.timer_session import write_session_data_to_json
 from timer_session.timer_session import fetch_helper_func

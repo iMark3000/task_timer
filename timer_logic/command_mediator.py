@@ -5,11 +5,13 @@ from command_classes.commands import LogCommand
 from command_classes.commands import QueryCommand
 from command_classes.commands import UtilityCommand
 from command_classes.commands import UpdateCommand
+from command_classes.commands import ConfigCommand
 
-from handlers.update_command_handler import UpdateCommandHandler
-from handlers.log_command_handler import LogCommandHandler
-from handlers.query_command_handler import QueryCommandHandler
-from handlers.utility_command_handler import UtilityCommandHandler
+from .handlers.update_command_handler import UpdateCommandHandler
+from .handlers.log_command_handler import LogCommandHandler
+from .handlers.query_command_handler import QueryCommandHandler
+from .handlers.utility_command_handler import UtilityCommandHandler
+from .handlers.config_command_handler import ConfigCommandHandler
 
 from utils.exceptions import HandlerNotFound
 from utils.exceptions import TimeSequenceError
@@ -28,8 +30,10 @@ def run_mediator(command_dict: dict):
             session = create_session()
             UtilityCommandHandler(command_obj, session).handle()
         elif isinstance(command_obj, UpdateCommand):
-            session = create_session()
+            # Todo: need a session?
             UpdateCommandHandler(command_obj).handle()
+        elif isinstance(command_obj, ConfigCommand):
+            ConfigCommandHandler(command_obj).handle()
         else:
             raise HandlerNotFound("Mediator was unable to find a handler for given command.")
     except (TimeSequenceError, CommandSequenceError) as e:

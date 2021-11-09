@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 from datetime import datetime
+from typing import Union
 
 from utils.exceptions import CommandSequenceError
 from utils.command_enums import InputType
@@ -149,9 +150,6 @@ class UtilityCommand(Command):
         super().__init__(command)
 
 
-class ConfigCommand(UtilityCommand):
-    pass
-
 
 class ProjectsCommand(UtilityCommand):
     pass
@@ -198,3 +196,25 @@ class NewCommand(UtilityCommand):
 
 class SwitchCommand(UtilityCommand):
     pass
+
+
+# ~~~~~~~~~~~CONFIG COMMAND FAMILY~~~~~~~~~~~~~~~~~~~~
+# This command did not feel like it fell under any of the
+# other groups
+
+class ConfigCommand(Command):
+
+    def __init__(self, command: InputType, view, config_key, config_value):
+        self.view = view
+        self.config_key = config_key
+        self.config_value = config_value
+        super().__init__(command)
+
+    def is_view(self):
+        return self.view
+
+    def get_key(self) -> Union[str, None]:
+        return self.config_key
+
+    def get_value(self) -> Union[str, int, None]:
+        return self.config_value
