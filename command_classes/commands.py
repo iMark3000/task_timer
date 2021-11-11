@@ -8,14 +8,18 @@ from utils.command_enums import InputType
 
 class Command(ABC):
     """Abstract Base Class for all command classes"""
-    def __init__(self, command: InputType):
-        self.command = command
+    def __init__(self, command: InputType, **kwargs):
+        self._command = command
+        for k, v in kwargs.items():
+            if f'_{k}' in self.__dict__.keys():
+                self.__dict__[f'_{k}'] = v
 
-    def get_command_type(self):
-        return self.command
+    @property
+    def command(self):
+        return self._command
 
     def get_command_name(self):
-        return self.command.name
+        return self._command.name
 
 
 # ~~~~~~~~~~~LOG COMMAND FAMILY~~~~~~~~~~~~~~~~~~~~
@@ -23,15 +27,17 @@ class Command(ABC):
 
 class LogCommand(Command):
     """Base Class for Log Commands"""
-    def __init__(self, command: InputType, time: datetime, log_note):
-        self.time = time
-        self._log_note = log_note
-        super().__init__(command)
+    def __init__(self, command: InputType, **kwargs):
+        self._time = None
+        self._log_note = None
+        super().__init__(command, **kwargs)
 
-    def get_command_time(self):
-        return self.time
+    @property
+    def time(self):
+        return self._time
 
-    def get_log_note(self):
+    @property
+    def log_note(self):
         return self._log_note
 
     @abstractmethod
@@ -41,15 +47,18 @@ class LogCommand(Command):
 
 class StartCommand(LogCommand):
 
-    def __init__(self, command: InputType, name: str, time: datetime, log_note: str, session_note: str):
-        self.name = name
-        self._session_note = session_note
-        super().__init__(command, time, log_note)
+    def __init__(self, command: InputType, **kwargs):
+        self._project_name = None
+        self._session_note = None
+        super().__init__(command, **kwargs)
 
-    def get_project_name(self):
-        return self.name
+    # Todo: Is a setter method needed for project_name?
+    @property
+    def project_name(self):
+        return self._project_name
 
-    def get_session_note(self):
+    @property
+    def session_note(self):
         return self._session_note
 
     def validate_sequence(self, previous_command):
@@ -60,8 +69,8 @@ class StartCommand(LogCommand):
 
 class PauseCommand(LogCommand):
 
-    def __init__(self, command: InputType, time: datetime, log_note: str):
-        super().__init__(command, time, log_note)
+    def __init__(self, command: InputType, **kwargs):
+        super().__init__(command, **kwargs)
 
     def validate_sequence(self, previous_command):
         if previous_command != InputType.START and previous_command != InputType.RESUME:
@@ -70,11 +79,8 @@ class PauseCommand(LogCommand):
 
 class ResumeCommand(LogCommand):
 
-    def __init__(self, command: InputType, time, log_note: str):
-        super().__init__(command, time, log_note)
-
-    def log_note(self):
-        return self.log_note()
+    def __init__(self, command: InputType, **kwargs):
+        super().__init__(command, **kwargs)
 
     def validate_sequence(self, previous_command):
         if previous_command != InputType.PAUSE:
@@ -86,8 +92,8 @@ class ResumeCommand(LogCommand):
 
 class StopCommand(LogCommand):
 
-    def __init__(self, command: InputType, time, log_note: str):
-        super().__init__(command, time, log_note)
+    def __init__(self, command: InputType, **kwargs):
+        super().__init__(command, **kwargs)
 
     def validate_sequence(self, previous_command):
         if previous_command == InputType.NO_SESSION:
@@ -146,56 +152,68 @@ class RenameCommand(UpdateCommand):
 
 class UtilityCommand(Command):
 
-    def __init__(self, command: InputType):
-        super().__init__(command)
-
-
-
-class ProjectsCommand(UtilityCommand):
-    pass
+    def __init__(self, command: InputType, **kwargs):
+        super().__init__(command, **kwargs)
 
 
 class StatusCheck(UtilityCommand):
 
-    def __init__(self, command: InputType):
-        super().__init__(command)
+    def __init__(self, command: InputType, **kwargs):
+        self._all = False
+        super().__init__(command, **kwargs)
+
+    def is_all(self):
+        return self._all
 
 
-class FetchProject(UtilityCommand):
+class UtilityProjectsCommands(UtilityCommand):
 
-    def __init__(self, command: InputType, project_id=None, project_name=None):
-        self.project_id = project_id
-        self.project_name = project_name
-        super().__init__(command)
+    def __init__(self, command: InputType, **kwargs):
+        self._project_name = None
+        super().__init__(command, **kwargs)
 
-    def get_project_name(self):
-        return self.project_name
-
-    def get_project_id(self):
-        return self.project_id
-
-    @staticmethod
-    def validate_sequence(previous_command):
-        if previous_command != InputType.NO_SESSION:
-            raise CommandSequenceError("Unable to fetch project with Session in progress")
+    @property
+    def project_name(self):
+        return self._project_name
 
 
-class NewCommand(UtilityCommand):
+class ProjectsCommand(UtilityProjectsCommands):
 
-    def __init__(self, command: InputType, project_id=None, project_name=None):
-        self.project_id = project_id
-        self.project_name = project_name
-        super().__init__(command)
+    def __init__(self, command: InputType, **kwargs):
+        self._all = False
+        super().__init__(command, **kwargs)
 
-    def get_project_name(self):
-        return self.project_name
-
-    def get_project_id(self):
-        return self.project_id
+    def is_all(self):
+        return self._all
 
 
-class SwitchCommand(UtilityCommand):
-    pass
+class NewCommand(UtilityProjectsCommands):
+
+    def __init__(self, command: InputType, **kwargs):
+        super().__init__(command, **kwargs)
+
+
+class SessionUtilityCommands(UtilityCommand):
+
+    def __init__(self, command: InputType, **kwargs):
+        self._project_id = None
+        super().__init__(command, **kwargs)
+
+    @property
+    def project_id(self):
+        return self._project_id
+
+
+class FetchProject(SessionUtilityCommands):
+
+    def __init__(self, command: InputType, **kwargs):
+        super().__init__(command, **kwargs)
+
+
+class SwitchCommand(SessionUtilityCommands):
+
+    def __init__(self, command: InputType, **kwargs):
+        super().__init__(command, **kwargs)
 
 
 # ~~~~~~~~~~~CONFIG COMMAND FAMILY~~~~~~~~~~~~~~~~~~~~

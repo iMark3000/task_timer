@@ -1,4 +1,3 @@
-from collections import namedtuple
 from datetime import datetime
 
 from .arg_parse_base_class import CommandArgParser
@@ -10,14 +9,10 @@ from utils.time_string_converter import TimeDateStrToDateTimeObj
 
 from utils.exceptions import TimeError
 
-LogArgs = namedtuple("LogArgs", "time name log_note session_note")
-
 
 class LogCommandArgParser(CommandArgParser):
 
     def __init__(self, command: InputType, command_args: list):
-        self.time = None
-        self.date = None
         self.log_note = None
         super().__init__(command, command_args)
 
@@ -46,11 +41,12 @@ class LogCommandArgParser(CommandArgParser):
             elif index + 1 == len(self.command_args):
                 return None
 
-    def _convert_to_date_time_obj(self):
-        if self.time and self.date:
-            datetime_obj = TimeDateStrToDateTimeObj(self.time, self.date).get_datetime_obj()
-        elif self.time:
-            datetime_obj = TimeDateStrToDateTimeObj(self.time).get_datetime_obj()
+    @staticmethod
+    def _convert_to_date_time_obj(date, time):
+        if time and date:
+            datetime_obj = TimeDateStrToDateTimeObj(time, date).get_datetime_obj()
+        elif time:
+            datetime_obj = TimeDateStrToDateTimeObj(time).get_datetime_obj()
         else:
             datetime_obj = datetime.now()
 
@@ -74,24 +70,25 @@ class LogCommandArgParser(CommandArgParser):
         else:
             return None
 
-    def parse(self):
+    def _compute_date_time(self):
         date = self._identify_date()
         if date is not None:
-            self.date = self.command_args.pop(date)
-        else:
-            self.date = date
+            date = self.command_args.pop(date)
 
-        time_arg = self._identify_time()
-        if time_arg is not None:
-            self.time = self.command_args.pop(time_arg)
-
-        self.log_note = self._parse_log_note()
+        time = self._identify_time()
+        if time is not None:
+            time = self.command_args.pop(time)
         try:
-            time = self._convert_to_date_time_obj()
-            tup = LogArgs(name=None, time=time, log_note=self.log_note, session_note=None)
-            return {'command': self.command, 'command_args': tup}
+            return self._convert_to_date_time_obj(date, time)
         except TimeError as e:
             print(e)
+
+    def parse(self) -> tuple:
+        self.arg_dict['time'] = self._compute_date_time()
+        log_note = self._parse_log_note()
+        if log_note is not None:
+            self.arg_dict['log_note'] = log_note
+        return super().get_command_tuple()
 
 
 class StartCommandArgParser(LogCommandArgParser):
@@ -155,24 +152,14 @@ class StartCommandArgParser(LogCommandArgParser):
         else:
             return None
 
-    def parse(self):
-        date = self._identify_date()
-        if date is not None:
-            self.date = self.command_args.pop(date)
-        else:
-            self.date = date
+    def parse(self) -> tuple:
+        self.arg_dict['time'] = self._compute_date_time()
 
-        time_arg = self._identify_time()
-        if time_arg is not None:
-            self.time = self.command_args.pop(time_arg)
-
-        self.session_note = self._parse_session_note()
-        self.log_note = self._parse_log_note()
-        try:
-            time = self._convert_to_date_time_obj()
-            tup = LogArgs(name=self.project_name, time=time,
-                          log_note=self.log_note, session_note=self.session_note)
-            return {'command': self.command, 'command_args': tup}
-        except TimeError as e:
-            print(e)
+        session_note = self._parse_session_note()
+        if session_note is not None:
+            self.arg_dict['session_note'] = session_note
+        log_note = self._parse_log_note()
+        if log_note is not None:
+            self.arg_dict['log_note'] = log_note
+        return super().get_command_tuple()
 

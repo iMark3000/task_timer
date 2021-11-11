@@ -1,3 +1,4 @@
+from collections import namedtuple
 
 from .log_parse import LogCommandArgParser
 from .log_parse import StartCommandArgParser
@@ -14,7 +15,8 @@ from utils.const import UPDATE_COMMANDS
 from utils.const import CONFIG_COMMANDS
 
 
-def arg_router(command: InputType, command_args: list) -> dict:
+def arg_router(command: InputType, command_args: list) -> tuple:
+    # Each ArgParser returns the args in a named tuple
     if command == InputType.START:
         return StartCommandArgParser(command, command_args).parse()
     elif command in LOG_COMMANDS:

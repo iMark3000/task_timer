@@ -1,21 +1,13 @@
-from collections import namedtuple
 
 from .arg_parse_base_class import CommandArgParser
 
 from utils.command_enums import InputType
 from utils.const import VALID_NAME_CHARACTERS
-from utils.exceptions import RequiredArgMissing
 from utils.exceptions import InvalidArgument
 from utils.exceptions import TooManyCommandArgs
 
-UtilityArgs = namedtuple("UtilityArgs", "project_id project_name")
-
 
 class UtilityCommandArgParser(CommandArgParser):
-    utility_command_dict = {
-        'FETCH': ['Project ID', 'self._fetch_args'],
-        'NEW': ['Project Name', 'self._new_args'],
-    }
 
     def __init__(self, command: InputType, command_args: list):
         super().__init__(command, command_args)
@@ -40,31 +32,29 @@ class UtilityCommandArgParser(CommandArgParser):
 
     def _fetch_args(self):
         try:
-            project_id = int(self.command_args[0])
-            tup = UtilityArgs(project_id=project_id, project_name=None)
-            return {'command': self.command, 'command_args': tup}
+            self.arg_dict['project_id'] = int(self.command_args[0])
+            return super().get_command_tuple()
         except ValueError:
-            raise InvalidArgument('Project ID for FETCH command is not an integer')
+            raise InvalidArgument('Project ID for FETCH command must be an integer')
 
     def _status_args(self):
         if len(self.command_args) == 0:
-            tup = UtilityArgs(project_id=None, project_name=None)
-            return {'command': self.command, 'command_args': tup}
+            return super().get_command_tuple()
         else:
             raise TooManyCommandArgs('STATUS Command takes no arguments.')
 
     def _new_args(self):
         project_name = self.command_args[0]
         if self._validate_name_char_count(project_name):
-            tup = UtilityArgs(project_id=None, project_name=project_name)
-            return {'command': self.command, 'command_args': tup}
+            self.arg_dict['project_name'] = project_name
+            return super().get_command_tuple()
         else:
             raise InvalidArgument('Project Names need a minimum of three alphabetic characters.')
 
-    def parse(self) -> dict:
-        if self.command == InputType.STATUS:
+    def parse(self) -> tuple:
+        if self.arg_dict['command'] == InputType.STATUS:
             return self._status_args()
-        elif self.command == InputType.FETCH:
+        elif self.arg_dict['command'] == InputType.FETCH:
             return self._fetch_args()
-        elif self.command == InputType.NEW:
+        elif self.arg_dict['command'] == InputType.NEW:
             return self._new_args()

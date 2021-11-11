@@ -8,7 +8,11 @@ class CommandArgParser(ABC):
     def __init__(self, command: InputType, command_args: list):
         self.command = command
         self.command_args = command_args
+        self.arg_dict = dict()
 
-        @abstractmethod
-        def parse():
-            pass
+    def get_command_tuple(self):
+        return self.command, self.arg_dict
+
+    @abstractmethod
+    def parse(self):
+        pass

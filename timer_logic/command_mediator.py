@@ -1,3 +1,5 @@
+from collections import namedtuple
+
 from timer_session.timer_session import create_session
 from timer_logic.factories.factory_router import command_factory_router
 
@@ -18,8 +20,8 @@ from utils.exceptions import TimeSequenceError
 from utils.exceptions import CommandSequenceError
 
 
-def run_mediator(command_dict: dict):
-    command_obj = command_factory_router(command_dict)
+def run_mediator(command_args: tuple):
+    command_obj = command_factory_router(command_args)
     try:
         if isinstance(command_obj, LogCommand):
             session = create_session()

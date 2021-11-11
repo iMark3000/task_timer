@@ -6,8 +6,8 @@ from command_classes.commands import ConfigCommand
 
 class ConfigCommandFactory(CommandAbstractFactory):
 
-    def __init__(self, command_dict: dict):
-        self.command = command_dict['command']
+    def __init__(self, command_args: tuple):
+        self.command = command_dict[0]
         self.view = command_dict['command_args'].view
         self.config_key = command_dict['command_args'].config_key
         self.config_value = command_dict['command_args'].config_value

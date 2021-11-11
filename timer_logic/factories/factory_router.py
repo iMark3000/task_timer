@@ -11,15 +11,16 @@ from utils.const import UPDATE_COMMANDS
 from utils.const import CONFIG_COMMANDS
 
 
-def command_factory_router(command_dict: dict):
-    command = command_dict['command']
+def command_factory_router(command_args: tuple):
+    command = command_args[0]
+    command_args = command_args[1]
     if command in LOG_COMMANDS:
-        return LogCommandFactory(command_dict).create_command()
+        return LogCommandFactory(command, command_args).create_command()
     elif command in QUERY_COMMANDS:
-        return QueryCommandFactory(command_dict).create_command()
+        return QueryCommandFactory(command, command_args).create_command()
     elif command in UTILITY_COMMANDS:
-        return UtilityCommandFactory(command_dict).create_command()
+        return UtilityCommandFactory(command, command_args).create_command()
     elif command in UPDATE_COMMANDS:
-        return UpdateCommandFactory(command_dict).create_command()
+        return UpdateCommandFactory(command, command_args).create_command()
     elif command in CONFIG_COMMANDS:
-        return ConfigCommandFactory(command_dict).create_command()
+        return ConfigCommandFactory(command, command_args).create_command()

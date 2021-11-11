@@ -1,10 +1,7 @@
 from collections import namedtuple
-from datetime import datetime
 
 from .arg_parse_base_class import CommandArgParser
 from utils.command_enums import InputType
-
-QueryArgs = namedtuple("QueryArgs", "args")
 
 
 class QueryCommandArgParser(CommandArgParser):
