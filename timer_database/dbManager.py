@@ -23,8 +23,22 @@ class DbManager:
 
 class DbQuery(DbManager):
 
-    def query_project_list(self):
-        pass
+    def query_projects_by_status(self, status):
+        conn = self.dbConnect()
+        cur = conn.cursor()
+        status = (status,)
+        cur.execute("SELECT * FROM projects WHERE status=?", status)
+        result = cur.fetchall()
+        conn.close()
+        return result
+
+    def query_all_projects(self):
+        conn = self.dbConnect()
+        cur = conn.cursor()
+        cur.execute("SELECT * FROM projects")
+        result = cur.fetchall()
+        conn.close()
+        return result
 
     def query_project_time(self):
         pass

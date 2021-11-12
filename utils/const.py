@@ -11,9 +11,7 @@ LOG_COMMANDS = [
 ]
 
 QUERY_COMMANDS = [
-    InputType.PROJECTS,
-    InputType.REPORT,
-    InputType.PROJECTS
+    InputType.REPORT
 ]
 
 UTILITY_COMMANDS = [

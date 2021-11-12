@@ -51,10 +51,20 @@ class UtilityCommandArgParser(CommandArgParser):
         else:
             raise InvalidArgument('Project Names need a minimum of three alphabetic characters.')
 
+    def _project_args(self):
+        if self.command_args:
+            if self.command_args[0].upper() == 'ALL':
+                self.arg_dict['all'] = True
+            elif self.command_args[0].upper() == 'DEACTIVATED':
+                self.arg_dict['filter_by'] = 0
+        return super().get_command_tuple()
+
     def parse(self) -> tuple:
-        if self.arg_dict['command'] == InputType.STATUS:
+        if self.command == InputType.STATUS:
             return self._status_args()
-        elif self.arg_dict['command'] == InputType.FETCH:
+        elif self.command == InputType.FETCH:
             return self._fetch_args()
-        elif self.arg_dict['command'] == InputType.NEW:
+        elif self.command == InputType.NEW:
             return self._new_args()
+        elif self.command == InputType.PROJECTS:
+            return self._project_args()

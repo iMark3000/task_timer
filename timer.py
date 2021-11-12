@@ -19,7 +19,7 @@ def intake(args):
         command_args = args[2:]
         pass_to_mediator(arg_router(command, command_args))
     except KeyError:
-        print(f"{args[1]} is not a command")
+        print(f'{args[1]} in not a command.')
 
 
 def pass_to_mediator(command_dict):

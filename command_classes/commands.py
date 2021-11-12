@@ -21,6 +21,9 @@ class Command(ABC):
     def get_command_name(self):
         return self._command.name
 
+    def __str__(self):
+        return f'{self.command}: {self.__dict__}'
+
 
 # ~~~~~~~~~~~LOG COMMAND FAMILY~~~~~~~~~~~~~~~~~~~~
 # Log Commands log time entries to the database
@@ -181,10 +184,15 @@ class ProjectsCommand(UtilityProjectsCommands):
 
     def __init__(self, command: InputType, **kwargs):
         self._all = False
+        self._filter_by = None
         super().__init__(command, **kwargs)
 
     def is_all(self):
         return self._all
+
+    @property
+    def filter_by(self):
+        return self._filter_by
 
 
 class NewCommand(UtilityProjectsCommands):
