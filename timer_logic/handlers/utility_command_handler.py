@@ -1,23 +1,17 @@
-from typing import Union
-
 from .command_handler_base_class import Handler
 from timer_database.dbManager import DbUpdate
 from timer_database.dbManager import DbQuery
-from command_classes.commands import *
+from command_classes.commands import UtilityCommand
 
-
-from config.config_manager import ConfigFetch
-from config.config_manager import ConfigUpdater
-from timer_session.timer_session import Session
-from timer_session.timer_session import write_session_data_to_json
-from timer_session.timer_session import fetch_helper_func
+from timer_session.sessions_manager import SessionManager
+from timer_session.sessions_manager import FetchSessionHelper
 from utils.command_enums import InputType
 
 
 class UtilityCommandHandler(Handler):
 
-    def __init__(self, command: UtilityCommand, session: Session):
-        self.session = session
+    def __init__(self, command: UtilityCommand, session_manager: SessionManager):
+        self.session_manager = session_manager
         self.command = command
 
     def handle(self):
@@ -31,12 +25,14 @@ class UtilityCommandHandler(Handler):
             self._get_projects()
 
     def _fetch_project(self):
-        project_id = (self.command.project_id,)  # This works even though PyCharm disagrees
+        project_id = (self.command.project_id,)
         results = DbQuery().fetch_project(project_id)
         project_name = results[1]
-        fetch_helper_func(self.session, project_name, self.command.project_id)
-        write_session_data_to_json(self.session)
-        print(f'Fetched {self.session.project_name} -- Now in queue')
+        if FetchSessionHelper(project_name, self.command.project_id, self.session_manager).fetch():
+            self.session_manager.export_sessions_to_json()
+            print(f'Fetched {project_name} -- Use "SWITCH {self.command.project_id}" to make it current')
+        else:
+            print(f'{project_name} [ID: {self.command.project_id}] is already in queue')
 
     def _new_project(self):
         tup = (self.command.project_name, 1)
@@ -45,15 +41,18 @@ class UtilityCommandHandler(Handler):
 
     def _status_check(self):
         # Todo: This will need to be reworked later
-        if self.session.project_name and self.session.last_command != InputType.NO_SESSION:
-            print(f'Current project: {self.session.project_name}')
-            print(f'Session started on {self.session.session_start_time}')
-            print(f'Last command {self.session.last_command.name.upper()} on {self.session.last_command_time}')
-        elif self.session.project_name:
-            print(f'Project Queued Up: {self.session.project_name}')
+        session = self.session_manager.get_current_session()
+        if session is None:
+            print('No sessions are in progress')
+        elif session.project_name and session.last_command != InputType.NO_SESSION:
+            print(f'Current project: {session.project_name}')
+            print(f'Session started on {session.session_start_time}')
+            print(f'Last command {session.last_command.name.upper()} on {session.last_command_time}')
+            print(f'There are {self.session_manager.count_of_concurrent_sessions()} concurrent sessions.')
+        elif session.project_name:
+            print(f'Project Queued Up: {session.project_name}')
             print(f'No session in progress')
-        else:
-            print('No project queued and no session in progress.')
+            print(f'There are {self.session_manager.count_of_concurrent_sessions()} concurrent sessions.')
 
     def _get_projects(self):
         # Todo: break this up
@@ -69,5 +68,6 @@ class UtilityCommandHandler(Handler):
                 header = 'Here are ACTIVE projects in database:'
 
         print(header)
+        print("====================")
         for r in result:
             print(f'{r[0]}......{r[1]}')

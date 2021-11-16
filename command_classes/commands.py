@@ -230,11 +230,11 @@ class SwitchCommand(SessionUtilityCommands):
 
 class ConfigCommand(Command):
 
-    def __init__(self, command: InputType, view, config_key, config_value):
-        self.view = view
-        self.config_key = config_key
-        self.config_value = config_value
-        super().__init__(command)
+    def __init__(self, command: InputType, **kwargs):
+        self.view = None
+        self.config_key = None
+        self.config_value = None
+        super().__init__(command, **kwargs)
 
     def is_view(self):
         return self.view

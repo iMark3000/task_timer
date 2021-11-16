@@ -9,11 +9,12 @@ from utils.const import UTILITY_COMMANDS
 from utils.const import QUERY_COMMANDS
 from utils.const import UPDATE_COMMANDS
 from utils.const import CONFIG_COMMANDS
+from utils.command_enums import InputType
 
 
 def command_factory_router(command_args: tuple):
-    command = command_args[0]
-    command_args = command_args[1]
+    command: InputType = command_args[0]
+    command_args: dict = command_args[1]
     if command in LOG_COMMANDS:
         return LogCommandFactory(command, command_args).create_command()
     elif command in QUERY_COMMANDS:

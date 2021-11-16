@@ -5,7 +5,7 @@ from typing import Tuple, List
 from config.config_manager import ConfigFetch
 from utils.database_setup import run_db_setup
 
-DB_PATH = ConfigFetch().fetch_current_env()['DB_PATH']
+DB_PATH = ConfigFetch().fetch_current_env()['PATHS']['DB_PATH']
 
 
 class DbManager:

@@ -6,17 +6,16 @@ from typing import Union
 from .command_handler_base_class import Handler
 from timer_database.dbManager import DbUpdate
 from command_classes.commands import *
-from timer_session.timer_session import Session
-from timer_session.timer_session import write_session_data_to_json
-from timer_session.timer_session import reset_json_data
+from timer_session.sessions_manager import SessionManager
 from utils.exceptions import CommandSequenceError, TimeSequenceError
 from utils.command_enums import InputType
 
 
 class LogCommandHandler(Handler):
 
-    def __init__(self, command: Union[LogCommand, StartCommand], session: Session):
-        self.session = session
+    def __init__(self, command: Union[LogCommand, StartCommand], session_manager: SessionManager):
+        self.session = session_manager.get_current_session()
+        self.session_manager = session_manager
         self.command = command
 
     def _validate_command(self):
@@ -60,20 +59,23 @@ class LogCommandHandler(Handler):
         self._update_session()
 
     def _stop_command(self):
-        # gather data and creating log for DB
-        if self.session.last_command != InputType.PAUSE:
+        # Logging data for START and RESUME to DB
+        if self.session.last_command != InputType.PAUSE or InputType.NO_SESSION:
             self._log_time_to_db()
-        # close session
-        self._close_session()
-        # reset json
-        reset_json_data()
+
+        # Closing session of all except NO_SESSION
+        if self.session.last_command != InputType.NO_SESSION:
+            self._close_session()
+
+        # Removing Session
+        self.session_manager.remove_session(self.session.project_id)
 
     def _update_session(self):
         if self.command.log_note:
             self.session.log_note = self.command.log_note
         self.session.last_command = self.command.command
         self.session.last_command_time = self.command.time
-        write_session_data_to_json(self.session)
+        self.session_manager.export_sessions_to_json()
 
     def _log_time_to_db(self):
         session_id = self.session.session_id

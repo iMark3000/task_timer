@@ -18,7 +18,8 @@ def intake(args):
         command = InputType[args[1].upper()]
         command_args = args[2:]
         pass_to_mediator(arg_router(command, command_args))
-    except KeyError:
+    except KeyError as e:
+        print(e)
         print(f'{args[1]} in not a command.')
 
 

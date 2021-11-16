@@ -1,6 +1,6 @@
 from collections import namedtuple
 
-from timer_session.timer_session import create_session
+from timer_session.sessions_manager import start_manager
 from timer_logic.factories.factory_router import command_factory_router
 
 from command_classes.commands import LogCommand
@@ -24,13 +24,13 @@ def run_mediator(command_args: tuple):
     command_obj = command_factory_router(command_args)
     try:
         if isinstance(command_obj, LogCommand):
-            session = create_session()
-            LogCommandHandler(command_obj, session).handle()
+            session_manager = start_manager()
+            LogCommandHandler(command_obj, session_manager).handle()
         elif isinstance(command_obj, QueryCommand):
             QueryCommandHandler(command_obj).handle()
         elif isinstance(command_obj, UtilityCommand):
-            session = create_session()
-            UtilityCommandHandler(command_obj, session).handle()
+            session_manager = start_manager()
+            UtilityCommandHandler(command_obj, session_manager).handle()
         elif isinstance(command_obj, UpdateCommand):
             # Todo: need a session?
             UpdateCommandHandler(command_obj).handle()

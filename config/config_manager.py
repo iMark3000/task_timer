@@ -37,15 +37,16 @@ class ConfigUpdater(ConfigManager):
                 print(f'{k}...{v}')
 
     def update(self, param: str, val: str) -> None:
-        if param.upper() not in self.config_data.keys():
-            raise KeyError(f'{param} is not a configuration')
-        elif param.upper() == 'TEST_ON':
-            if self._validate_test(val):
-                self.config_data[param.upper()] = val.upper()
-            else:
-                raise InvalidConfigArgument('Value must be TRUE or FALSE')
-        elif param.upper() == "CONCURRENT_SESSIONS":
-            self.config_data[param] = int(val)
+        if param:
+            if param.upper() not in self.config_data.keys():
+                raise KeyError(f'{param} is not a configuration')
+            elif param.upper() == 'TEST_ON':
+                if self._validate_test(val):
+                    self.config_data[param.upper()] = val.upper()
+                else:
+                    raise InvalidConfigArgument('Value must be TRUE or FALSE')
+            elif param.upper() == "CONCURRENT_SESSIONS":
+                self.config_data[param] = int(val)
 
         self._config_save()
 
@@ -75,19 +76,23 @@ class ConfigFetch(ConfigManager):
 
     def fetch_current_env(self) -> dict:
         if self.fetch_test_status():
-            return self._package_paths(self.config_data['ENV']['TEST_RESOURCES'])
+            paths = self._package_paths(self.config_data['ENV']['TEST_RESOURCES']["PATHS"])
+            concurrent_sessions = self.config_data['ENV']['TEST_RESOURCES']['CONCURRENT_SESSIONS']
         else:
-            return self._package_paths(self.config_data['ENV']['PROD_RESOURCES'])
+            paths = self._package_paths(self.config_data['ENV']['PROD_RESOURCES']["PATHS"])
+            concurrent_sessions = self.config_data['ENV']['PROD_RESOURCES']['CONCURRENT_SESSIONS']
+
+        return {'CONCURRENT_SESSIONS': concurrent_sessions, 'PATHS': paths}
 
     def _package_paths(self, env: dict) -> dict:
-        packaged_env = dict()
+        packaged_env_paths = dict()
         for k, v in env.items():
             if k == 'TIMER_DB_PATH':
-                packaged_env['DB_PATH'] = self._compile_path(v)
+                packaged_env_paths['DB_PATH'] = self._compile_path(v)
             else:
-                packaged_env['SESSION_PATH'] = self._compile_path(v)
+                packaged_env_paths['SESSION_PATH'] = self._compile_path(v)
 
-        return packaged_env
+        return packaged_env_paths
 
     def _compile_path(self, file: str) -> os:
         return os.path.join(self.config_data["PROJECT_PATH"], file)

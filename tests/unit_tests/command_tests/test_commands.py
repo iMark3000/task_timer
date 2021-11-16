@@ -134,7 +134,8 @@ def command_arg_input_utility_commands():
     arg_dict = {
         'all': True,
         'project_name': 'Test',
-        'project_id': 456
+        'project_id': 456,
+        'filter_by': 1
     }
     return arg_dict
 
@@ -154,6 +155,7 @@ def test_PROJECTS_command(command_arg_input_utility_commands):
     command = ProjectsCommand(InputType.PROJECTS, **command_arg_input_utility_commands)
     assert command.project_name == 'Test'
     assert command.is_all() is True
+    assert command.filter_by == 1
     assert command.get_command_name() == 'PROJECTS'
     assert command.command == InputType.PROJECTS
     with pytest.raises(AttributeError):
