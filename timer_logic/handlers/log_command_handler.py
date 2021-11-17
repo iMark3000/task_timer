@@ -67,12 +67,18 @@ class LogCommandHandler(Handler):
         if self.session.last_command != InputType.NO_SESSION:
             self._close_session()
 
+        # Getting new current session
+        new_current_pid = self.session_manager.determine_new_current_pid()
+        if new_current_pid is not None:
+            self.session_manager.switch_current_session(new_current_pid)
+
         # Removing Session
         self.session_manager.remove_session(self.session.project_id)
+        self.session_manager.export_sessions_to_json()
 
     def _update_session(self):
         if self.command.log_note:
-            self.session.log_note = self.command.log_note
+            self.session.last_command_log_note = self.command.log_note
         self.session.last_command = self.command.command
         self.session.last_command_time = self.command.time
         self.session_manager.export_sessions_to_json()
@@ -81,7 +87,7 @@ class LogCommandHandler(Handler):
         session_id = self.session.session_id
         start_log_time = self.session.last_command_time
         end_log_time = self.command.time
-        start_note = self.session.log_note
+        start_note = self.session.last_command_log_note
         end_note = self.command.log_note
         log = session_id, start_log_time, end_log_time, start_note, end_note
         DbUpdate().create_time_log(log)

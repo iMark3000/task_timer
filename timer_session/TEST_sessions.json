@@ -7,7 +7,17 @@
     "_session_start_time": "None",
     "_last_command_time": "None",
     "_last_command_log_note": "None",
-    "_current_session": true
+    "_current_session": "False"
+  },
+  {
+    "_project_name": "cat",
+    "_project_id": 3,
+    "_last_command": "NO_SESSION",
+    "_session_id": "None",
+    "_session_start_time": "None",
+    "_last_command_time": "None",
+    "_last_command_log_note": "None",
+    "_current_session": "True"
   },
   {
     "_project_name": "cadabada",
@@ -17,6 +27,16 @@
     "_session_start_time": "None",
     "_last_command_time": "None",
     "_last_command_log_note": "None",
-    "_current_session": false
+    "_current_session": "False"
+  },
+  {
+    "_project_name": "park",
+    "_project_id": 5,
+    "_last_command": "NO_SESSION",
+    "_session_id": "None",
+    "_session_start_time": "None",
+    "_last_command_time": "None",
+    "_last_command_log_note": "None",
+    "_current_session": "False"
   }
 ]

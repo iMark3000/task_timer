@@ -22,7 +22,7 @@ def test_START_command(command_arg_input_full):
     assert command.get_command_name() == 'START'
     assert command.time == datetime(2021, 1, 1, 12, 55, 40)
     assert command.project_name == 'Test'
-    assert command.log_note == 'THIS IS A LOG NOTE'
+    assert command.last_command_log_note == 'THIS IS A LOG NOTE'
     assert command.session_note == 'THIS IS A SESSION NOTE'
 
 
@@ -33,7 +33,7 @@ def test_START_command_missing_optional_args():
     assert command.get_command_name() == 'START'
     assert command.time == datetime(2021, 1, 1, 12, 55, 40)
     assert command.project_name is None
-    assert command.log_note is None
+    assert command.last_command_log_note is None
     assert command.session_note is None
 
 
@@ -54,7 +54,7 @@ def test_PAUSE_command(command_arg_input_full):
     assert command.command == InputType.PAUSE
     assert command.get_command_name() == 'PAUSE'
     assert command.time == datetime(2021, 1, 1, 12, 55, 40)
-    assert command.log_note == 'THIS IS A LOG NOTE'
+    assert command.last_command_log_note == 'THIS IS A LOG NOTE'
 
 
 def test_PAUSE_command_missing_optional_args():
@@ -63,7 +63,7 @@ def test_PAUSE_command_missing_optional_args():
     assert command.command == InputType.PAUSE
     assert command.get_command_name() == 'PAUSE'
     assert command.time == datetime(2021, 1, 1, 12, 55, 40)
-    assert command.log_note is None
+    assert command.last_command_log_note is None
 
 
 def test_PAUSE_command_ignores_unallowed_attr(command_arg_input_full):
@@ -71,7 +71,7 @@ def test_PAUSE_command_ignores_unallowed_attr(command_arg_input_full):
     assert command.command == InputType.PAUSE
     assert command.get_command_name() == 'PAUSE'
     assert command.time == datetime(2021, 1, 1, 12, 55, 40)
-    assert command.log_note == 'THIS IS A LOG NOTE'
+    assert command.last_command_log_note == 'THIS IS A LOG NOTE'
     with pytest.raises(AttributeError):
         command.session_note
     with pytest.raises(AttributeError):
@@ -96,7 +96,7 @@ def test_RESUME_command(command_arg_input_full):
     assert command.command == InputType.RESUME
     assert command.get_command_name() == 'RESUME'
     assert command.time == datetime(2021, 1, 1, 12, 55, 40)
-    assert command.log_note == 'THIS IS A LOG NOTE'
+    assert command.last_command_log_note == 'THIS IS A LOG NOTE'
 
 
 def test_RESUME_command_missing_optional_args():
@@ -105,7 +105,7 @@ def test_RESUME_command_missing_optional_args():
     assert command.command == InputType.RESUME
     assert command.get_command_name() == 'RESUME'
     assert command.time == datetime(2021, 1, 1, 12, 55, 40)
-    assert command.log_note is None
+    assert command.last_command_log_note is None
 
 
 def test_RESUME_command_ignores_unallowed_attr(command_arg_input_full):
@@ -113,7 +113,7 @@ def test_RESUME_command_ignores_unallowed_attr(command_arg_input_full):
     assert command.command == InputType.RESUME
     assert command.get_command_name() == 'RESUME'
     assert command.time == datetime(2021, 1, 1, 12, 55, 40)
-    assert command.log_note == 'THIS IS A LOG NOTE'
+    assert command.last_command_log_note == 'THIS IS A LOG NOTE'
     with pytest.raises(AttributeError):
         command.session_note
     with pytest.raises(AttributeError):

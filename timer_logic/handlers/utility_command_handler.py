@@ -23,6 +23,8 @@ class UtilityCommandHandler(Handler):
             self._new_project()
         elif self.command.command == InputType.PROJECTS:
             self._get_projects()
+        elif self.command.command == InputType.SWITCH:
+            self._switch_project()
 
     def _fetch_project(self):
         project_id = (self.command.project_id,)
@@ -71,3 +73,10 @@ class UtilityCommandHandler(Handler):
         print("====================")
         for r in result:
             print(f'{r[0]}......{r[1]}')
+
+    def _switch_project(self):
+        if self.session_manager.check_for_session(self.command.project_id):
+            self.session_manager.switch_current_session(self.command.project_id)
+            self.session_manager.export_sessions_to_json()
+        else:
+            print(f'{self.command.project_id} is not in queue. Use FETCH to add project or NEW to create project.')

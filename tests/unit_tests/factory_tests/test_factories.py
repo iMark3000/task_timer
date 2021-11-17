@@ -26,7 +26,7 @@ def test_log_factory_PAUSE(log_args):
     assert command_obj.command == InputType.PAUSE
     assert command_obj.get_command_name() == 'PAUSE'
     assert command_obj.time == datetime(2021, 1, 1, 12, 55, 40)
-    assert command_obj.log_note == 'THIS IS A LOG NOTE'
+    assert command_obj.last_command_log_note == 'THIS IS A LOG NOTE'
     with pytest.raises(AttributeError):
         command.session_note
     with pytest.raises(AttributeError):
@@ -39,7 +39,7 @@ def test_log_factory_RESUME(log_args):
     assert command_obj.command == InputType.RESUME
     assert command_obj.get_command_name() == 'RESUME'
     assert command_obj.time == datetime(2021, 1, 1, 12, 55, 40)
-    assert command_obj.log_note == 'THIS IS A LOG NOTE'
+    assert command_obj.last_command_log_note == 'THIS IS A LOG NOTE'
     with pytest.raises(AttributeError):
         command.session_note
     with pytest.raises(AttributeError):
@@ -52,7 +52,7 @@ def test_log_factory_STOP(log_args):
     assert command_obj.command == InputType.STOP
     assert command_obj.get_command_name() == 'STOP'
     assert command_obj.time == datetime(2021, 1, 1, 12, 55, 40)
-    assert command_obj.log_note == 'THIS IS A LOG NOTE'
+    assert command_obj.last_command_log_note == 'THIS IS A LOG NOTE'
     with pytest.raises(AttributeError):
         command.session_note
     with pytest.raises(AttributeError):
@@ -65,7 +65,7 @@ def test_log_factory_START(log_args):
     assert command_obj.get_command_name() == 'START'
     assert command_obj.time == datetime(2021, 1, 1, 12, 55, 40)
     assert command_obj.project_name == 'Test'
-    assert command_obj.log_note == 'THIS IS A LOG NOTE'
+    assert command_obj.last_command_log_note == 'THIS IS A LOG NOTE'
     assert command_obj.session_note == 'THIS IS A SESSION NOTE'
 
 
@@ -146,7 +146,7 @@ def test_command_factory_router_START(log_args):
     assert command_obj.get_command_name() == 'START'
     assert command_obj.time == datetime(2021, 1, 1, 12, 55, 40)
     assert command_obj.project_name == 'Test'
-    assert command_obj.log_note == 'THIS IS A LOG NOTE'
+    assert command_obj.last_command_log_note == 'THIS IS A LOG NOTE'
     assert command_obj.session_note == 'THIS IS A SESSION NOTE'
 
 
@@ -156,7 +156,7 @@ def test_command_factory_router_PAUSE(log_args):
     assert command_obj.command == InputType.PAUSE
     assert command_obj.get_command_name() == 'PAUSE'
     assert command_obj.time == datetime(2021, 1, 1, 12, 55, 40)
-    assert command_obj.log_note == 'THIS IS A LOG NOTE'
+    assert command_obj.last_command_log_note == 'THIS IS A LOG NOTE'
     with pytest.raises(AttributeError):
         command_obj.session_note
     with pytest.raises(AttributeError):
@@ -169,7 +169,7 @@ def test_command_factory_router_RESUME(log_args):
     assert command_obj.command == InputType.RESUME
     assert command_obj.get_command_name() == 'RESUME'
     assert command_obj.time == datetime(2021, 1, 1, 12, 55, 40)
-    assert command_obj.log_note == 'THIS IS A LOG NOTE'
+    assert command_obj.last_command_log_note == 'THIS IS A LOG NOTE'
     with pytest.raises(AttributeError):
         command_obj.session_note
     with pytest.raises(AttributeError):
@@ -182,7 +182,7 @@ def test_command_factory_router_STOP(log_args):
     assert command_obj.command == InputType.STOP
     assert command_obj.get_command_name() == 'STOP'
     assert command_obj.time == datetime(2021, 1, 1, 12, 55, 40)
-    assert command_obj.log_note == 'THIS IS A LOG NOTE'
+    assert command_obj.last_command_log_note == 'THIS IS A LOG NOTE'
     with pytest.raises(AttributeError):
         command_obj.session_note
     with pytest.raises(AttributeError):

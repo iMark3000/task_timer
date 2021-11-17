@@ -59,6 +59,16 @@ class UtilityCommandArgParser(CommandArgParser):
                 self.arg_dict['filter_by'] = 0
         return super().get_command_tuple()
 
+    def _switch_args(self):
+        if self.command_args:
+            try:
+                self.arg_dict['project_id'] = int(self.command_args[0])
+                return super().get_command_tuple()
+            except ValueError:
+                print('SWITCH need an int.')
+        else:
+            raise InvalidArgument('SWITCH requires one argument: project_id(int)')
+
     def parse(self) -> tuple:
         if self.command == InputType.STATUS:
             return self._status_args()
@@ -68,3 +78,5 @@ class UtilityCommandArgParser(CommandArgParser):
             return self._new_args()
         elif self.command == InputType.PROJECTS:
             return self._project_args()
+        elif self.command == InputType.SWITCH:
+            return self._switch_args()
