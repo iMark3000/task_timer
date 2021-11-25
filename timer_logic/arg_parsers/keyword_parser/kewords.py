@@ -16,26 +16,34 @@ class KeywordBaseClass(ABC):
     def process_value(self):
         pass
 
+
 class ProjectID:
     pass
+
 
 class SessionID:
     pass
 
+
 class LogID:
     pass
+
 
 class AppendNote:
     pass
 
+
 class OverWriteNote:
     pass
+
 
 class DeleteNote:
     pass
 
+
 class StartTimeDate:
     pass
+
 
 class EndTimeDate:
     pass

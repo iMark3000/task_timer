@@ -1,6 +1,6 @@
 from .command_handler_base_class import Handler
 from timer_database.dbManager import DbUpdate
-from timer_database.dbManager import DbQuery
+from timer_database.dbManager import DbQueryUtility
 from command_classes.commands import UtilityCommand
 
 from timer_session.sessions_manager import SessionManager
@@ -28,7 +28,7 @@ class UtilityCommandHandler(Handler):
 
     def _fetch_project(self):
         project_id = (self.command.project_id,)
-        results = DbQuery().fetch_project(project_id)
+        results = DbQueryUtility().fetch_project(project_id)
         project_name = results[1]
         if FetchSessionHelper(project_name, self.command.project_id, self.session_manager).fetch():
             self.session_manager.export_sessions_to_json()
@@ -59,14 +59,14 @@ class UtilityCommandHandler(Handler):
     def _get_projects(self):
         # Todo: break this up
         if self.command.is_all():
-            result = DbQuery().query_all_projects()
+            result = DbQueryUtility().query_all_projects()
             header = 'Here are ALL projects in database:'
         else:
             if self.command.filter_by == 0:
-                result = DbQuery().query_projects_by_status(0)
+                result = DbQueryUtility().query_projects_by_status(0)
                 header = 'Here are DEACTIVATED projects in database:'
             else:
-                result = DbQuery().query_projects_by_status(1)
+                result = DbQueryUtility().query_projects_by_status(1)
                 header = 'Here are ACTIVE projects in database:'
 
         print(header)

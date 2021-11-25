@@ -21,7 +21,7 @@ class DbManager:
             return sqlite3.connect(self.db_path)
 
 
-class DbQuery(DbManager):
+class DbQueryUtility(DbManager):
 
     def query_projects_by_status(self, status):
         conn = self.dbConnect()
@@ -39,12 +39,6 @@ class DbQuery(DbManager):
         result = cur.fetchall()
         conn.close()
         return result
-
-    def query_project_time(self):
-        pass
-
-    def query_time_period(self):
-        pass
 
     def fetch_project(self, project_id: tuple) -> tuple:
         conn = self.dbConnect()
@@ -113,3 +107,43 @@ class DbUpdate(DbManager):
     def check_for_project(self):
         # Checks for project name
         pass
+
+
+class DbQueryReport(DbManager):
+
+    def project_session_join(self):
+        conn = self.dbConnect()
+        conn.row_factory = sqlite3.Row
+        cur = conn.cursor()
+        statement = '''SELECT name, start_date, note from 
+        projects INNER JOIN sessions ON projects.id = sessions.project_id'''
+        cur.execute(statement)
+        results = cur.fetchall()
+        return results
+
+    def get_sessions_by_project(self, pid):
+        conn = sqlite3.connect(self.db_path)
+        conn.row_factory = lambda c, r: dict([(col[0], r[idx]) for idx, col in enumerate(c.description)])
+        cur = conn.cursor()
+        pid = (pid,)
+        statement = """
+        SELECT 
+        projects.name AS project,
+        projects.id AS project_id,
+        sessions.id AS session, 
+        sessions.note AS note,
+        time_log.id AS logID, 
+        time_log.start_timestamp AS startTime, 
+        time_log.end_timestamp AS endTime, 
+        time_log.start_note AS startLogNote, 
+        time_log.end_note AS endLogNote
+        FROM projects 
+        INNER JOIN sessions ON sessions.project_id = projects.id 
+        INNER JOIN time_log ON time_log.session_id = sessions.id 
+        WHERE projects.id = ?	
+        """
+
+        cur.execute(statement, pid)
+        results = cur.fetchall()
+        conn.close()
+        return results
