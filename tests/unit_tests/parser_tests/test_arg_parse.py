@@ -3,8 +3,8 @@ import datetime
 
 from timer_logic.arg_parsers.log_parse import LogCommandArgParser
 from timer_logic.arg_parsers.log_parse import StartCommandArgParser
-from timer_logic.arg_parsers.log_parse import UtilityCommandArgParser
-from timer_logic.arg_parsers.log_parse import arg_router
+from timer_logic.arg_parsers.utility_parse import UtilityCommandArgParser
+from timer_logic.arg_parsers.arg_parser_router import arg_router
 from utils.command_enums import InputType
 
 from utils.exceptions import RequiredArgMissing

@@ -11,7 +11,7 @@ LOG_COMMANDS = [
 ]
 
 QUERY_COMMANDS = [
-    InputType.REPORT
+    InputType.QUERY
 ]
 
 UTILITY_COMMANDS = [

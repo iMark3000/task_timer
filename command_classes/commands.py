@@ -108,26 +108,28 @@ class StopCommand(LogCommand):
 
 class QueryCommand(Command):
 
-    def __init__(self, command: InputType):
-        super().__init__(command)
-        self._report_type = None
-        self._report_level = None
+    def __init__(self, command: InputType, **kwargs):
+        self._query_projects = None
+        self._query_level = None
+        self._query_time_period = None
+        self._chron = False
+        super().__init__(command, **kwargs)
 
     @property
-    def report_type(self):
-        return self._report_type
-
-    @report_type.setter
-    def report_type(self, report_type):
-        self._report_type = report_type
+    def query_projects(self):
+        return self._query_projects
 
     @property
-    def report_level(self):
-        return self._report_type
+    def query_level(self):
+        return self._query_level
 
-    @report_level.setter
-    def report_level(self, report_level):
-        self._report_level = report_level
+    @property
+    def query_time_period(self):
+        return self._query_time_period
+
+    @property
+    def is_chron(self):
+        return self._chron
 
 
 # ~~~~~~~~~~~UPDATE COMMAND FAMILY~~~~~~~~~~~~~~~~~~~~
