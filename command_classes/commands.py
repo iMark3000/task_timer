@@ -110,15 +110,24 @@ class QueryCommand(Command):
 
     def __init__(self, command: InputType):
         super().__init__(command)
-        self.dataset = None
+        self._report_type = None
+        self._report_level = None
 
     @property
-    def dataset(self):
-        return self.dataset
+    def report_type(self):
+        return self._report_type
 
-    @dataset.setter
-    def dataset(self, dataset):
-        self.dataset = dataset
+    @report_type.setter
+    def report_type(self, report_type):
+        self._report_type = report_type
+
+    @property
+    def report_level(self):
+        return self._report_type
+
+    @report_level.setter
+    def report_level(self, report_level):
+        self._report_level = report_level
 
 
 # ~~~~~~~~~~~UPDATE COMMAND FAMILY~~~~~~~~~~~~~~~~~~~~
