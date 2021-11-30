@@ -12,6 +12,7 @@ QUERY_PARAMS = {
     '+p': 0,
     }
 
+NON_INT_TIME_PERIOD_INPUT = ['W', 'M', 'Y', 'CY', 'AT']
 
 class QueryCommandArgParser(CommandArgParser):
 
@@ -52,6 +53,24 @@ class QueryCommandArgParser(CommandArgParser):
         else:
             self.arg_dict['query_level'] = QUERY_PARAMS[arg]
 
+    def _eval_time_param(self):
+        if 'query_time_period' in self.arg_dict.keys():
+            if self.arg_dict['query_time_period'].upper() not in NON_INT_TIME_PERIOD_INPUT:
+                try:
+                    self.arg_dict['query_time_period'] = int(self.arg_dict['query_time_period'])
+                except ValueError:
+                    raise InvalidArgument('Time must be an int or str values of "W", "M" "Y", "CY" or "AT"')
+
+    def _eval_project_id(self):
+        if 'query_projects' in self.arg_dict.keys():
+            project_ids = self.arg_dict['query_projects'].split(',')
+            for i, e in enumerate(project_ids):
+                try:
+                    project_ids[i] = int(e)
+                except ValueError:
+                    raise InvalidArgument('Project ID must be an int')
+            self.arg_dict['query_projects'] = tuple(project_ids)
+
     def _no_params(self):
         self.arg_dict['query_time_period'] = '0'
         self.arg_dict['query_projects'] = '0'
@@ -64,4 +83,7 @@ class QueryCommandArgParser(CommandArgParser):
                 param_search = self._identify_query_params()
         else:
             self._no_params()
+
+        self._eval_time_param()
+        self._eval_project_id()
         return super().get_command_tuple()

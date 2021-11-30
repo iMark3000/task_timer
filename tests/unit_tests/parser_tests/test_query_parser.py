@@ -19,15 +19,49 @@ def test_time_param(basic_params):
     command = InputType.QUERY
     q = QueryCommandArgParser(command, basic_params)
     result = q.parse()
-    assert isinstance(result, tuple)
-    assert result[1]['query_time_period'] == '30'
+    assert result[1]['query_time_period'] == 30
+
+
+def test_time_param_w():
+    command = InputType.QUERY
+    q = QueryCommandArgParser(command, ['d=w'])
+    result = q.parse()
+    assert result[1]['query_time_period'] == 'w'
+
+
+def test_time_param_m():
+    command = InputType.QUERY
+    q = QueryCommandArgParser(command, ['d=m'])
+    result = q.parse()
+    assert result[1]['query_time_period'] == 'm'
+
+
+def test_time_param_y():
+    command = InputType.QUERY
+    q = QueryCommandArgParser(command, ['d=y'])
+    result = q.parse()
+    assert result[1]['query_time_period'] == 'y'
+
+
+def test_time_param_cy():
+    command = InputType.QUERY
+    q = QueryCommandArgParser(command, ['d=CY'])
+    result = q.parse()
+    assert result[1]['query_time_period'] == 'CY'
+
+
+def test_time_param_at():
+    command = InputType.QUERY
+    q = QueryCommandArgParser(command, ['d=at'])
+    result = q.parse()
+    assert result[1]['query_time_period'] == 'at'
 
 
 def test_project_param(basic_params):
     command = InputType.QUERY
     q = QueryCommandArgParser(command, basic_params)
     result = q.parse()
-    assert result[1]['query_projects'] == '123'
+    assert result[1]['query_projects'] == (123,)
 
 
 def test_chron_param(basic_params):
@@ -50,16 +84,16 @@ def test_empty_params(empty_params):
     command = InputType.QUERY
     q = QueryCommandArgParser(command, empty_params)
     result = q.parse()
-    assert result[1]['query_time_period'] == '0'
-    assert result[1]['query_projects'] == '0'
+    assert result[1]['query_time_period'] == 0
+    assert result[1]['query_projects'] == (0,)
 
 
 def test_no_params():
     command = InputType.QUERY
     q = QueryCommandArgParser(command, [])
     result = q.parse()
-    assert result[1]['query_time_period'] == '0'
-    assert result[1]['query_projects'] == '0'
+    assert result[1]['query_time_period'] == 0
+    assert result[1]['query_projects'] == (0,)
     assert result[1]['query_level'] == 2
 
 
@@ -159,7 +193,7 @@ def test_query_level_hierarchy_lp(multiple_levels_all):
 
 @pytest.fixture
 def additional_args():
-    return ['p=123', 'd=30', '+s', 'fart']
+    return ['p=123', 'd=30', '+s', 'nutmeg']
 
 
 def test_parser_ignores_additional_args(additional_args):

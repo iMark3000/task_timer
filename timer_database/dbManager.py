@@ -111,21 +111,11 @@ class DbUpdate(DbManager):
 
 class DbQueryReport(DbManager):
 
-    def project_session_join(self):
-        conn = self.dbConnect()
-        conn.row_factory = sqlite3.Row
-        cur = conn.cursor()
-        statement = '''SELECT name, start_date, note from 
-        projects INNER JOIN sessions ON projects.id = sessions.project_id'''
-        cur.execute(statement)
-        results = cur.fetchall()
-        return results
-
-    def get_sessions_by_project(self, pid):
+    def get_sessions_by_project(self, pid: tuple):
         conn = sqlite3.connect(self.db_path)
         conn.row_factory = lambda c, r: dict([(col[0], r[idx]) for idx, col in enumerate(c.description)])
         cur = conn.cursor()
-        pid = (pid,)
+        proj = ', '.join(['?'] * len(pid))
         statement = """
         SELECT 
         projects.name AS project,
@@ -140,9 +130,8 @@ class DbQueryReport(DbManager):
         FROM projects 
         INNER JOIN sessions ON sessions.project_id = projects.id 
         INNER JOIN time_log ON time_log.session_id = sessions.id 
-        WHERE projects.id = ?	
-        """
-
+        WHERE projects.id IN ({p})	
+        """.format(p=proj)
         cur.execute(statement, pid)
         results = cur.fetchall()
         conn.close()
