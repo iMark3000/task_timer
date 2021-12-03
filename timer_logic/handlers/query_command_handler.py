@@ -13,7 +13,7 @@ class QueryCommandHandler(Handler):
         pass
 
     def _report_all_time(self):
-
+        pass
 
     def handle(self):
         if self.command.is_chron:
