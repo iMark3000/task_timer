@@ -8,8 +8,9 @@ from command_classes.commands import *
 
 class QueryCommandFactory(CommandAbstractFactory):
 
-    def __init__(self, command_dict: dict):
-        self.command = command_dict['command']
+    def __init__(self, command: InputType, command_args: dict):
+        self.command = command
+        self.command_args = command_args
 
     def create_command(self):
         return QueryCommand(self.command, **self.command_args)

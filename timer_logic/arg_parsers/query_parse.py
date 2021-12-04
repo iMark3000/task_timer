@@ -14,6 +14,7 @@ QUERY_PARAMS = {
 
 NON_INT_TIME_PERIOD_INPUT = ['W', 'M', 'Y', 'CY', 'AT']
 
+
 class QueryCommandArgParser(CommandArgParser):
 
     def __init__(self, command: InputType, command_args: list):
@@ -21,20 +22,13 @@ class QueryCommandArgParser(CommandArgParser):
 
     def _identify_query_params(self):
         for index, arg in enumerate(self.command_args):
-            if arg.lower() == '+chron':
-                _ = self.command_args.pop(index)
-                self._set_chron()
-                return True
-            elif "=" in arg:
+            if "=" in arg:
                 self._set_variable_param(self.command_args.pop(index))
                 return True
             elif "+" in arg:
                 self._set_query_level(self.command_args.pop(index))
                 return True
         return False
-
-    def _set_chron(self):
-        self.arg_dict['chron'] = True
 
     def _set_variable_param(self, arg):
         param, param_value = arg.split('=')
