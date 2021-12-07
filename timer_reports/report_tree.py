@@ -19,7 +19,6 @@ class ReportTree:
         self._root = node
 
     def add_node(self, parent, node: LogNode):
-        self._visit_inner_node(parent, node)
         if isinstance(parent, RootNode):
             project = [x for x in parent.children() if x.project_id == node.project_id]
             if len(project) == 0:
@@ -33,25 +32,16 @@ class ReportTree:
                 self._add_session_node(parent, node)
             else:
                 session = session[0]
-                self._visit_inner_node(session, node)
                 session.add_child(node)
-
-    @staticmethod
-    def _visit_inner_node(inner_node, node):
-        inner_node.compare_start_time(node.startTime)
-        inner_node.compare_end_time(node.endTime)
-        inner_node.add_duration(node.duration)
 
     def _add_project_node(self, node: LogNode):
         new_node = ProjectNode(node.project, node.project_id)
         self.root.add_child(new_node)
-        self._visit_inner_node(new_node, node)
         self._add_session_node(new_node, node)
 
     def _add_session_node(self, parent: ProjectNode, node: LogNode):
         new_node = SessionNode(node.session)
         parent.add_child(new_node)
-        self._visit_inner_node(new_node, node)
         new_node.add_child(node)
 
 

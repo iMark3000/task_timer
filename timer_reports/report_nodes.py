@@ -4,27 +4,6 @@ class RootNode:
 
     def __init__(self):
         self._children = list()
-        self._startTime = None
-        self._endTime = None
-        self._duration = None
-
-    def add_duration(self, duration):
-        if self._duration is None:
-            self._duration = duration
-        else:
-            self._duration += duration
-
-    def compare_start_time(self, time):
-        if self._startTime is None:
-            self._startTime = time
-        elif self._startTime > time:
-            self._startTime = time
-
-    def compare_end_time(self, time):
-        if self._endTime is None:
-            self._endTime = time
-        elif self._endTime < time:
-            self._endTime = time
 
     def add_child(self, node):
         node.parent = self
@@ -42,9 +21,6 @@ class InnerNode:
     def __init__(self):
         self._parent = None
         self._children = list()
-        self._startTime = None
-        self._endTime = None
-        self._duration = None
 
     def __getattr__(self, item):
         if item in self.__dict__.keys():
@@ -66,54 +42,51 @@ class InnerNode:
     def children(self):
         return self._children
 
-    @property
-    def duration(self):
-        return self._duration
-
-    def add_duration(self, duration):
-        if self._duration is None:
-            self._duration = duration
-        else:
-            self._duration += duration
-
-    def compare_start_time(self, time):
-        if self._startTime is None:
-            self._startTime = time
-        elif self._startTime > time:
-            self._startTime = time
-
-    def compare_end_time(self, time):
-        if self._endTime is None:
-            self._endTime = time
-        elif self._endTime < time:
-            self._endTime = time
-
 
 class ProjectNode(InnerNode):
 
-    def __init__(self, project, project_id):
-        self._project = project
+    def __init__(self, project_name, project_id):
+        self._project_name = project_name
         self._project_id = project_id
         super().__init__()
 
     @property
     def project(self):
-        return self._project
+        return self._project_name
 
     @property
     def project_id(self):
         return self._project_id
 
+    @property
+    def session_count(self):
+        return len(self.children)
 
 class SessionNode(InnerNode):
 
-    def __init__(self, session):
+    def __init__(self, session, session_note=None):
         self._session = session
+        self._session_note = session_note
         super().__init__()
 
     @property
     def session(self):
         return self._session
+
+    @property
+    def session_note(self):
+        return self._session_note
+
+    @property
+    def log_count(self):
+        return len(self.children)
+
+    @property
+    def session_duration(self):
+        duration = 0
+        for c in self.children:
+            duration += c.duration
+        return duration
 
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -123,15 +96,15 @@ class LogNode:
 
     def __init__(self, **kwargs):
         self._parent = None
-        self._project: None
+        self._project_name: None
         self._project_id: None
         self._session: None
-        self._logID = None
-        self._startTime = None
-        self._endTime = None
+        self._log_id = None
+        self._start_time = None
+        self._end_time = None
         self._duration = None
-        self._startLogNote = None
-        self._endLogNote = None
+        self._start_log_note = None
+        self._end_log_note = None
 
         for key, value in kwargs.items():
             if key in self.__dict__.keys():
@@ -148,8 +121,8 @@ class LogNode:
         self._parent = node
 
     @property
-    def project(self):
-        return self._project
+    def project_name(self):
+        return self._project_name
 
     @property
     def project_id(self):
@@ -160,25 +133,30 @@ class LogNode:
         return self._session
 
     @property
-    def logID(self):
-        return self._logID
+    def log_id(self):
+        return self._log_id
 
     @property
-    def startTime(self):
-        return self._startTime
+    def start_time(self):
+        return self._start_time
 
     @property
-    def endTime(self):
-        return self._endTime
+    def end_time(self):
+        return self._end_time
 
     @property
     def duration(self):
         return self._duration
 
     @property
-    def startLogNote(self):
-        return self._startLogNote
+    def start_log_note(self):
+        return self._start_log_note
 
     @property
-    def endLogNote(self):
-        return self._endLogNote
+    def end_log_note(self):
+        return self._end_log_note
+
+    @property
+    def session_percentage(self):
+        return self.duration / self.parent.get_duration()
+

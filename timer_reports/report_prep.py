@@ -1,10 +1,6 @@
 from typing import List, Tuple
 from datetime import datetime
 
-from command_classes.commands import QueryCommand
-from report_tree import ReportQueue
-from report_tree import ReportSummary
-from report_tree import ReportQueuePrint
 
 
 class ReportConstructor:
@@ -54,109 +50,6 @@ class ReportConstructor:
         self.process_data()
 
 
-class ReportTemplate:
-
-    def __init__(self, level):
-        self.level = level
-
-    @staticmethod
-    def _log_level_template(self):
-        report_max_width = 165
-        footer_fields = (
-            'TOTAL DURATION:',
-            'COUNT OF PROJECTS:',
-            'AVE TIME PER: PROJECT:',
-            'COUNT OF SESSIONS:',
-            'AVE TIME PER SESSION:',
-            "COUNT OF LOGS:",
-            "AVE TIME PER LOG:"
-        )
-        row_headers = (
-            "PROJECT",
-            "SESSION ID",
-            "LOG ID",
-            "START",
-            "END",
-            "DURATION",
-            "%REPORT",
-            "NOTES"
-        )
-        row_formats = {
-            "LOG ID": {"align": '^', "width": .076},
-            "START": {"align": "^", "width": .169},
-            "END": {"align": '^', "width": .169},
-            "DURATION": {"align": '^', "width": .135},
-            "%SESSION": {"align": '^', "width": .118},
-            "%PROJECT": {"align": '^', "width": .118},
-            "NOTES": {"align": '<'}
-        }
-        return {'report_max_width': report_max_width, 'footer_fields': footer_fields,
-                'row_headers': row_headers,'row_formats': row_formats}
-
-    @staticmethod
-    def _session_level_template(self):
-        report_max_width = 135
-        footer_fields = (
-            'TOTAL DURATION:',
-            'COUNT OF PROJECTS:',
-            'AVE TIME PER: PROJECT:',
-            'COUNT OF SESSIONS:',
-            'AVE TIME PER SESSION:'
-        )
-        row_headers = (
-            "SESSION ID",
-            "DURATION",
-            '%PROJECT',
-            "NOTES"
-        )
-        row_formats = {
-            "SESSION ID": {"align": '^', "width": 0.135},
-            "DURATION": {"align": '^', "width": 0.237},
-            "%PROJECT": {"align": '^', "width": 0.16},
-            "NOTES": {"align": '<'}
-        }
-        return {'report_max_width': report_max_width, 'footer_fields': footer_fields,
-                'row_headers': row_headers, 'row_formats': row_formats}
-
-    @staticmethod
-    def _project_level_template():
-        report_max_width = 118
-        footer_fields = (
-            "TOTAL DURATION",
-            "COUNT OF PROJECTS",
-            "AVE TIME PER PROJECT",
-            "COUNT OF LOGS",
-            "AVE TIME PER LOG"
-        )
-        row_headers = (
-            "LOG ID",
-            "START",
-            "END",
-            "DURATION",
-            "%%SESSION",
-            "%PROJECT",
-            "NOTES"
-        )
-        row_formats = {
-            "PROJECT": {"align": '^', "width": 0.076},
-            "SESSION ID": {"align": '^', "width": 0.135},
-            "LOG ID": {"align": '^', "width": 0.101},
-            "START": {"align": '^', "width": 0.152},
-            "END": {"align": '^', "width": 0.161},
-            "DURATION": {"align": '^', "width": 0.152},
-            "%REPORT": {"align": '^', "width": 0.118},
-            "NOTES": {"align": '<'}
-        }
-        return {'report_max_width': report_max_width, 'footer_fields': footer_fields,
-                'row_headers': row_headers, 'row_formats': row_formats}
-
-    def fetch_template(self):
-        if self.level == 0:
-            return self._project_level_template()
-        elif self.level == 1:
-            return self._session_level_template()
-        elif self.level == 2:
-            return self._log_level_template()
 
 
 """
