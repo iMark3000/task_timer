@@ -11,9 +11,10 @@ class ReportFormatTemplate:
 
     @staticmethod
     def _log_level_template():
+        non_note_col_width_percent = .79
         non_note_col_max_width = 135
         report_header_fields = {
-            'reporting_on ': {"align": '<', 'end_char': '|'},
+            'reporting_on': {"align": '<', 'end_char': '|'},
             'reporting_period': {"align": '<', 'end_char': '|'},
         }
         report_footer_fields = {
@@ -35,16 +36,17 @@ class ReportFormatTemplate:
             'average_session_time:': {"align": '<'},
         }
         row_formats = {
-            "log_id": {"align": '^', "width": .086},
-            "start_time": {"align": "^", "width": .17},
-            "end_time": {"align": '^', "width": .17},
-            "duration": {"align": '^', "width": .15},
-            "session_percentage": {"align": '^', "width": .11},
-            "project_percentage": {"align": '^', "width": .11},
+            "log_id": {"align": '^', "width_%": .095, "width": 0},
+            "start_time": {"align": "^", "width_%": .22, "width": 0},
+            "end_time": {"align": '^', "width_%": .21, "width": 0},
+            "duration": {"align": '^', "width_%": .19, "width": 0},
+            "session_percentage": {"align": '^', "width_%": .13, "width": 0},
+            "project_percentage": {"align": '^', "width_%": .13, "width": 0},
             "start_log_note": {"align": '<'},
             "end_log_note": {"align": '<'}
         }
         return {'non_note_col_max_width': non_note_col_max_width,
+                "non_note_col_width_percent": non_note_col_width_percent,
                 "report_formats": {
                     "header_fields": report_header_fields,
                     "footer_fields": report_footer_fields},
@@ -56,6 +58,7 @@ class ReportFormatTemplate:
 
     @staticmethod
     def _session_level_template():
+        non_note_col_width_percent = .51
         non_note_col_max_width = 84
         report_header_fields = {
             'reporting_on ': {"align": '<', 'end_char': '|'},
@@ -77,13 +80,14 @@ class ReportFormatTemplate:
             'average_session_time:': {"align": '<'},
         }
         row_formats = {
-            "session": {"align": '^', "width": 0.135},
-            "log_count": {"align": '^', "width": 0.135},
-            "duration": {"align": '^', "width": 0.147},
-            "project_percentage": {"align": '^', "width": 0.127},
+            "session": {"align": '^', "width_%": 0.25, "width": 0},
+            "log_count": {"align": '^', "width_%": 0.25, "width": 0},
+            "duration": {"align": '^', "width_%": 0.3, "width": 0},
+            "project_percentage": {"align": '^', "width_%": 0.26, "width": 0},
             "session_note": {"align": '<'}
         }
         return {'non_note_col_max_width': non_note_col_max_width,
+                "non_note_col_width_percent": non_note_col_width_percent,
                 "report_formats": {
                     "header_fields": report_header_fields,
                     "footer_fields": report_footer_fields},
@@ -95,6 +99,7 @@ class ReportFormatTemplate:
 
     @staticmethod
     def _project_level_template():
+        non_note_col_width_percent = .88
         non_note_col_max_width = 131
         report_header_fields = {
             'reporting_on ': {"align": '<', 'end_char': '|'},
@@ -108,17 +113,18 @@ class ReportFormatTemplate:
             "average_log_time:": {"align": '<', 'end_char': '|'}
         }
         row_formats = {
-            "project_name": {"align": '^', "width": 0.076},
-            "session": {"align": '^', "width": 0.135},
-            "log_id": {"align": '^', "width": .101},
-            "start_time": {"align": "^", "width": .152},
-            "end_time": {"align": '^', "width": .161},
-            "duration": {"align": '^', "width": .152},
-            "project_percentage": {"align": '^', "width": .118},
+            "project_name": {"align": '^', "width_%": 0.087, "width": 0},
+            "session": {"align": '^', "width_%": 0.145, "width": 0},
+            "log_id": {"align": '^', "width_%": .106, "width": 0},
+            "start_time": {"align": "^", "width_%": .174, "width": 0},
+            "end_time": {"align": '^', "width_%": .174, "width": 0},
+            "duration": {"align": '^', "width_%": .184, "width": 0},
+            "report_percentage": {"align": '^', "width_%": .135, "width": 0},
             "start_log_note": {"align": '<'},
             "end_log_note": {"align": '<'}
         }
         return {"non_note_col_max_width": non_note_col_max_width,
+                "non_note_col_width_percent": non_note_col_width_percent,
                 "report_formats": {
                     "header_fields": report_header_fields,
                     "footer_fields": report_footer_fields},
@@ -141,7 +147,9 @@ class ReportFormatCreator:
     def __init__(self, template: dict):
         self.report_width = 118
         self.non_note_col_max_width = template["non_note_col_max_width"]
+        self._non_note_col_width_percent = template["non_note_col_width_percent"]
         self.non_note_col_width = None
+        self.non_note_col_width_sum = 0
         self.row_format = template["row_formats"]
         self.report_header_footer = template["report_formats"]
         self.section_header_footer = template["section_formats"]
@@ -158,37 +166,37 @@ class ReportFormatCreator:
             self.report_width = width
 
     # For Rows
-    def _calculate_non_note_column_width(self, width):
-        sum_col_width = 0
-        for row in self.row_format.items():
-            if 'width' in row.keys():
-                row["width"] = floor(row["width"] * width)
-                sum_col_width += row["width"]
-        self.non_note_col_width = sum_col_width
-
-    def _check_col_width_against_max(self):
+    def _set_non_note_column_width(self):
+        self.non_note_col_width = floor(self.report_width * self._non_note_col_width_percent)
         if self.non_note_col_width > self.non_note_col_max_width:
-            self._calculate_non_note_column_width(self.non_note_col_max_width)
+            self.non_note_col_width = self.non_note_col_max_width
+
+    def _calculate_widths_for_non_note_columns(self):
+        for row, attr in self.row_format.items():
+            for k, v in attr.items():
+                if k == 'width_%':
+                    width = floor(attr["width_%"] * self.non_note_col_width)
+                    attr["width"] = floor(attr["width_%"] * self.non_note_col_width)
+                    self.non_note_col_width_sum += width
 
     def _calculate_note_column_width(self):
         note_fields = ["start_log_note", "end_log_note", "session_note"]
-        note_width = self.report_width - self.non_note_col_width
-        for row, value in self.row_format.items():
-            for v in value.keys():
-                if v in note_fields:
-                    value[v].update({"width": note_width})
+        note_width = self.report_width - self.non_note_col_width_sum
+        for row, attr in self.row_format.items():
+            if row in note_fields:
+                self.row_format[row].update({"width": note_width})
 
-    def _calculate_end_note_column_formatting(self):
+    def _calculate_end_note_column_padding(self):
         if 'end_log_note' in self.row_format.keys():
-            self.row_format["end_log_note"].update({"buffer": self.non_note_col_width})
+            self.row_format["end_log_note"].update({"padding": self.non_note_col_width_sum})
 
     # For Report Header and Footer
     def _calculate_report_header_footer_width(self):
         width = self.report_width - 2
-        for k, v in self.report_header_footer["report_header_fields"].items():
-            k["width"] = width
-        for k, v in self.report_header_footer["report_footer_fields"].items():
-            k["width"] = width
+        for field, attr in self.report_header_footer["header_fields"].items():
+            self.report_header_footer["header_fields"][field].update({"width": width})
+        for field, attr in self.report_header_footer["footer_fields"].items():
+            self.report_header_footer["footer_fields"][field].update({"width": width})
 
     # Just project_name needs the width
     def _calculate_section_header_width(self):
@@ -199,10 +207,13 @@ class ReportFormatCreator:
     def generate_format_dict(self):
         terminal_width = self._get_terminal_width()
         self._set_report_width(terminal_width)
-        # Maybe not the best way to do this
-        self._calculate_non_note_column_width(self.report_width)
-        self._check_col_width_against_max()
+        self._set_non_note_column_width()
+        self._calculate_widths_for_non_note_columns()
         self._calculate_note_column_width()
-        self._calculate_end_note_column_formatting()
+        self._calculate_end_note_column_padding()
         self._calculate_report_header_footer_width()
         self._calculate_section_header_width()
+
+    def get_formats(self):
+        return {"report": self.report_header_footer, "section": self.section_header_footer,
+                "row": self.row_format}
