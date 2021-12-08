@@ -1,6 +1,6 @@
 import pytest
 
-from timer_reports.report_prep import report_prep
+from timer_reports.report import report_prep
 from command_classes.commands import QueryCommand
 from utils.command_enums import InputType
 

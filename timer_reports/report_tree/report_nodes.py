@@ -2,7 +2,9 @@
 
 class RootNode:
 
-    def __init__(self):
+    def __init__(self, reporting_on, reporting_period):
+        self.reporting_on = reporting_on
+        self.reporting_period = reporting_period
         self._children = list()
 
     def add_child(self, node):
@@ -61,6 +63,7 @@ class ProjectNode(InnerNode):
     @property
     def session_count(self):
         return len(self.children)
+
 
 class SessionNode(InnerNode):
 
