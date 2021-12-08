@@ -31,9 +31,9 @@ class PrinterObjectFactory:
         self.row_fields = None
         self.row_formats = None
 
-    def get_formats(self):
+    def get_formats(self) -> dict:
         format_template = ReportFormatTemplate(self.report_level).fetch_template()
-        return ReportFormatCreator(format_template)
+        return ReportFormatCreator(format_template).get_formats()
 
     def set_report_formats(self, formats):
         self.report_heading_fields = list(formats["header_fields"].keys())
@@ -59,19 +59,19 @@ class PrinterObjectFactory:
         self.set_row_formats(formatting['row'])
 
     def create_report_header(self, node):
-        pass
+        return ReportHeader(node, self.report_heading_fields, self.report_heading_formats)
 
     def create_report_footer(self, node):
-        pass
+        return ReportFooter(node, self.report_footer_fields, self.report_footer_formats)
 
     def create_section_header(self, node):
-        pass
+        return SectionHeader(node, self.section_heading_fields, self.section_heading_formats)
 
     def create_section_footer(self, node):
-        pass
+        return SectionFooter(node, self.section_footer_fields, self.section_footer_formats)
 
     def create_row_header(self, node):
-        pass
+        return RowHeaders(node, self.row_fields, self.row_formats)
 
     def create_row(self, node):
-        pass
+        return Row(node, self.row_fields, self.row_formats)

@@ -3,7 +3,7 @@ from abc import ABC, abstractmethod
 
 class PrinterObject(ABC):
 
-    def __init__(self, node, formats):
+    def __init__(self, node, fields, formats):
         self.node = node
         self.formats = formats
         pass
@@ -15,8 +15,8 @@ class PrinterObject(ABC):
 
 class ReportHeader(PrinterObject):
 
-    def __init__(self, node, formats):
-        super().__init__(node, formats)
+    def __init__(self, node, fields, formats):
+        super().__init__(node, fields, formats)
 
     def print_lines(self):
         pass
@@ -24,8 +24,8 @@ class ReportHeader(PrinterObject):
 
 class ReportFooter(PrinterObject):
 
-    def __init__(self, node, formats):
-        super().__init__(node, formats)
+    def __init__(self, node, fields, formats):
+        super().__init__(node, fields, formats)
 
     def print_lines(self):
         pass
@@ -33,8 +33,8 @@ class ReportFooter(PrinterObject):
 
 class SectionHeader(PrinterObject):
 
-    def __init__(self, node, formats):
-        super().__init__(node, formats)
+    def __init__(self, node, fields, formats):
+        super().__init__(node, fields, formats)
 
     def print_lines(self):
         pass
@@ -42,8 +42,8 @@ class SectionHeader(PrinterObject):
 
 class SectionFooter(PrinterObject):
 
-    def __init__(self, node, formats):
-        super().__init__(node, formats)
+    def __init__(self, node, fields, formats):
+        super().__init__(node, fields, formats)
 
     def print_lines(self):
         pass
@@ -51,8 +51,8 @@ class SectionFooter(PrinterObject):
 
 class RowHeaders(PrinterObject):
 
-    def __init__(self, node, formats):
-        super().__init__(node, formats)
+    def __init__(self, node, fields, formats):
+        super().__init__(node, fields, formats)
 
     def print_lines(self):
         pass
@@ -60,8 +60,8 @@ class RowHeaders(PrinterObject):
 
 class Row(PrinterObject):
 
-    def __init__(self, node, formats):
-        super().__init__(node, formats)
+    def __init__(self, node, fields, formats):
+        super().__init__(node, fields, formats)
 
     def print_lines(self):
         pass
