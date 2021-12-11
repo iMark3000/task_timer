@@ -5,12 +5,24 @@ class PrinterObject(ABC):
 
     def __init__(self, node, fields, formats):
         self.node = node
+        self.fields = fields
         self.formats = formats
-        pass
 
     @abstractmethod
     def print_lines(self):
-        pass
+
+        first_line = '|' + '{0:{fill}{align}{length}}'.format('', fill='*', align='^', length=width) + '|'
+        print(first_line)
+
+        for key, value in fields.items():
+            if 'count' in key:
+                print('|' + '{0:{fill}{align}{length}}'.format('', fill='', align='<', length=width) + '|')
+            field = f'{key}: {value}'
+            field_formatted = '{0:{fill}{align}{length}}'.format(field, fill='', align='<', length=width)
+            line = '|' + field_formatted + '|'
+            print(line)
+
+        print('|' + '{0:{fill}{align}{length}}'.format('', fill='*', align='^', length=width) + '|')
 
 
 class ReportHeader(PrinterObject):
