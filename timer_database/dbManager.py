@@ -120,7 +120,7 @@ class DbQueryReport(DbManager):
         SELECT 
         projects.name AS project_name,
         projects.id AS project_id,
-        sessions.id AS session, 
+        sessions.id AS session_id, 
         sessions.note AS session_note,
         time_log.id AS log_id, 
         time_log.start_timestamp AS start_time, 

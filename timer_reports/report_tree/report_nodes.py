@@ -2,7 +2,7 @@
 
 class RootNode:
 
-    def __init__(self, reporting_on, reporting_period):
+    def __init__(self, reporting_on: str, reporting_period: str):
         self.reporting_on = reporting_on
         self.reporting_period = reporting_period
         self._children = list()
@@ -15,6 +15,7 @@ class RootNode:
     def children(self):
         return self._children
 
+
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
@@ -23,10 +24,7 @@ class InnerNode:
     def __init__(self):
         self._parent = None
         self._children = list()
-
-    def __getattr__(self, item):
-        if item in self.__dict__.keys():
-            return self.__dict__[item]
+        self._duration = None
 
     def add_child(self, node):
         node.parent = self
@@ -37,12 +35,23 @@ class InnerNode:
         return self._parent
 
     @parent.setter
-    def parent(self, node):
-        self._parent = node
+    def parent(self, p):
+        self._parent = p
 
     @property
     def children(self):
         return self._children
+
+    @property
+    def duration(self):
+        return self._duration
+
+    @duration.setter
+    def duration(self, d):
+        if self._duration is None:
+            self._duration = d
+        else:
+            self._duration += d
 
 
 class ProjectNode(InnerNode):
@@ -53,7 +62,7 @@ class ProjectNode(InnerNode):
         super().__init__()
 
     @property
-    def project(self):
+    def project_name(self):
         return self._project_name
 
     @property
@@ -64,17 +73,20 @@ class ProjectNode(InnerNode):
     def session_count(self):
         return len(self.children)
 
+    def __str__(self):
+        return f'{self.project_name} {self.project_id}'
+
 
 class SessionNode(InnerNode):
 
-    def __init__(self, session, session_note=None):
-        self._session = session
+    def __init__(self, session_id, session_note=None):
+        self._session_id = session_id
         self._session_note = session_note
         super().__init__()
 
     @property
-    def session(self):
-        return self._session
+    def session_id(self):
+        return self._session_id
 
     @property
     def session_note(self):
@@ -84,12 +96,8 @@ class SessionNode(InnerNode):
     def log_count(self):
         return len(self.children)
 
-    @property
-    def session_duration(self):
-        duration = 0
-        for c in self.children:
-            duration += c.duration
-        return duration
+    def __str__(self):
+        return f'Session: {self.session_id}'
 
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -99,9 +107,9 @@ class LogNode:
 
     def __init__(self, **kwargs):
         self._parent = None
-        self._project_name: None
-        self._project_id: None
-        self._session: None
+        self._project_name = None
+        self._project_id = None
+        self._session_id = None
         self._log_id = None
         self._start_time = None
         self._end_time = None
@@ -110,18 +118,8 @@ class LogNode:
         self._end_log_note = None
 
         for key, value in kwargs.items():
-            if key in self.__dict__.keys():
-                self.__dict__[key] = value
-
-    def __getattr__(self, item):
-        if item in self.__dict__.keys():
-            return self.__dict__[item]
-
-    def __setattr__(self, key, value):
-        self.__dict__[key] = value
-
-    def set_parent(self, node: InnerNode):
-        self._parent = node
+            if f'_{key}' in self.__dict__.keys():
+                self.__dict__[f'_{key}'] = value
 
     @property
     def project_name(self):
@@ -132,8 +130,8 @@ class LogNode:
         return self._project_id
 
     @property
-    def session(self):
-        return self._session
+    def session_id(self):
+        return self._session_id
 
     @property
     def log_id(self):
@@ -160,6 +158,12 @@ class LogNode:
         return self._end_log_note
 
     @property
-    def session_percentage(self):
-        return self.duration / self.parent.get_duration()
+    def parent(self):
+        return self._parent
 
+    @parent.setter
+    def parent(self, p):
+        self._parent = p
+
+    def __str__(self):
+        return f'LOG: {self.log_id}'

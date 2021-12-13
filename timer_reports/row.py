@@ -4,16 +4,20 @@ from row_fields import SesionField
 from row_fields import ProjectField
 from row_fields import DurationField
 from row_fields import CountField
+from row_fields import IDField
 
 
 FIELD_MAPPING = {
     'end_log_note': ['NOTE', NoteField],
     'end_time': ['END TIME', TimeField],
     'session_note': ['NOTE', NoteField],
-    'session': ['SESSION', SesionField],
+    'session_id': ['SESSION', IDField], # get rid of session
     'start_log_note': ['NOTE', NoteField],
     'start_time': ['START TIME', TimeField],
-    'project_name': ['PROJECT NAME', ProjectField]
+    'project_name': ['PROJECT NAME', ProjectField],
+    'duration': ['DURATION', DurationField],
+    'log_id': ['LOG ID', IDField],
+    'project_id': ['PROJECT ID', IDField]
 }
 
 
@@ -65,7 +69,6 @@ class Row:
         line = ''
         for index, header in enumerate(self.column_headers):
             formatted_value = self.row_field_objects[index].print_field(header)
-            # print(formatted_value)
             line += formatted_value[:-1] + '|'
         print(line)
         print('{0:{fill}{align}{length}}'.format('', fill='-', align='<', length=self.report_width))

@@ -11,23 +11,25 @@ class ReportTree:
         self._root = None
 
     @property
-    def root(self):
+    def root(self) -> RootNode:
         return self._root
 
     @root.setter
     def root(self, node: RootNode):
         self._root = node
 
+    #  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~`
+
     def add_node(self, parent, node: LogNode):
         if isinstance(parent, RootNode):
-            project = [x for x in parent.children() if x.project_id == node.project_id]
+            project = [x for x in parent.children if x.project_id == node.project_id]
             if len(project) == 0:
                 self._add_project_node(node)
             else:
                 project = project[0]
                 self.add_node(project, node)
         elif isinstance(parent, ProjectNode):
-            session = [x for x in parent.children() if x.session == node.session]
+            session = [x for x in parent.children if x.session_id == node.session_id]
             if len(session) == 0:
                 self._add_session_node(parent, node)
             else:
@@ -35,12 +37,12 @@ class ReportTree:
                 session.add_child(node)
 
     def _add_project_node(self, node: LogNode):
-        new_node = ProjectNode(node.project, node.project_id)
+        new_node = ProjectNode(node.project_name, node.project_id)
         self.root.add_child(new_node)
         self._add_session_node(new_node, node)
 
     @staticmethod
     def _add_session_node(parent: ProjectNode, node: LogNode):
-        new_node = SessionNode(node.session)
+        new_node = SessionNode(node.session_id)
         parent.add_child(new_node)
         new_node.add_child(node)

@@ -1,11 +1,34 @@
 
 
+class Field:
+
+    def __init__(self):
+        self.WIDTH_PERCENT = None
+        self.MIN_WIDTH = None
+        self._field_width = None
+
+    @property
+    def field_width(self):
+        return self._field_width
+
+    def set_field_width(self, width):
+        if self.WIDTH_PERCENT * width <= self.MIN_WIDTH:
+            self._field_width = self.MIN_WIDTH
+        else:
+            self._field_width = self.WIDTH_PERCENT * width
+
+    def print_field(self, value):
+        return '{0:{fill}{align}{length}}'.format(value, fill='', align='^', length=self._field_width)
+
 
 class ProjectField:
+
     MIN_WIDTH = 15
     WIDTH_PERCENT = .20
 
     def __init__(self):
+        self.WIDTH_PERCENT = None
+        self.MIN_WIDTH = None
         self._field_width = None
 
     @property
@@ -27,6 +50,8 @@ class TimeField:
     WIDTH_PERCENT = .33
 
     def __init__(self):
+        self.WIDTH_PERCENT = None
+        self.MIN_WIDTH = None
         self._field_width = None
 
     @property
@@ -43,11 +68,13 @@ class TimeField:
         return '{0:{fill}{align}{length}}'.format(value, fill='', align='^', length=self._field_width)
 
 
-class SesionField:
+class IDField:
     MIN_WIDTH = 10
     WIDTH_PERCENT = .15
 
     def __init__(self):
+        self.WIDTH_PERCENT = None
+        self.MIN_WIDTH = None
         self._field_width = None
 
     @property
