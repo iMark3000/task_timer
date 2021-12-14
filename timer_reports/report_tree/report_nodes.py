@@ -6,6 +6,7 @@ class RootNode:
         self.reporting_on = reporting_on
         self.reporting_period = reporting_period
         self._children = list()
+        self._duration = None
 
     def add_child(self, node):
         node.parent = self
@@ -14,6 +15,17 @@ class RootNode:
     @property
     def children(self):
         return self._children
+
+    @property
+    def duration(self):
+        return self._duration
+
+    @duration.setter
+    def duration(self, d):
+        if self._duration is None:
+            self._duration = d
+        else:
+            self._duration += d
 
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

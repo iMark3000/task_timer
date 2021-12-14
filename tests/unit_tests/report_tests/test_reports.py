@@ -1,37 +1,125 @@
-import pytest
+from datetime import timedelta
 
-from timer_reports.report import report_prep
-from command_classes.commands import QueryCommand
-from utils.command_enums import InputType
+import pytest
+from pprint import pprint
+
+from timer_reports.report_tree.report_tree import ReportTree
+from timer_reports.report import ReportConstructor
+from timer_reports.report import ReportTreeCreator
+from timer_reports.report_tree.report_nodes import ProjectNode
+from timer_reports.report_tree.report_nodes import SessionNode
+from timer_reports.report_tree.report_nodes import LogNode
+
 
 
 @pytest.fixture
 def query_data():
     return [
-        {'project': 'cat', 'project_id': 3, 'session': 3, 'note': None, 'logID': 5, 'startTime': '2021-11-17 11:07:11',
-         'endTime': '2021-11-17 11:07:37.923870', 'startLogNote': None, 'endLogNote': None},
-        {'project': 'cat', 'project_id': 3, 'session': 4, 'note': None, 'logID': 6, 'startTime': '2021-11-17 11:26:58',
-         'endTime': '2021-11-17 11:27:10.419275', 'startLogNote': 'Testing this shit out',
-         'endLogNote': 'How do you handle this?'},
-        {'project': 'cat', 'project_id': 3, 'session': 5, 'note': None, 'logID': 7, 'startTime': '2021-11-17 11:20:00',
-         'endTime': '2021-11-17 11:34:00', 'startLogNote': None, 'endLogNote': None},
-        {'project': 'cat', 'project_id': 3, 'session': 5, 'note': None, 'logID': 8, 'startTime': '2021-11-17 11:40:00',
-         'endTime': '2021-11-17 11:55:42.765024', 'startLogNote': None, 'endLogNote': None},
-        {'project': 'cat', 'project_id': 3, 'session': 6, 'note': None, 'logID': 9, 'startTime': '2021-11-17 11:20:00',
-         'endTime': '2021-11-17 11:34:00', 'startLogNote': None, 'endLogNote': None},
-        {'project': 'cat', 'project_id': 3, 'session': 6, 'note': None, 'logID': 10, 'startTime': '2021-11-17 11:40:00',
-         'endTime': '2021-11-17 12:08:42.438854', 'startLogNote': None, 'endLogNote': None},
-        {'project': 'cadabada', 'project_id': 4, 'session': 8, 'note': None, 'logID': 12,
-         'startTime': '2021-11-17 10:23:00', 'endTime': '2021-11-17 11:05:00', 'startLogNote': None,
-         'endLogNote': None},
-        {'project': 'cadabada', 'project_id': 4, 'session': 8, 'note': None, 'logID': 13,
-         'startTime': '2021-11-17 11:05:00', 'endTime': '2021-11-17 12:11:02.103525', 'startLogNote': None,
-         'endLogNote': None}]
+        {'project_name': 'cat',
+         'project_id': 3,
+         'session_id': 3,
+         'session_note': None,
+         'log_id': 5,
+         'start_time': '2021-11-17 11:07:11',
+         'end_time': '2021-11-17 11:07:37.923870',
+         'start_log_note': None,
+         'end_log_note': None},
+        {'project_name': 'cat',
+         'project_id': 3,
+         'session_id': 4,
+         'session_note': None,
+         'log_id': 6,
+         'start_time': '2021-11-17 11:26:58',
+         'end_time': '2021-11-17 11:27:10.419275',
+         'start_log_note': 'Testing this out',
+         'end_log_note': 'How do you handle this?'},
+        {'project_name': 'cat',
+         'project_id': 3,
+         'session_id': 5,
+         'session_note': None,
+         'log_id': 7,
+         'start_time': '2021-11-17 11:20:00',
+         'end_time': '2021-11-17 11:34:00',
+         'start_log_note': None,
+         'end_log_note': None},
+        {'project_name': 'cat',
+         'project_id': 3,
+         'session_id': 5,
+         'session_note': None,
+         'log_id': 8,
+         'start_time': '2021-11-17 11:40:00',
+         'end_time': '2021-11-17 11:55:42.765024',
+         'start_log_note': None,
+         'end_log_note': None},
+        {'project_name': 'cat',
+         'project_id': 3,
+         'session_id': 6,
+         'session_note': None,
+         'log_id': 9,
+         'start_time': '2021-11-17 11:20:00',
+         'end_time': '2021-11-17 11:34:00',
+         'start_log_note': None,
+         'end_log_note': None},
+        {'project_name': 'cat',
+         'project_id': 3,
+         'session_id': 6,
+         'session_note': None,
+         'log_id': 10,
+         'start_time': '2021-11-17 11:40:00',
+         'end_time': '2021-11-17 12:08:42.438854',
+         'start_log_note': None,
+         'end_log_note': None},
+        {'project_name': 'cadabada',
+         'project_id': 4,
+         'session_id': 8,
+         'session_note': None,
+         'log_id': 12,
+         'start_time': '2021-11-17 10:23:00',
+         'end_time': '2021-11-17 11:05:00',
+         'start_log_note': None,
+         'end_log_note': None},
+        {'project_name': 'cadabada',
+         'project_id': 4,
+         'session_id': 8,
+         'session_note': None,
+         'log_id': 13,
+         'start_time': '2021-11-17 11:05:00',
+         'end_time': '2021-11-17 12:11:02.103525',
+         'start_log_note': None,
+         'end_log_note': None}]
 
 
-def test_report_prep(query_data):
-    args = {'chron': True}
-    command = QueryCommand(InputType.QUERY, **args)
-    result = report_prep(command, query_data)
-    assert len(result) == 8
+@pytest.fixture
+def create_report_constructor(query_data):
+    dates = ('11/15/2021', '11/22/2021')
+    p_ids = ('4', '3')
+    return ReportConstructor(1, dates, p_ids, query_data)
 
+
+def test_report_constructor(create_report_constructor):
+    report = create_report_constructor
+    report.prep_report()
+    report_data = report.export_data_for_tree()
+    assert len(report_data) == 3
+    assert len(report_data["report_data_for_tree"]) == 8
+    pprint(report_data)
+
+
+def test_report_tree_creator(create_report_constructor):
+    report = create_report_constructor
+    report.prep_report()
+    report_data = report.export_data_for_tree()
+    tree_constructor = ReportTreeCreator(**report_data)
+    tree_constructor.build_tree()
+    tree = tree_constructor.get_tree()
+    assert tree.root.reporting_on == 'cat & cadabada'
+    assert tree.root.reporting_period == '11/15/2021 to 11/22/2021'
+    assert len(tree.root.children) == 2
+    assert tree.root.duration == timedelta(seconds=10864)
+    # checking structure
+    for child in tree.root.children:
+        assert isinstance(child, ProjectNode)
+        for c in child.children:
+            assert isinstance(c, SessionNode)
+            for leaf in c.children:
+                assert isinstance(leaf, LogNode)

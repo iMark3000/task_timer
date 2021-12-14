@@ -6,44 +6,40 @@ from .report_tree.report_nodes import RootNode
 from .report_tree.report_nodes import LogNode
 
 
-class Report:
-    """Container for all of the parts needed to put together a report"""
-    def __init__(self):
-        self.report_constrtutor = None
-        self.report_tree = None
-        self.report_formats = None
-        self.report_print_queue = None
-
-
 class ReportConstructor:
 
-    def __init__(self, report_level: int, dates: Tuple[str], project_ids: List[str], query_data: List[dict]):
+    def __init__(self, report_level: int, dates: Tuple[str], project_ids: Tuple[str], query_data: List[dict]):
         self.report_level = report_level
         self.project_ids = project_ids
         self.project_names = None
         self.report_dates = dates[0] + " to " + dates[1]
         self.query_data = query_data
 
-    def _set_names(self):
+    def _set_report_name(self):
         """Setting names for Root Node"""
         name_list = list()
         if len(self.project_ids) < 3:
             for d in self.query_data:
-                if d["project"] not in name_list:
-                    name_list.append(d["project"])
+                if d["project_name"] not in name_list:
+                    name_list.append(d["project_name"])
                     if len(name_list) == 2:
+                        self.project_names = ' & '.join(name_list)
                         break
-            self.project_names = ' & '.join(name_list)
+            if len(name_list) < 2:
+                self.project_names = name_list[0]
         else:
             self.project_names = 'MULTIPLE PROJECTS'
 
-    def _get_durations(self):
+    def _convert_times_to_datetime(self):
         """Calculates Durations for LogNodes"""
         for d in self.query_data:
-            d['startTime'] = self._handle_microseconds(d['startTime'])
-            d['endTime'] = self._handle_microseconds(d['endTime'])
-            d['duration'] = self._convert_to_datetime(d['endTime']) - self._convert_to_datetime(d['startTime'])
-        self.query_data.sort(key=lambda x: (x['project_id'], x['session'], x['logID']))
+            d['start_time'] = self._convert_to_datetime(self._handle_microseconds(d['start_time']))
+            d['end_time'] = self._convert_to_datetime(self._handle_microseconds(d['end_time']))
+
+    def _calculate_durations(self):
+        """Calculates Durations for LogNodes"""
+        for d in self.query_data:
+            d['duration'] = d['end_time'] - d['start_time']
 
     @staticmethod
     def _handle_microseconds(tstamp):
@@ -60,8 +56,9 @@ class ReportConstructor:
         return datetime.strptime(time, _format)
 
     def prep_report(self):
-        self._set_names()
-        self._get_durations()
+        self._set_report_name()
+        self._convert_times_to_datetime()
+        self._calculate_durations()
 
     def export_data_for_tree(self):
         export = {
@@ -71,7 +68,7 @@ class ReportConstructor:
         }
         return export
 
-    def get_report_leve(self):
+    def get_report_level(self):
         return self.report_level
 
 

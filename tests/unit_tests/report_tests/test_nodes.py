@@ -3,8 +3,6 @@ from datetime import datetime
 
 import pytest
 
-from timer_reports.report_tree.report_tree import ReportTree
-from timer_reports.report_tree.report_nodes import RootNode
 from timer_reports.report_tree.report_nodes import ProjectNode
 from timer_reports.report_tree.report_nodes import SessionNode
 from timer_reports.report_tree.report_nodes import LogNode
@@ -45,7 +43,6 @@ def test_project_node(node_data):
     assert len(node.children) == 0
     node.duration = timedelta(hours=3, minutes=10)
     assert node.duration == timedelta(hours=6, minutes=20)
-    print(f'\n{node}')
 
 
 def test_session_node(node_data):
@@ -56,7 +53,6 @@ def test_session_node(node_data):
     assert len(node.children) == 0
     node.duration = timedelta(hours=3, minutes=10)
     assert node.duration == timedelta(hours=6, minutes=20)
-    print(f'\n{node}')
 
 
 def test_log_node(node_data):
@@ -70,7 +66,6 @@ def test_log_node(node_data):
     assert node.start_log_note == 'Test note'
     assert node.end_log_note == 'Test note...again'
     assert node.duration == timedelta(hours=3, minutes=10)
-    print(f'\n{node}')
 
 
 def test_session_project_relationship(node_data, project_node):
