@@ -4,7 +4,7 @@ import pytest
 from pprint import pprint
 
 from timer_reports.report_tree.report_tree import ReportTree
-from timer_reports.report import ReportConstructor
+from timer_reports.report import ReportPrep
 from timer_reports.report import ReportTreeCreator
 from timer_reports.report_tree.report_nodes import ProjectNode
 from timer_reports.report_tree.report_nodes import SessionNode
@@ -93,7 +93,7 @@ def query_data():
 def create_report_constructor(query_data):
     dates = ('11/15/2021', '11/22/2021')
     p_ids = ('4', '3')
-    return ReportConstructor(1, dates, p_ids, query_data)
+    return ReportPrep(1, dates, p_ids, query_data)
 
 
 def test_report_constructor(create_report_constructor):

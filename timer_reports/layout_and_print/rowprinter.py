@@ -1,27 +1,8 @@
-from row_fields import NoteField
-from row_fields import TimeField
-from row_fields import SesionField
-from row_fields import ProjectField
-from row_fields import DurationField
-from row_fields import CountField
-from row_fields import IDField
+from report_fields import NoteField
+from report_configuration import FIELD_MAPPING
 
 
-FIELD_MAPPING = {
-    'end_log_note': ['NOTE', NoteField],
-    'end_time': ['END TIME', TimeField],
-    'session_note': ['NOTE', NoteField],
-    'session_id': ['SESSION', IDField], # get rid of session
-    'start_log_note': ['NOTE', NoteField],
-    'start_time': ['START TIME', TimeField],
-    'project_name': ['PROJECT NAME', ProjectField],
-    'duration': ['DURATION', DurationField],
-    'log_id': ['LOG ID', IDField],
-    'project_id': ['PROJECT ID', IDField]
-}
-
-
-class Row:
+class RowPrinter:
 
     def __init__(self, fields, report_width):
         self.row_fields = fields
@@ -47,7 +28,7 @@ class Row:
                     self.row_field_objects.append(field_obj())
 
     def set_non_note_field_widths(self):
-        calculated_column_widths = self.report_width * .50
+        calculated_column_widths = self.report_width * .50 # Todo: This is an  arbitrary number for testing
         for field in self.row_field_objects:
             if not isinstance(field, NoteField):
                 field.set_field_width(calculated_column_widths)

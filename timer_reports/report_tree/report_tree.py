@@ -18,8 +18,6 @@ class ReportTree:
     def root(self, node: RootNode):
         self._root = node
 
-    #  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~`
-
     def add_node(self, parent, node: LogNode):
         parent.duration = node.duration
         if isinstance(parent, RootNode):

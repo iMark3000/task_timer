@@ -99,6 +99,14 @@ class CountField:
     pass
 
 
+class AverageField:
+    pass
+
+
+class PercentField:
+    pass
+
+
 class NoteField:
 
     def __init__(self, end_note=False):
