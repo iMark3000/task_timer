@@ -15,6 +15,7 @@ class SectionPrinter:
         self.footer_field_obj = list()
 
     def set_header_field_names(self):
+        # Sets field names for corresponding header field
         for field in self.header_fields:
             if field in FIELD_MAPPING.keys():
                 header = FIELD_MAPPING[field][0]
@@ -22,6 +23,7 @@ class SectionPrinter:
                     self.header_field_names.append(header)
 
     def set_header_field_objects(self):
+        # Sets appropriate object for each header field
         for field in self.header_fields:
             if field in FIELD_MAPPING.keys():
                 field_obj = FIELD_MAPPING[field][1]
@@ -30,6 +32,7 @@ class SectionPrinter:
                 self.header_field_obj.append(field_obj)
 
     def set_footer_field_names(self):
+        # Sets field names for corresponding footer field
         for field in self.footer_fields:
             if field in FIELD_MAPPING.keys():
                 footer = FIELD_MAPPING[field][0]
@@ -37,6 +40,7 @@ class SectionPrinter:
                     self.footer_field_names.append(footer)
 
     def set_footer_field_objects(self):
+        # Sets appropriate object for each footer field
         for field in self.footer_fields:
             if field in FIELD_MAPPING.keys():
                 field_obj = FIELD_MAPPING[field][1]
@@ -45,9 +49,15 @@ class SectionPrinter:
                 self.footer_field_obj.append(field_obj)
 
     def print_section_header(self, section: Section):
+        """
+        Iterates through the header_fields list and checks if each header is in the Section's data dict keys.
+        If True, then it retrieves the value from dict and relays it to the corresponding header_field_obj
+
+        Primary sections are formatted as full line breaks.
+        """
         for index, field in enumerate(self.header_fields):
             if field in section.section_data.keys():
-                data = section.section_data[field]
+                data = self.header_field_obj[index].print_field(section.section_data[field])
                 if section.is_sub_section():
                     print(f'>>>>{self.header_field_names[index]}: {data}')
                 else:
@@ -55,10 +65,16 @@ class SectionPrinter:
                     print('{0:{fill}{align}{length}}'.format(head, fill='-', align='^', length=self.report_width))
 
     def print_section_foot(self, section: Section):
+        """
+        Iterates through the footer fields and checks if it's in the Section's data dict keys.
+        If True, then it retrieves the value from dict and relays it to the corresponding footer_field_obj
+
+        Sub sections do not have footers.
+        """
         if not section.is_sub_section():
             print('SECTION SUMMARY')
             print('---------------')
-            for key, value in section.section_data.items():
-                if key in self.footer_fields:
-                    field = self._format_field(key)
-                    print(f'{field}: {value}')
+            for index, field in enumerate(self.footer_fields):
+                if field in section.section_data.keys():
+                    data = self.footer_field_obj[index].print_field(section.section_data[field])
+                    print(f'{self.footer_field_names[index]}: {data}')
