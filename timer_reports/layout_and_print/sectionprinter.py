@@ -1,33 +1,64 @@
+from ..report import Section
+from report_configuration import FIELD_MAPPING
+from .report_fields import ValueField
 
-class Section:
 
-    def __init__(self, report_width, **kwargs):
+class SectionPrinter:
+
+    def __init__(self, report_width, header_fields, footer_fields):
         self.report_width = report_width
-        self.head_field = None
-        self.sub_head_field = None
-        self.footer_fields = None
-        for key, value in kwargs.items():
-            if key in self.__dict__.keys():
-                self.__dict__[key] = value
+        self.header_fields = header_fields
+        self.header_field_names = None
+        self.header_field_obj = list()
+        self.footer_fields = footer_fields
+        self.footer_field_names = None
+        self.footer_field_obj = list()
 
-    def print_main_head(self, data):
-        field = self._format_field(self.head_field)
-        head = f' {field} : {data.upper()} '
-        print('{0:{fill}{align}{length}}'.format(head, fill='-', align='^', length=self.report_width))
+    def set_header_field_names(self):
+        for field in self.header_fields:
+            if field in FIELD_MAPPING.keys():
+                header = FIELD_MAPPING[field][0]
+                if header not in self.header_field_names:
+                    self.header_field_names.append(header)
 
-    def print_sub_head(self, data):
-        if self.sub_head_field is not None:
-            field = self._format_field(self.sub_head_field)
-            print(f'>>>>{field}: {data}')
+    def set_header_field_objects(self):
+        for field in self.header_fields:
+            if field in FIELD_MAPPING.keys():
+                field_obj = FIELD_MAPPING[field][1]
+                field_obj = field_obj(row_field=False)
+                field_obj.set_field_width(self.report_width - (len(field) + 2))
+                self.header_field_obj.append(field_obj)
 
-    @staticmethod
-    def _format_field(field):
-        return " ".join([word for word in field.split('_')]).upper()
+    def set_footer_field_names(self):
+        for field in self.footer_fields:
+            if field in FIELD_MAPPING.keys():
+                footer = FIELD_MAPPING[field][0]
+                if footer not in self.footer_field_names:
+                    self.footer_field_names.append(footer)
 
-    def print_section_foot(self, data):
-        print('SECTION SUMMARY')
-        print('---------------')
-        for key, value in data.items():
-            if key in self.footer_fields:
-                field = self._format_field(key)
-                print(f'{field}: {value}')
+    def set_footer_field_objects(self):
+        for field in self.footer_fields:
+            if field in FIELD_MAPPING.keys():
+                field_obj = FIELD_MAPPING[field][1]
+                field_obj = field_obj(row_field=False)
+                field_obj.set_field_width(self.report_width - (len(field) + 2))
+                self.footer_field_obj.append(field_obj)
+
+    def print_section_header(self, section: Section):
+        for index, field in enumerate(self.header_fields):
+            if field in section.section_data.keys():
+                data = section.section_data[field]
+                if section.is_sub_section():
+                    print(f'>>>>{self.header_field_names[index]}: {data}')
+                else:
+                    head = f' {self.header_field_names[index]}: {data.upper()} '
+                    print('{0:{fill}{align}{length}}'.format(head, fill='-', align='^', length=self.report_width))
+
+    def print_section_foot(self, section: Section):
+        if not section.is_sub_section():
+            print('SECTION SUMMARY')
+            print('---------------')
+            for key, value in section.section_data.items():
+                if key in self.footer_fields:
+                    field = self._format_field(key)
+                    print(f'{field}: {value}')

@@ -39,7 +39,7 @@ class TimeDateStrToDateTimeObj:
 
     def _convert_time_to_int(self):
         self.date_cont.convert_to_int()
-        if self.pm:  # Todo: Figure hour why the multiple conditions were not working
+        if self.pm:
             if self.date_cont.hour < 12:
                 self.date_cont.hour += 12
 

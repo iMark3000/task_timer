@@ -165,27 +165,28 @@ class Row:
 
 class Section:
 
-    def __init__(self, node, fields):
+    def __init__(self, node, fields, sub_section=False):
         self.node = node
         self.fields = fields
-        self._header = dict()
-        self._footer = dict()
+        self.sub_section = sub_section
+        self._section_data = dict()
 
-    def compile_header(self):
-        if isinstance(self.node, ProjectNode):
-            pass
+    def is_sub_section(self):
+        return self.sub_section
 
-
-    def compile_footer(self):
+    def compile_section_data(self):
         for field in self.fields:
             if hasattr(self.node, f'_{field}'):
-                self._footer[field] = getattr(self.node, f'_{field}')
+                self._section_data[field] = getattr(self.node, f'_{field}')
             elif 'count' in field:
-                self._footer[field] = len(self.node.children)
+                self._section_data[field] = len(self.node.children)
             elif 'percent' in field:
                 whole_node_type = field.split('_')[1]
-                self._footer[field] = percent_helper(self.node, whole_node_type)
+                self._section_data[field] = percent_helper(self.node, whole_node_type)
 
+    @property
+    def section_data(self):
+        return self._section_data
 
 
 class ReportHeaderFooter:
