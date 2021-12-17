@@ -1,5 +1,4 @@
-from abc import ABC, abstractmethod
-
+from datetime import timedelta
 from ..report_tree.report_nodes import RootNode
 from ..report_tree.report_nodes import ProjectNode
 from ..report_tree.report_nodes import SessionNode
@@ -15,27 +14,43 @@ NODE_LOOKUP = {
 
 class ReportComponent:
 
-    def __init__(self, node, fields):
+    def __init__(self, node, fields,  sub_section=None):
         self._node = node
         self._fields = fields
         self._data = dict()
+        self.sub_section = sub_section
+        self._count_container = dict()
 
-    def compile_data(self):
-        for field in self._fields:
+    def calculate_fields(self, fields):
+        for field in fields:
             if hasattr(self._node, f'_{field}'):
                 self._data[field] = getattr(self._node, f'_{field}')
             elif 'count' in field and not isinstance(self._node, LogNode):
                 count_node_type = field.split('_')[1]
-                self._data[field] = count_helper(self._node, count_node_type)
+                self._count_container[count_node_type] = count_and_average_helper(self._node, count_node_type)
+                self._data[field] = self._count_container[count_node_type][0]
             elif 'average' in field:
-                self._data[field] = average_helper(self._node)
+                ave_node_type = field.split('_')[1]
+                count, duration = self._count_container[ave_node_type]
+                self._data[field] = duration / count
             elif 'percent' in field:
                 whole_node_type = field.split('_')[1]
                 self._data[field] = percent_helper(self._node, whole_node_type)
 
+    def compile_data(self):
+        if 'row_fields' in self._fields.keys():
+            self.calculate_fields(self._fields['row_fields'])
+        if 'headers' in self._fields.keys():
+            self.calculate_fields(self._fields['headers'])
+        if 'footers' in self._fields.keys() and not self.sub_section:
+            self.calculate_fields(self._fields['footers'])
+
     @property
     def data(self):
         return self._data
+
+    def is_sub_section(self):
+        return self.sub_section
 
 
 class Row(ReportComponent):
@@ -46,12 +61,8 @@ class Row(ReportComponent):
 
 class Section(ReportComponent):
 
-    def __init__(self, node, fields, sub_section=False):
-        self.sub_section = sub_section
-        super().__init__(node, fields)
-
-    def is_sub_section(self):
-        return self.sub_section
+    def __init__(self, node, fields, sub_section=None):
+        super().__init__(node, fields, sub_section)
 
 
 class ReportHeaderSummary(ReportComponent):
@@ -69,21 +80,21 @@ class ReportHeaderSummary(ReportComponent):
         return self._header
 
 
-def average_helper(node):
-    t = node.duration
-    c = len(node.parent.children)
-    return t/c
-
-
-def count_helper(node, count_node_type, tot=0):
+def count_and_average_helper(node, count_node_type, count=0, duration=None):
+    if duration is None:
+        duration = timedelta(0)
     node_type = NODE_LOOKUP[count_node_type]
     for child in node.children:
         if type(child) == node_type:
-            tot += 1
+            count += 1
+            duration += child.duration
         else:
-            if len(child.children) != 0:
-                return count_helper(child, count_node_type, tot=tot)
-    return tot
+            if type(child) != LogNode:
+                if len(child.children) != 0:
+                    return count_and_average_helper(child, count_node_type, count=count, duration=duration)
+                else:
+                    pass
+    return count, duration
 
 
 def percent_helper(node, whole_node_type):
