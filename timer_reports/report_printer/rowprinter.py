@@ -1,6 +1,6 @@
 from report_fields import NoteField
 from report_configuration import FIELD_MAPPING
-from ..report import Row
+from timer_reports.report import Row
 
 
 class RowPrinter:

@@ -11,7 +11,6 @@ from timer_reports.report_tree.report_nodes import SessionNode
 from timer_reports.report_tree.report_nodes import LogNode
 
 
-
 @pytest.fixture
 def query_data():
     return [

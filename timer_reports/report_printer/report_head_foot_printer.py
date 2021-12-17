@@ -1,12 +1,11 @@
-from ..report import Section
+from timer_reports.report import ReportHeaderSummary
 from report_configuration import FIELD_MAPPING
-from .report_fields import ValueField
 
 
-class SectionPrinter:
+class ReportHeadFootPrinter:
 
     def __init__(self, report_width, header_fields, footer_fields):
-        self.report_width = report_width
+        self.report_width = report_width - 2
         self.header_fields = header_fields
         self.header_field_names = None
         self.header_field_obj = list()
@@ -48,33 +47,38 @@ class SectionPrinter:
                 field_obj.set_field_width(self.report_width - (len(field) + 2))
                 self.footer_field_obj.append(field_obj)
 
-    def print_section_header(self, section: Section):
-        """
-        Iterates through the header_fields list and checks if each header is in the Section's data dict keys.
-        If True, then it retrieves the value from dict and relays it to the corresponding header_field_obj
+    def first_last_line(self, title_line=False, summary=False):
+        title = ''
+        if title_line:
+            if summary:
+                title = ' REPORT SUMMARY '
+            else:
+                title = ' TIMER QUERY '
 
-        Primary sections are formatted as full line breaks.
+        return '| ' + '{0:{fill}{align}{length}}'.format(title, fill='*', align='^', length=self.report_width) + '|'
+
+    def print_section_header(self, report_head: ReportHeaderSummary):
         """
+        """
+        self.first_last_line(title_line=True)
         for index, field in enumerate(self.header_fields):
-            if field in section.section_data.keys():
-                data = self.header_field_obj[index].print_field(section.section_data[field])
-                if section.is_sub_section():
-                    print(f'>>>>{self.header_field_names[index]}: {data}')
-                else:
-                    head = f' {self.header_field_names[index]}: {data.upper()} '
-                    print('{0:{fill}{align}{length}}'.format(head, fill='-', align='^', length=self.report_width))
+            if field in report_head.section_data.keys():  # TODO: !!!
+                data = self.header_field_obj[index].print_field(report_head.section_data[field])  # TODO: !!!
+                self._print_line(self.header_field_names[index], data)
+        self.first_last_line()
 
-    def print_section_foot(self, section: Section):
+    def print_report_summary(self, report_foot: ReportHeaderSummary):
         """
-        Iterates through the footer fields and checks if it's in the Section's data dict keys.
-        If True, then it retrieves the value from dict and relays it to the corresponding footer_field_obj
+        """
+        self.first_last_line(title_line=True, summary=True)
+        for index, field in enumerate(self.footer_fields):
+            if field in report_foot.section_data.keys():  # TODO: !!!
+                data = self.footer_field_obj[index].print_field(report_foot.section_data[field])  # TODO: !!!
+                self._print_line(self.footer_field_names[index], data)
+        self.first_last_line()
 
-        Sub sections do not have footers.
-        """
-        if not section.is_sub_section():
-            print('SECTION SUMMARY')
-            print('---------------')
-            for index, field in enumerate(self.footer_fields):
-                if field in section.section_data.keys():
-                    data = self.footer_field_obj[index].print_field(section.section_data[field])
-                    print(f'{self.footer_field_names[index]}: {data}')
+    def _print_line(self, field, data):
+        if 'count' in field:
+            print('|' + '{0:{fill}{align}{length}}'.format('', fill='', align='<', length=self.report_width) + '|')
+        line = f'{field}: {data}'
+        print('|' + '{0:{fill}{align}{length}}'.format(line, fill='', align='<', length=self.report_width) + '|')

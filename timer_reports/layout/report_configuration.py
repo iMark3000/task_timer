@@ -1,11 +1,11 @@
-from report_fields import NoteField
-from report_fields import TimeField
-from report_fields import ProjectField
-from report_fields import DurationField
-from report_fields import CountField
-from report_fields import IDField
-from report_fields import AverageField
-from report_fields import PercentField
+from timer_reports.report_printer.report_fields import NoteField
+from timer_reports.report_printer.report_fields import TimeField
+from timer_reports.report_printer.report_fields import ProjectField
+from timer_reports.report_printer.report_fields import DurationField
+from timer_reports.report_printer.report_fields import CountField
+from timer_reports.report_printer.report_fields import IDField
+from timer_reports.report_printer.report_fields import AverageField
+from timer_reports.report_printer.report_fields import PercentField
 
 
 FIELD_MAPPING = {
@@ -57,7 +57,7 @@ ROW_FIELD_LAYOUTS = {
 SECTION_FOOTER_FIELD_LAYOUTS = {
     1: ['count_SessionNode',
         'duration',
-        'average_SessionNode'
+        'average_SessionNode',
         'percent_RootNode'],
     2: ['count_SessionNode',
         'duration',

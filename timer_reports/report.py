@@ -1,14 +1,18 @@
 from typing import List, Tuple
 from datetime import datetime
-from math import floor
 
 from .report_tree.report_tree import ReportTree
 from .report_tree.report_nodes import RootNode
+from .report_tree.report_nodes import SessionNode
 from .report_tree.report_nodes import LogNode
 from .report_tree.report_nodes import ProjectNode
-from timer_reports.layout_and_print.report_configuration import ROW_FIELD_LAYOUTS
-from timer_reports.layout_and_print.report_configuration import SECTION_FOOTER_FIELD_LAYOUTS
-from timer_reports.layout_and_print.report_configuration import REPORT_FOOTER_FIELD_LAYOUTS
+from timer_reports.layout.report_configuration import ROW_FIELD_LAYOUTS
+from timer_reports.layout.report_configuration import SECTION_FOOTER_FIELD_LAYOUTS
+from timer_reports.layout.report_configuration import REPORT_FOOTER_FIELD_LAYOUTS
+
+from layout.report_componenets import ReportHeaderSummary
+from layout.report_componenets import Section
+from layout.report_componenets import Row
 
 
 class ReportPrep:
@@ -132,81 +136,17 @@ class ReportConstructor:
         if type(node) == self.row_node:
             row = Row(node, self.row_fields)
         if type(node) in self.section_nodes:
-            pass
+            if type(node) == self.section_nodes[0]:
+                # First node in the list is the primary section
+                section = Section(node, self.section_fields)
+            else:
+                section = Section(node, self.section_fields, sub_section=True)
         elif isinstance(node, RootNode):
             pass
 
     def construct(self):
         self._get_fields()
-        self.traverse_tree()
-
-
-class Row:
-
-    def __init__(self, node, fields):
-        self.node = node
-        self.fields = fields
-        self._row = dict()
-
-    def compile_row(self):
-        for field in self.fields:
-            if hasattr(self.node, f'_{field}'):
-                self._row[field] = getattr(self.node, f'_{field}')
-            elif 'count' in field:
-                self._row[field] = len(self.node.children)
-            elif 'percent' in field:
-                whole_node_type = field.split('_')[1]
-                self._row[field] = percent_helper(self.node, whole_node_type)
-
-    @property
-    def row(self):
-        return self._row
-
-
-class Section:
-
-    def __init__(self, node, fields, sub_section=False):
-        self.node = node
-        self.fields = fields
-        self.sub_section = sub_section
-        self._section_data = dict()
-
-    def is_sub_section(self):
-        return self.sub_section
-
-    def compile_section_data(self):
-        for field in self.fields:
-            if hasattr(self.node, f'_{field}'):
-                self._section_data[field] = getattr(self.node, f'_{field}')
-            elif 'count' in field:
-                self._section_data[field] = len(self.node.children)
-            elif 'percent' in field:
-                whole_node_type = field.split('_')[1]
-                self._section_data[field] = percent_helper(self.node, whole_node_type)
-
-    @property
-    def section_data(self):
-        return self._section_data
-
-
-class ReportHeaderFooter:
-    pass
-
-
-def average_helper(node):
-    t = node.duration
-    c = len(node.parent.children)
-    return t/c
-
-
-def percent_helper(node, whole_node_type):
-    node_duration = node.duration
-    parent = node.parent
-    if type(parent) == whole_node_type:
-        whole_duration = parent.durantion
-    else:
-        whole_duration = parent.parent.duration
-    return floor(node_duration/whole_duration)
+        self._traverse_tree()
 
 
 class ReportPrintQueue:
