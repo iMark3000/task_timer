@@ -1,12 +1,12 @@
 from report_fields import NoteField
-from report_configuration import FIELD_MAPPING
-from timer_reports.report import Row
+from ..layout.report_configuration import FIELD_MAPPING
+from ..layout.report_componenets import Row
 
 
 class RowPrinter:
 
-    def __init__(self, fields, report_width):
-        self.row_fields = fields
+    def __init__(self, report_width, fields):
+        self.row_fields = fields["row_fields"]
         self.report_width = report_width
         self.column_widths = 0
         self.column_headers = list()
@@ -32,7 +32,7 @@ class RowPrinter:
 
     def set_non_note_field_widths(self):
         # Iterate through Field Objects and set their widths
-        calculated_column_widths = self.report_width * .50 # Todo: This is an  arbitrary number for testing
+        calculated_column_widths = self.report_width * .50  # Todo: This is an  arbitrary number for testing
         for field in self.row_field_objects:
             if not isinstance(field, NoteField):
                 field.set_field_width(calculated_column_widths)
@@ -63,7 +63,7 @@ class RowPrinter:
 
     def generate_row(self, row: Row):
         # Takes in Row object, accesses it's data, and compiles a print line
-        data = row.row
+        data = row.data
         line = ''
         for index, field in enumerate(self.row_fields):
             value = data[field]
@@ -80,4 +80,3 @@ class RowPrinter:
                 pass
 
         print(line)
-

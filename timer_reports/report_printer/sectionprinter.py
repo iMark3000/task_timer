@@ -1,16 +1,15 @@
 from timer_reports.report import Section
-from report_configuration import FIELD_MAPPING
-from .report_fields import ValueField
+from ..layout.report_configuration import FIELD_MAPPING
 
 
 class SectionPrinter:
 
-    def __init__(self, report_width, header_fields, footer_fields):
+    def __init__(self, report_width, fields):
         self.report_width = report_width
-        self.header_fields = header_fields
+        self.header_fields = fields["headers"]
         self.header_field_names = None
         self.header_field_obj = list()
-        self.footer_fields = footer_fields
+        self.footer_fields = fields["footers"]
         self.footer_field_names = None
         self.footer_field_obj = list()
 
@@ -56,8 +55,8 @@ class SectionPrinter:
         Primary sections are formatted as full line breaks.
         """
         for index, field in enumerate(self.header_fields):
-            if field in section.section_data.keys():
-                data = self.header_field_obj[index].print_field(section.section_data[field])
+            if field in section.data.keys():
+                data = self.header_field_obj[index].print_field(section.data[field])
                 if section.is_sub_section():
                     print(f'>>>>{self.header_field_names[index]}: {data}')
                 else:
@@ -75,6 +74,6 @@ class SectionPrinter:
             print('SECTION SUMMARY')
             print('---------------')
             for index, field in enumerate(self.footer_fields):
-                if field in section.section_data.keys():
-                    data = self.footer_field_obj[index].print_field(section.section_data[field])
+                if field in section.data.keys():
+                    data = self.footer_field_obj[index].print_field(section.data[field])
                     print(f'{self.footer_field_names[index]}: {data}')
