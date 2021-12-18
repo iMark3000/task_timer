@@ -7,8 +7,6 @@ from math import floor
 class Field(ABC):
 
     def __init__(self):
-        # self.WIDTH_PERCENT = width_per
-        # self.MIN_WIDTH = min_width
         self._field_width = None
 
     @property
@@ -90,7 +88,7 @@ class TimeField(ValueField):
             return f'{value}'
 
 
-class IDField(ValueField):
+class IntField(ValueField):
 
     def __init__(self, row_field=True):
         self.WIDTH_PERCENT = .142
@@ -106,35 +104,6 @@ class DurationField(ValueField):
         self.MIN_WIDTH = 18
         self._row_field = row_field
         super().__init__(self.WIDTH_PERCENT, self.MIN_WIDTH, row_field=row_field)
-
-
-class CountField(ValueField):
-
-    def __init__(self, row_field=True):
-        self.WIDTH_PERCENT = .104
-        self.MIN_WIDTH = 11
-        self._row_field = row_field
-        super().__init__(self.WIDTH_PERCENT, self.MIN_WIDTH, row_field=row_field)
-
-
-class AverageField(ValueField):
-
-    def __init__(self, row_field=True):
-        self.WIDTH_PERCENT = .123
-        self.MIN_WIDTH = 13
-        self._row_field = row_field
-        super().__init__(self.WIDTH_PERCENT, self.MIN_WIDTH, row_field=row_field)
-
-    @staticmethod
-    def _format_float(n: float) -> str:
-        return f'{n:.2f}'
-
-    def print_field(self, value: float) -> str:
-        value = self._format_float(value)
-        if self._row_field:
-            return self._as_row(value)
-        else:
-            return f'{value}'
 
 
 class PercentField(ValueField):
@@ -155,6 +124,19 @@ class PercentField(ValueField):
             return self._as_row(value)
         else:
             return f'{value}'
+
+
+class HeaderTextField(Field):
+
+    def __init__(self, row_field=True):
+        self._row_field = row_field
+        super().__init__()
+
+    def set_field_width(self, width: int) -> None:
+        self._field_width = width
+
+    def print_field(self, value: str) -> str:
+        return '{0:{fill}{align}{length}}'.format(value, fill='', align='<', length=self._field_width)
 
 
 class NoteField(Field):

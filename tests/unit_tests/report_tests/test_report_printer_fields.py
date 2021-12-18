@@ -5,10 +5,8 @@ from datetime import timedelta
 
 from timer_reports.report_printer.report_fields import ProjectField
 from timer_reports.report_printer.report_fields import TimeField
-from timer_reports.report_printer.report_fields import IDField
+from timer_reports.report_printer.report_fields import IntField
 from timer_reports.report_printer.report_fields import DurationField
-from timer_reports.report_printer.report_fields import CountField
-from timer_reports.report_printer.report_fields import AverageField
 from timer_reports.report_printer.report_fields import PercentField
 from timer_reports.report_printer.report_fields import NoteField
 
@@ -56,8 +54,13 @@ def test_time_field():
     print(f'\n{line}')
 
 
-def test_id_field():
-    pass
+def test_num_field():
+    field = TimeField()
+    field.set_field_width(110)
+    line = field.print_field(datetime(year=2021, day=12, month=12, hour=12, minute=12))
+    assert field.field_width == 26
+    assert len(line) == 26
+    print(f'\n{line}')
 
 
 def test_duration_field():
@@ -67,14 +70,6 @@ def test_duration_field():
     assert field.field_width == 18
     assert len(line) == 18
     print(f'\n{line}')
-
-
-def test_count_field():
-    pass
-
-
-def test_average_field():
-    pass
 
 
 def test_percent_field():
