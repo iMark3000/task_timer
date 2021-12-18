@@ -54,12 +54,12 @@ def test_time_field():
     print(f'\n{line}')
 
 
-def test_num_field():
-    field = TimeField()
+def test_int_field():
+    field = IntField()
     field.set_field_width(110)
-    line = field.print_field(datetime(year=2021, day=12, month=12, hour=12, minute=12))
-    assert field.field_width == 26
-    assert len(line) == 26
+    line = field.print_field(3)
+    assert field.field_width == 15
+    assert len(line) == 15
     print(f'\n{line}')
 
 
