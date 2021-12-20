@@ -14,7 +14,7 @@ NODE_LOOKUP = {
 
 class ReportComponent:
 
-    def __init__(self, node, fields,  sub_section=None):
+    def __init__(self, node, fields, sub_section=None):
         self._node = node
         self._fields = fields
         self._data = dict()

@@ -1,4 +1,4 @@
-from report_fields import NoteField
+
 from ..layout.report_configuration import FIELD_MAPPING
 from ..layout.report_componenets import Row
 from .report_fields import Field
@@ -36,7 +36,7 @@ class RowPrinter:
 
     def set_non_note_field_widths(self):
         # Iterate through Field Objects and set their widths
-        calculated_column_widths = self.report_width * .50  # Todo: This is an  arbitrary number for testing
+        calculated_column_widths = self.report_width * .75  # Todo: This is an  arbitrary number for testing
         for field in self.row_field_objects:
             if not isinstance(field, NoteField):
                 field.set_field_width(calculated_column_widths)
@@ -58,15 +58,7 @@ class RowPrinter:
         self.set_field_objects()
         self.set_non_note_field_widths()
         self.set_note_field_widths()
-
-    def print_column_headers(self):
-        # Prints the headers for the columns
-        line = ''
-        for index, header in enumerate(self.column_headers):
-            formatted_value = self.row_field_objects[index].print_field(header)
-            line += formatted_value[:-1] + '|'
-        print(line)
-        print('{0:{fill}{align}{length}}'.format('', fill='-', align='<', length=self.report_width))
+        self.set_column_head_printer()
 
     def generate_row(self, row: Row):
         # Takes in Row object, accesses it's data, and compiles a print line
@@ -101,7 +93,7 @@ class ColumnHeaderPrinter:
         self.column_headers = headers
 
     def _set_header_widths(self, field_obj: List[Field]):
-        for index, header in self.column_headers:
+        for index, header in enumerate(self.column_headers):
             self.column_header_widths[header] = field_obj[index].field_width
 
     def _create_header_line(self):
@@ -119,10 +111,11 @@ class ColumnHeaderPrinter:
 
     def _create_header_breaker_line(self):
         width = 0
-        field_widths = [v.field_width for v in self.column_header_widths.values()]
+        field_widths = [v for v in self.column_header_widths.values()]
         for w in field_widths:
             width += w
-        self.header_breaker_line = '{0:{fill}{align}{length}}'.format('-', fill='', align='<', length=width)
+
+        self.header_breaker_line = '{0:{fill}{align}{length}}'.format('', fill='-', align='<', length=width)
 
     def configure_header_printer(self, column_headers, field_objects):
         self._set_headers(column_headers)
@@ -131,5 +124,5 @@ class ColumnHeaderPrinter:
         self._create_header_breaker_line()
 
     def print_headers(self):
-        print(self.column_headers)
+        print(self.header_line)
         print(self.header_breaker_line)
