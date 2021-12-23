@@ -8,6 +8,27 @@ from typing import List
 
 class RowPrinter:
 
+    #  TODO: Is it Field or Column, need to be more consistent
+    #  TODO: Move column_headers to ColumnHeaderPrinter object. This data does not need to be maintained here
+    """
+    The RowPrinter class maintains field order for report rows, maintains the field headers, and sets the overall
+    width for note and non-note fields. It also maintains the Field objects needed for the row to be printed.
+
+    Rows are printed by passing the row data as a dict into the generate_row() method.
+
+    :params:
+    row_fields: Container that maintains the order of row fields; must match a key from FIELD_MAPPING
+    report_width: Overall width of report (i.e. terminal window)
+    column_widths: The sum of the non-note column widths; used to calculate note colum widths
+    column_headers: Container for the field headers; looked up with FIELD_MAPPING and should match the order of
+    row_fields
+    row_field_objects: Container for the reports' Field subclasses. These objects are looked up in FIELD_MAPPING
+    and their order should correspond with row_fields
+    column_head_printer: A ColumnHeaderPrinter object that generates the field headers; it uses RowPrinter's
+    column_headers and and row_field_objects to generate the headers
+
+    """
+
     def __init__(self, report_width, fields):
         self.row_fields = fields["row_fields"]
         self.report_width = report_width
@@ -25,7 +46,8 @@ class RowPrinter:
                     self.column_headers.append(header)
 
     def set_field_objects(self):
-        # Create a Field Object to correspond with the column's data
+        """Iterates through the row fields and looks up the corresponding Field subclass using
+        the FIELD MAPPING dict"""
         for field in self.row_fields:
             if field in FIELD_MAPPING.keys():
                 field_obj = FIELD_MAPPING[field][1]
@@ -35,15 +57,19 @@ class RowPrinter:
                     self.row_field_objects.append(field_obj())
 
     def set_non_note_field_widths(self):
-        # Iterate through Field Objects and set their widths
-        calculated_column_widths = self.report_width * .75  # Todo: This is an  arbitrary number for testing
+        """Allocates 85% of total width or 135 chars, whichever is lower, as total width for non-note
+        fields then iterates through Field Objects and set their individual widths based on allocation"""
+        calculated_column_widths = self.report_width * .85
+        if calculated_column_widths > 135:
+            calculated_column_widths = 135
         for field in self.row_field_objects:
             if not isinstance(field, NoteField):
                 field.set_field_width(calculated_column_widths)
                 self.column_widths += field.field_width
 
     def set_note_field_widths(self):
-        # Special function to set the width of NoteField objects
+        """Sets width for note fields based on diff between the sum of non-note fields and
+        the report width"""
         width = self.report_width - self.column_widths
         for field in self.row_field_objects:
             if isinstance(field, NoteField):
