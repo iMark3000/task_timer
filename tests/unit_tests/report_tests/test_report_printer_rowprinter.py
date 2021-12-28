@@ -6,9 +6,9 @@ from datetime import timedelta
 
 from timer_reports.report_printer.rowprinter import RowPrinter
 from timer_reports.layout.report_componenets import Row
-from timer_reports.layout.report_componenets import RootNode
-from timer_reports.layout.report_componenets import SessionNode
-from timer_reports.layout.report_componenets import ProjectNode
+from timer_reports.report_tree.report_nodes import RootNode
+from timer_reports.report_tree.report_nodes import SessionNode
+from timer_reports.report_tree.report_nodes import ProjectNode
 from timer_reports.layout.report_configuration import FIELD_MAPPING
 from timer_reports.layout.report_configuration import ROW_FIELD_LAYOUTS
 from timer_reports.report_tree.report_nodes import LogNode
@@ -60,14 +60,14 @@ def row_obj(log_node):
 def test_rowprinter(row_obj):
 
     fields = ROW_FIELD_LAYOUTS[1]
-    rowprinter = RowPrinter(200, fields)
+    rowprinter = RowPrinter(120, fields)
 
     rowprinter.configure_row()
     print('\n')
     rowprinter.column_head_printer.print_headers()
     for row in row_obj:
         rowprinter.generate_row(row)
-'''
+
     rowprinter2 = RowPrinter(200, fields)
 
     rowprinter2.configure_row()
@@ -75,4 +75,3 @@ def test_rowprinter(row_obj):
     rowprinter2.column_head_printer.print_headers()
     for row in row_obj:
         rowprinter2.generate_row(row)
-'''

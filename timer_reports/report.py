@@ -7,12 +7,12 @@ from .report_tree.report_nodes import SessionNode
 from .report_tree.report_nodes import LogNode
 from .report_tree.report_nodes import ProjectNode
 from timer_reports.layout.report_configuration import ROW_FIELD_LAYOUTS
-from timer_reports.layout.report_configuration import SECTION_FOOTER_FIELD_LAYOUTS
-from timer_reports.layout.report_configuration import REPORT_FOOTER_FIELD_LAYOUTS
+from timer_reports.layout.report_configuration import SECTION_FIELD_LAYOUTS
+from timer_reports.layout.report_configuration import REPORT_HEADER_FOOTER_FIELD_LAYOUTS
 
-from layout.report_componenets import ReportHeaderSummary
-from layout.report_componenets import Section
-from layout.report_componenets import Row
+from timer_reports.layout.report_componenets import ReportHeaderSummary
+from timer_reports.layout.report_componenets import Section
+from timer_reports.layout.report_componenets import Row
 
 
 class ReportPrep:
@@ -123,7 +123,7 @@ class ReportConstructor:
 
     def _get_fields(self):
         self.row_fields = ROW_FIELD_LAYOUTS[self.report_type]
-        self.section_fields = SECTION_FOOTER_FIELD_LAYOUTS[self.report_type]
+        self.section_fields = SECTION_FIELD_LAYOUTS[self.report_type]
         self.report_footer_fields = REPORT_FOOTER_FIELD_LAYOUTS[self.report_type]
 
     def _traverse_tree(self, node):

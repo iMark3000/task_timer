@@ -55,7 +55,7 @@ ROW_FIELD_LAYOUTS = {
                        'session_note']}
 }
 
-SECTION_FOOTER_FIELD_LAYOUTS = {
+SECTION_FIELD_LAYOUTS = {
     1: {"headers": ['project_name', 'session_id'],
         "footers": ['count_SessionNode',
                     'duration',
@@ -69,7 +69,7 @@ SECTION_FOOTER_FIELD_LAYOUTS = {
     3: None
 }
 
-REPORT_FOOTER_FIELD_LAYOUTS = {
+REPORT_HEADER_FOOTER_FIELD_LAYOUTS = {
     1: {"headers": ['reporting_on', 'reporting_period'],
         "footers": ['duration', 'count_ProjectNode', 'average_ProjectNode',
                     'count_SessionNode', 'average_SessionNode', 'count_LogNode',

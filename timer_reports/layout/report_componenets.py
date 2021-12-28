@@ -21,7 +21,7 @@ class ReportComponent:
         self.sub_section = sub_section
         self._count_container = dict()
 
-    def calculate_fields(self, fields):
+    def _calculate_fields(self, fields):
         for field in fields:
             if hasattr(self._node, f'_{field}'):
                 self._data[field] = getattr(self._node, f'_{field}')
@@ -39,11 +39,11 @@ class ReportComponent:
 
     def compile_data(self):
         if 'row_fields' in self._fields.keys():
-            self.calculate_fields(self._fields['row_fields'])
+            self._calculate_fields(self._fields['row_fields'])
         if 'headers' in self._fields.keys():
-            self.calculate_fields(self._fields['headers'])
+            self._calculate_fields(self._fields['headers'])
         if 'footers' in self._fields.keys() and not self.sub_section:
-            self.calculate_fields(self._fields['footers'])
+            self._calculate_fields(self._fields['footers'])
 
     @property
     def data(self):

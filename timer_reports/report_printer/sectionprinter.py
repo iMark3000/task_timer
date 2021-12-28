@@ -7,10 +7,10 @@ class SectionPrinter:
     def __init__(self, report_width, fields):
         self.report_width = report_width
         self.header_fields = fields["headers"]
-        self.header_field_names = None
+        self.header_field_names = list()
         self.header_field_obj = list()
         self.footer_fields = fields["footers"]
-        self.footer_field_names = None
+        self.footer_field_names = list()
         self.footer_field_obj = list()
 
     def set_header_field_names(self):
@@ -46,6 +46,12 @@ class SectionPrinter:
                 field_obj = field_obj(row_field=False)
                 field_obj.set_field_width(self.report_width - (len(field) + 2))
                 self.footer_field_obj.append(field_obj)
+
+    def configure(self):
+        self.set_header_field_names()
+        self.set_header_field_objects()
+        self.set_footer_field_names()
+        self.set_footer_field_objects()
 
     def print_section_header(self, section: Section):
         """

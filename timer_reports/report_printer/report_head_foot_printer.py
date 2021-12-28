@@ -5,12 +5,12 @@ from ..layout.report_configuration import FIELD_MAPPING
 class ReportHeadFootPrinter:
 
     def __init__(self, report_width, fields):
-        self.report_width = report_width - 2
+        self.report_width = report_width
         self.header_fields = fields["headers"]
-        self.header_field_names = None
+        self.header_field_names = list()
         self.header_field_obj = list()
         self.footer_fields = fields["footers"]
-        self.footer_field_names = None
+        self.footer_field_names = list()
         self.footer_field_obj = list()
 
     def set_header_field_names(self):
@@ -47,6 +47,12 @@ class ReportHeadFootPrinter:
                 field_obj.set_field_width(self.report_width - (len(field) + 2))
                 self.footer_field_obj.append(field_obj)
 
+    def configure(self):
+        self.set_header_field_names()
+        self.set_header_field_objects()
+        self.set_footer_field_names()
+        self.set_footer_field_objects()
+
     def first_last_line(self, title_line=False, summary=False):
         title = ''
         if title_line:
@@ -55,11 +61,15 @@ class ReportHeadFootPrinter:
             else:
                 title = ' TIMER QUERY '
 
-        return '| ' + '{0:{fill}{align}{length}}'.format(title, fill='*', align='^', length=self.report_width) + '|'
+        line = '|' + '{0:{fill}{align}{length}}'.format(title, fill='*', align='^', length=self.report_width) + '|'
+        print(line)
 
     def print_section_header(self, report_head: ReportHeaderSummary):
         """
         """
+        print(f'{report_head.data}')
+        print(f'{report_head.header}')
+        print(f'{self.header_fields}')
         self.first_last_line(title_line=True)
         for index, field in enumerate(self.header_fields):
             if field in report_head.data.keys():  # TODO: !!!
@@ -80,5 +90,5 @@ class ReportHeadFootPrinter:
     def _print_line(self, field, data):
         if 'count' in field:
             print('|' + '{0:{fill}{align}{length}}'.format('', fill='', align='<', length=self.report_width) + '|')
-        line = f'{field}: {data}'
+        line = f' {field}: {data}'
         print('|' + '{0:{fill}{align}{length}}'.format(line, fill='', align='<', length=self.report_width) + '|')

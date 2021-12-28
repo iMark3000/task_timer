@@ -13,7 +13,7 @@ from timer_reports.layout.report_componenets import Row
 from timer_reports.layout.report_componenets import Section
 from timer_reports.layout.report_componenets import ReportHeaderSummary
 from timer_reports.layout.report_configuration import ROW_FIELD_LAYOUTS
-from timer_reports.layout.report_configuration import SECTION_FOOTER_FIELD_LAYOUTS
+from timer_reports.layout.report_configuration import SECTION_FIELD_LAYOUTS
 from timer_reports.layout.report_configuration import REPORT_FOOTER_FIELD_LAYOUTS
 from timer_reports.layout.report_configuration import FIELD_MAPPING
 from timer_reports.layout.report_componenets import count_and_average_helper
@@ -78,7 +78,7 @@ def test_row_session_level(node_setup):
 
 def test_section_session_level(node_setup):
     node = node_setup['session']
-    fields = SECTION_FOOTER_FIELD_LAYOUTS[1]
+    fields = SECTION_FIELD_LAYOUTS[1]
     section = Section(node, fields, sub_section=True)
     section.compile_data()
     assert section.is_sub_section() is not None
@@ -88,7 +88,7 @@ def test_section_session_level(node_setup):
 
 def test_section_project_level(node_setup):
     node = node_setup['proj']
-    fields = SECTION_FOOTER_FIELD_LAYOUTS[1]
+    fields = SECTION_FIELD_LAYOUTS[1]
     section = Section(node, fields)
     section.compile_data()
     assert section.is_sub_section() is None
