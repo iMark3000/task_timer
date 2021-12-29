@@ -124,7 +124,7 @@ class ReportConstructor:
     def _get_fields(self):
         self.row_fields = ROW_FIELD_LAYOUTS[self.report_type]
         self.section_fields = SECTION_FIELD_LAYOUTS[self.report_type]
-        self.report_footer_fields = REPORT_FOOTER_FIELD_LAYOUTS[self.report_type]
+        self.report_footer_fields = REPORT_HEADER_FOOTER_FIELD_LAYOUTS[self.report_type]
 
     def _traverse_tree(self, node):
         self._analyze_node(node)

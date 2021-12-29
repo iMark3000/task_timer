@@ -1,6 +1,5 @@
 from datetime import timedelta
 from datetime import datetime
-
 import pytest
 
 from pprint import pprint
@@ -14,8 +13,7 @@ from timer_reports.layout.report_componenets import Section
 from timer_reports.layout.report_componenets import ReportHeaderSummary
 from timer_reports.layout.report_configuration import ROW_FIELD_LAYOUTS
 from timer_reports.layout.report_configuration import SECTION_FIELD_LAYOUTS
-from timer_reports.layout.report_configuration import REPORT_FOOTER_FIELD_LAYOUTS
-from timer_reports.layout.report_configuration import FIELD_MAPPING
+from timer_reports.layout.report_configuration import REPORT_HEADER_FOOTER_FIELD_LAYOUTS
 from timer_reports.layout.report_componenets import count_and_average_helper
 from timer_reports.layout.report_componenets import percent_helper
 
@@ -99,7 +97,7 @@ def test_section_project_level(node_setup):
 
 def test_report_head_foot_log_level(node_setup):
     node = node_setup['root']
-    fields = REPORT_FOOTER_FIELD_LAYOUTS[1]
+    fields = REPORT_HEADER_FOOTER_FIELD_LAYOUTS[1]
     report_header_sum = ReportHeaderSummary(node, fields)
     report_header_sum.compile_report_header()
     report_header_sum.compile_data()
@@ -109,7 +107,7 @@ def test_report_head_foot_log_level(node_setup):
 
 def test_report_head_foot_session_level(node_setup):
     node = node_setup['root']
-    fields = REPORT_FOOTER_FIELD_LAYOUTS[2]
+    fields = REPORT_HEADER_FOOTER_FIELD_LAYOUTS[2]
     report_header_sum = ReportHeaderSummary(node, fields)
     report_header_sum.compile_report_header()
     report_header_sum.compile_data()
@@ -119,7 +117,7 @@ def test_report_head_foot_session_level(node_setup):
 
 def test_report_head_foot_project_level(node_setup):
     node = node_setup['root']
-    fields = REPORT_FOOTER_FIELD_LAYOUTS[3]
+    fields = REPORT_HEADER_FOOTER_FIELD_LAYOUTS[3]
     report_header_sum = ReportHeaderSummary(node, fields)
     report_header_sum.compile_report_header()
     report_header_sum.compile_data()
