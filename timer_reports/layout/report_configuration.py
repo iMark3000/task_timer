@@ -27,8 +27,8 @@ FIELD_MAPPING = {
     'percent_ProjectNode': ['%PROJECT', PercentField],
     'percent_RootNode': ['%REPORT', PercentField],
     'percent_SessionNode': ['%SESSION', PercentField],
-    'reporting_on':  ['REPORTING ON: ', HeaderTextField],
-    'reporting_period':  ['REPORTING PERIOD: ', HeaderTextField]
+    'reporting_on':  ['REPORTING ON', HeaderTextField],
+    'reporting_period':  ['REPORTING PERIOD', HeaderTextField]
 }
 
 ROW_FIELD_LAYOUTS = {

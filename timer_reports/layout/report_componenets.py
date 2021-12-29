@@ -68,16 +68,11 @@ class Section(ReportComponent):
 class ReportHeaderSummary(ReportComponent):
 
     def __init__(self, node, fields):
-        self._header = dict()
         super().__init__(node, fields)
 
     def compile_report_header(self):
-        self._header['reporting_on'] = self._node.reporting_on
-        self._header['reporting_period'] = self._node.reporting_period
-
-    @property
-    def header(self):
-        return self._header
+        self._data['reporting_on'] = self._node.reporting_on
+        self._data['reporting_period'] = self._node.reporting_period
 
 
 def count_and_average_helper(node, count_node_type, count=0, duration=None):

@@ -45,7 +45,7 @@ def set_up_nodes(row_data):
     return {"root": root, "proj": proj, "session": session, "log": log}
 
 
-def test_report_heder_footer(set_up_nodes):
+def test_report_header_footer(set_up_nodes):
     print('\n')
 
     fields = REPORT_HEADER_FOOTER_FIELD_LAYOUTS[1]
@@ -57,6 +57,6 @@ def test_report_heder_footer(set_up_nodes):
 
     printer = ReportHeadFootPrinter(120, fields)
     printer.configure()
-    printer.print_section_header(header_footer)
+    printer.print_report_header(header_footer)
     print('\n')
     printer.print_report_summary(header_footer)

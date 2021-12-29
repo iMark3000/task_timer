@@ -64,16 +64,14 @@ class ReportHeadFootPrinter:
         line = '|' + '{0:{fill}{align}{length}}'.format(title, fill='*', align='^', length=self.report_width) + '|'
         print(line)
 
-    def print_section_header(self, report_head: ReportHeaderSummary):
+    def print_report_header(self, report_head: ReportHeaderSummary):
         """
         """
-        print(f'{report_head.data}')
-        print(f'{report_head.header}')
-        print(f'{self.header_fields}')
+        report_head.compile_report_header()
         self.first_last_line(title_line=True)
         for index, field in enumerate(self.header_fields):
-            if field in report_head.data.keys():  # TODO: !!!
-                data = self.header_field_obj[index].print_field(report_head.data[field])  # TODO: !!!
+            if field in report_head.data.keys():
+                data = self.header_field_obj[index].print_field(report_head.data[field])
                 self._print_line(self.header_field_names[index], data)
         self.first_last_line()
 
@@ -82,8 +80,8 @@ class ReportHeadFootPrinter:
         """
         self.first_last_line(title_line=True, summary=True)
         for index, field in enumerate(self.footer_fields):
-            if field in report_foot.data.keys():  # TODO: !!!
-                data = self.footer_field_obj[index].print_field(report_foot.data[field])  # TODO: !!!
+            if field in report_foot.data.keys():
+                data = self.footer_field_obj[index].print_field(report_foot.data[field])
                 self._print_line(self.footer_field_names[index], data)
         self.first_last_line()
 
