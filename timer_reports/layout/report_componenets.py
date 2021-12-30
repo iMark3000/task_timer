@@ -1,4 +1,6 @@
 from datetime import timedelta
+from typing import Union
+
 from ..report_tree.report_nodes import RootNode
 from ..report_tree.report_nodes import ProjectNode
 from ..report_tree.report_nodes import SessionNode
@@ -51,6 +53,10 @@ class ReportComponent:
 
     def is_sub_section(self):
         return self.sub_section
+
+    @property
+    def node(self) -> Union[RootNode, ProjectNode, SessionNode, LogNode]:
+        return self._node
 
 
 class Row(ReportComponent):
