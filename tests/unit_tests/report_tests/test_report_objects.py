@@ -4,18 +4,19 @@ import pytest
 
 from pprint import pprint
 
-from timer_reports.report_tree.report_nodes import RootNode
-from timer_reports.report_tree.report_nodes import ProjectNode
-from timer_reports.report_tree.report_nodes import SessionNode
-from timer_reports.report_tree.report_nodes import LogNode
-from timer_reports.layout.report_componenets import Row
-from timer_reports.layout.report_componenets import Section
-from timer_reports.layout.report_componenets import ReportHeaderSummary
+from timer_reports.report_constructor.report_tree.report_nodes import RootNode
+from timer_reports.report_constructor.report_tree.report_nodes import ProjectNode
+from timer_reports.report_constructor.report_tree.report_nodes import SessionNode
+from timer_reports.report_constructor.report_tree.report_nodes import LogNode
+from timer_reports.report_constructor.report_componenets import Row
+from timer_reports.report_constructor.report_componenets import Section
+from timer_reports.report_constructor.report_componenets import ReportHeaderSummary
 from timer_reports.layout.report_configuration import ROW_FIELD_LAYOUTS
 from timer_reports.layout.report_configuration import SECTION_FIELD_LAYOUTS
 from timer_reports.layout.report_configuration import REPORT_HEADER_FOOTER_FIELD_LAYOUTS
-from timer_reports.layout.report_componenets import count_and_average_helper
-from timer_reports.layout.report_componenets import percent_helper
+from timer_reports.report_constructor.report_componenets import count_helper
+from timer_reports.report_constructor.report_componenets import total_duration_helper
+from timer_reports.report_constructor.report_componenets import percent_helper
 
 
 @pytest.fixture
@@ -101,8 +102,7 @@ def test_report_head_foot_log_level(node_setup):
     report_header_sum = ReportHeaderSummary(node, fields)
     report_header_sum.compile_report_header()
     report_header_sum.compile_data()
-    assert len(report_header_sum.header) == 2
-    assert len(report_header_sum.data) == 7
+    assert len(report_header_sum.data) == 9
 
 
 def test_report_head_foot_session_level(node_setup):
@@ -111,8 +111,7 @@ def test_report_head_foot_session_level(node_setup):
     report_header_sum = ReportHeaderSummary(node, fields)
     report_header_sum.compile_report_header()
     report_header_sum.compile_data()
-    assert len(report_header_sum.header) == 2
-    assert len(report_header_sum.data) == 5
+    assert len(report_header_sum.data) == 7
 
 
 def test_report_head_foot_project_level(node_setup):
@@ -121,8 +120,7 @@ def test_report_head_foot_project_level(node_setup):
     report_header_sum = ReportHeaderSummary(node, fields)
     report_header_sum.compile_report_header()
     report_header_sum.compile_data()
-    assert len(report_header_sum.header) == 2
-    assert len(report_header_sum.data) == 7
+    assert len(report_header_sum.data) == 9
 
 
 def test_percent_helper_up_one_level(node_setup):
@@ -149,26 +147,19 @@ def test_percent_helper_up_three_levels(node_setup):
 @pytest.fixture
 def count_data(node_data):
     root = RootNode(reporting_on='Nothing', reporting_period='From 1 to 2')
-    root.duration = timedelta(minutes=30)
     proj1 = ProjectNode('proj1', 1)
-    proj1.duration = timedelta(minutes=5)
     proj2 = ProjectNode('proj2', 2)
-    proj2.duration = timedelta(minutes=5)
     root.add_child(proj1)
     root.add_child(proj2)
 
     proj = ProjectNode(node_data['project_name'], node_data['project_id'])
-    proj.duration = timedelta(minutes=20)
     root.add_child(proj)
     s1 = SessionNode(2)
-    s1.duration = timedelta(minutes=5)
     s2 = SessionNode(3)
-    s2.duration = timedelta(minutes=5)
     proj.add_child(s1)
     proj.add_child(s2)
 
     session = SessionNode(node_data['session_id'])
-    session.duration = timedelta(minutes=10)
     proj.add_child(session)
 
     node1 = LogNode(**node_data)
@@ -185,58 +176,52 @@ def count_data(node_data):
 def test_count_help_root_log(count_data):
     node = count_data['root']
     count_node_type = 'LogNode'
-    result = count_and_average_helper(node, count_node_type)
-    assert result[0] == 2
-    assert result[1] == timedelta(minutes=10)
+    result = count_helper(node, count_node_type)
+    assert result == 2
 
 
 def test_count_help_root_session(count_data):
     node = count_data['root']
     count_node_type = 'SessionNode'
-    result = count_and_average_helper(node, count_node_type)
-    assert result[0] == 3
-    assert result[1] == timedelta(minutes=20)
+    result = count_helper(node, count_node_type)
+    assert result == 3
 
 
 def test_count_help_root_project(count_data):
     node = count_data['root']
     count_node_type = 'ProjectNode'
-    result = count_and_average_helper(node, count_node_type)
-    assert result[0] == 3
-    assert result[1] == timedelta(minutes=30)
+    result = count_helper(node, count_node_type)
+    assert result == 3
 
 
 def test_count_help_project_log(count_data):
     node = count_data['proj']
     count_node_type = 'LogNode'
-    result = count_and_average_helper(node, count_node_type)
-    assert result[0] == 2
-    assert result[1] == timedelta(minutes=10)
+    result = count_helper(node, count_node_type)
+    assert result == 2
 
 
 def test_count_help_project_session(count_data):
     node = count_data['proj']
     count_node_type = 'SessionNode'
-    result = count_and_average_helper(node, count_node_type)
-    assert result[0] == 3
-    assert result[1] == timedelta(minutes=20)
+    result = count_helper(node, count_node_type)
+    assert result == 3
 
 
 def test_count_help_session_log(count_data):
     node = count_data['session']
     count_node_type = 'LogNode'
-    result = count_and_average_helper(node, count_node_type)
-    assert result[0] == 2
-    assert result[1] == timedelta(minutes=10)
+    result = count_helper(node, count_node_type)
+    assert result == 2
 
 
-def test_average_help_session(node_setup):
+def test_total_duration_root(node_setup):
+    result = total_duration_helper()
+
+
+def test_total_duration_project(node_setup):
     pass
 
 
-def test_average_help_project(node_setup):
-    pass
-
-
-def test_average_help_root(node_setup):
+def test_total_duration_session(node_setup):
     pass

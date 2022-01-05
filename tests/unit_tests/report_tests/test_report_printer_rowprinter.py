@@ -1,17 +1,14 @@
 import pytest
-import pytest_mock
-from pytest_mock import mocker
 from datetime import datetime
 from datetime import timedelta
 
-from timer_reports.report_printer.rowprinter import RowPrinter
-from timer_reports.layout.report_componenets import Row
-from timer_reports.report_tree.report_nodes import RootNode
-from timer_reports.report_tree.report_nodes import SessionNode
-from timer_reports.report_tree.report_nodes import ProjectNode
-from timer_reports.layout.report_configuration import FIELD_MAPPING
+from timer_reports.report_printer.row_printer import RowPrinter
+from timer_reports.report_constructor.report_componenets import Row
+from timer_reports.report_constructor.report_tree.report_nodes import RootNode
+from timer_reports.report_constructor.report_tree.report_nodes import SessionNode
+from timer_reports.report_constructor.report_tree.report_nodes import ProjectNode
 from timer_reports.layout.report_configuration import ROW_FIELD_LAYOUTS
-from timer_reports.report_tree.report_nodes import LogNode
+from timer_reports.report_constructor.report_tree.report_nodes import LogNode
 
 
 @pytest.fixture

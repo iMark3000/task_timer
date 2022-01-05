@@ -27,6 +27,8 @@ class RootNode:
         else:
             self._duration += d
 
+    def __str__(self):
+        return f'{self.reporting_on}'
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

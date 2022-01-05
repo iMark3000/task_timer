@@ -1,8 +1,8 @@
 
-from timer_reports.report_tree.report_nodes import RootNode
-from timer_reports.report_tree.report_nodes import ProjectNode
-from timer_reports.report_tree.report_nodes import SessionNode
-from timer_reports.report_tree.report_nodes import LogNode
+from timer_reports.report_constructor.report_tree.report_nodes import RootNode
+from timer_reports.report_constructor.report_tree.report_nodes import ProjectNode
+from timer_reports.report_constructor.report_tree.report_nodes import SessionNode
+from timer_reports.report_constructor.report_tree.report_nodes import LogNode
 
 
 class ReportTree:
@@ -34,7 +34,7 @@ class ReportTree:
             else:
                 session = session[0]
                 session.add_child(node)
-                session.dufation = node.duration
+                session.duration = node.duration
 
     def _add_project_node(self, node: LogNode):
         new_node = ProjectNode(node.project_name, node.project_id)

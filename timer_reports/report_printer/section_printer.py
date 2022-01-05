@@ -1,4 +1,4 @@
-from timer_reports.report import Section
+from timer_reports.report_constructor.report_constructor import Section
 from ..layout.report_configuration import FIELD_MAPPING
 
 

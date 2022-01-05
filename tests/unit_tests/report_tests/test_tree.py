@@ -3,9 +3,9 @@ from datetime import timedelta
 
 import pytest
 
-from timer_reports.report_tree.report_tree import ReportTree
-from timer_reports.report_tree.report_nodes import RootNode
-from timer_reports.report_tree.report_nodes import LogNode
+from timer_reports.report_constructor.report_tree.report_tree import ReportTree
+from timer_reports.report_constructor.report_tree.report_nodes import RootNode
+from timer_reports.report_constructor.report_tree.report_nodes import LogNode
 
 
 @pytest.fixture

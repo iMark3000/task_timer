@@ -21,5 +21,3 @@ class QueryCommandHandler(Handler):
 
 
     def handle(self):
-        if self.command.is_chron:
-            self._chronological_report()
