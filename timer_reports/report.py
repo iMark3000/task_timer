@@ -1,6 +1,7 @@
 from report_constructor.report_constructor import ReportPrep
 from report_constructor.report_constructor import ReportTreeCreator
 from report_constructor.report_constructor import ReportConstructor
+from report_constructor.report_constructor import total_duration_helper
 
 from layout.layout_manager import LayoutManager
 
@@ -21,6 +22,9 @@ def create_report(data):
 
     report_data = ReportPrep(data["reporting_period"], data["reporting_on"], data["report_query"])
     report_tree = ReportTreeCreator(**report_data.export_data_for_tree()).get_tree()
+    total_duration_helper(report_tree)
+
     layout_manager = LayoutManager(data["reporting_level"])
 
     report_constructor = ReportConstructor(report_tree, layout_manager)
+

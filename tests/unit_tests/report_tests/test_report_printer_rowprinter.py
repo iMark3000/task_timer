@@ -2,7 +2,7 @@ import pytest
 from datetime import datetime
 from datetime import timedelta
 
-from timer_reports.report_printer.row_printer import RowPrinter
+from timer_reports.report_printer.row_component_printer import RowPrinter
 from timer_reports.report_constructor.report_componenets import Row
 from timer_reports.report_constructor.report_tree.report_nodes import RootNode
 from timer_reports.report_constructor.report_tree.report_nodes import SessionNode
