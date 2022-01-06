@@ -1,3 +1,4 @@
+from datetime import timedelta
 
 
 class RootNode:
@@ -6,7 +7,7 @@ class RootNode:
         self.reporting_on = reporting_on
         self.reporting_period = reporting_period
         self._children = list()
-        self._duration = None
+        self._duration = timedelta(0)
 
     def add_child(self, node):
         node.parent = self
@@ -20,12 +21,8 @@ class RootNode:
     def duration(self):
         return self._duration
 
-    @duration.setter
-    def duration(self, d):
-        if self._duration is None:
-            self._duration = d
-        else:
-            self._duration += d
+    def add_to_duration(self, d):
+        self._duration += d
 
     def __str__(self):
         return f'{self.reporting_on}'
@@ -38,7 +35,7 @@ class InnerNode:
     def __init__(self):
         self._parent = None
         self._children = list()
-        self._duration = None
+        self._duration = timedelta(0)
 
     def add_child(self, node):
         node.parent = self
@@ -60,12 +57,8 @@ class InnerNode:
     def duration(self):
         return self._duration
 
-    @duration.setter
-    def duration(self, d):
-        if self._duration is None:
-            self._duration = d
-        else:
-            self._duration += d
+    def add_to_duration(self, d):
+        self._duration += d
 
 
 class ProjectNode(InnerNode):

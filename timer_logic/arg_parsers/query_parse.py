@@ -7,9 +7,9 @@ from utils.exceptions import InvalidArgument
 QUERY_PARAMS = {
     'd': 'query_time_period',
     'p': 'query_projects',
-    '+l': 2,
-    '+s': 1,
-    '+p': 0,
+    '+l': 1,    # Log Level Report
+    '+s': 2,    # Session Level Report
+    '+p': 3,    # Project Level
     }
 
 NON_INT_TIME_PERIOD_INPUT = ['W', 'M', 'Y', 'CY', 'AT']

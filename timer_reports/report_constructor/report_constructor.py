@@ -1,13 +1,15 @@
 from typing import List, Tuple
 from datetime import datetime
+from datetime import timedelta
 
 from timer_reports.report_constructor.report_tree.report_tree import ReportTree
 
 from timer_reports.report_constructor.report_tree.report_nodes import RootNode
+from timer_reports.report_constructor.report_tree.report_nodes import ProjectNode
+from timer_reports.report_constructor.report_tree.report_nodes import SessionNode
 from timer_reports.report_constructor.report_tree.report_nodes import LogNode
-from timer_reports.layout.report_configuration import ROW_FIELD_LAYOUTS
-from timer_reports.layout.report_configuration import SECTION_FIELD_LAYOUTS
-from timer_reports.layout.report_configuration import REPORT_HEADER_FOOTER_FIELD_LAYOUTS
+
+from timer_reports.layout.layout_manager import LayoutManager
 
 from timer_reports.report_constructor.report_componenets import Section
 from timer_reports.report_constructor.report_componenets import Row
@@ -109,20 +111,14 @@ class ReportTreeCreator:
 
 class ReportConstructor:
 
-    def __init__(self, tree: ReportTree, report_type: int, row_node, section_nodes=None):
+    def __init__(self, tree: ReportTree, report_layout: LayoutManager):
         self.tree = tree
-        self.report_type = report_type
-        self.row_node = row_node
-        self.section_nodes = section_nodes
-        self.row_fields = None
-        self.section_fields = None
-        self.report_footer_fields = None
+        self.row_node = report_layout.report_row
+        self.section_nodes = report_layout.report_sections
+        self.row_fields = report_layout.report_row_fields
+        self.section_fields = report_layout.report_section_fields
+        self.report_header_footer_fields = report_layout.report_header_footer_fields
         self._component_container = list()
-
-    def _get_fields(self):
-        self.row_fields = ROW_FIELD_LAYOUTS[self.report_type]
-        self.section_fields = SECTION_FIELD_LAYOUTS[self.report_type]
-        self.report_footer_fields = REPORT_HEADER_FOOTER_FIELD_LAYOUTS[self.report_type]
 
     def _traverse_tree(self, node):
         self._analyze_node(node)
@@ -140,11 +136,28 @@ class ReportConstructor:
             else:
                 self._component_container.append(Section(node, self.section_fields, sub_section=True))
         elif isinstance(node, RootNode):
-            self._component_container.append(ReportHeaderSummary(node, self.report_footer_fields))
+            self._component_container.append(ReportHeaderSummary(node, self.report_header_footer_fields))
 
     def construct(self):
-        self._get_fields()
         self._traverse_tree(self.tree.root)
 
     def get_report_components(self):
         return self._component_container
+
+
+def total_duration_helper(tree: ReportTree):
+    """Entry point to traverse tree and sum durations"""
+    nodes = [SessionNode, ProjectNode, RootNode]
+    for node in nodes:
+        _total_duration_traversal(node, tree.root)
+
+
+def _total_duration_traversal(node_type, node):
+    """Traverses tree and sums duration based on the type of Node being passed"""
+    if isinstance(node, node_type):
+        for child in node.children:
+            node.add_to_duration(child.duration)
+    else:
+        if hasattr(node, 'children'):
+            for child in node.children:
+                _total_duration_traversal(node_type, child)

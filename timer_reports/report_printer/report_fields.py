@@ -143,6 +143,7 @@ class NoteField(Field):
 
     def __init__(self, end_note=False):
         self.end_note = end_note
+        self.padding = 0
         super().__init__()
 
     @property
@@ -152,9 +153,12 @@ class NoteField(Field):
     def set_field_width(self, width: int) -> None:
         self._field_width = width
 
+    def set_padding_for_end_note(self, padding):
+        self.padding = padding
+
     def print_field(self, value: str, padding=None) -> str:
         if self.end_note:
-            first_str = '{0:{fill}{align}{length}}'.format('', fill='', align='<', length=padding)
+            first_str = '{0:{fill}{align}{length}}'.format('', fill='', align='<', length=self.padding)
             second_str = '{0:{fill}{align}{length}}'.format(value, fill='', align='<', length=self._field_width)
             return '\n' + first_str + second_str
         else:

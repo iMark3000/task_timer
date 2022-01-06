@@ -61,7 +61,7 @@ class ReportHeadFootPrinter:
             else:
                 title = ' TIMER QUERY '
 
-        line = '|' + '{0:{fill}{align}{length}}'.format(title, fill='*', align='^', length=self.report_width) + '|'
+        line = '|' + '{0:{fill}{align}{length}}'.format(title, fill='*', align='^', length=self.report_width-2) + '|'
         print(line)
 
     def print_report_header(self, report_head: ReportHeaderSummary):
@@ -74,6 +74,7 @@ class ReportHeadFootPrinter:
                 data = self.header_field_obj[index].print_field(report_head.data[field])
                 self._print_line(self.header_field_names[index], data)
         self.first_last_line()
+        print('\n')
 
     def print_report_summary(self, report_foot: ReportHeaderSummary):
         """
@@ -86,7 +87,8 @@ class ReportHeadFootPrinter:
         self.first_last_line()
 
     def _print_line(self, field, data):
-        if 'count' in field:
-            print('|' + '{0:{fill}{align}{length}}'.format('', fill='', align='<', length=self.report_width) + '|')
+        if 'NO.' in field:
+            print('|' + '{0:{fill}{align}{length}}'.format('', fill='', align='<', length=self.report_width-2) + '|')
         line = f' {field}: {data}'
-        print('|' + '{0:{fill}{align}{length}}'.format(line, fill='', align='<', length=self.report_width) + '|')
+        w = self.report_width - len(line)
+        print('|' + '{0:{fill}{align}{length}}'.format(line, fill='', align='<', length=self.report_width-2) + '|')

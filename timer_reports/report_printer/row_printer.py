@@ -74,6 +74,7 @@ class RowPrinter:
         for field in self.row_field_objects:
             if isinstance(field, NoteField):
                 field.set_field_width(width)
+                field.set_padding_for_end_note(self.column_widths)
 
     def set_column_head_printer(self):
         self.column_head_printer.configure_header_printer(self.column_headers, self.row_field_objects)
@@ -135,6 +136,8 @@ class ColumnHeaderPrinter:
             else:
                 self.header_line += head
 
+        print(self.header_line)
+
     def _create_header_breaker_line(self):
         width = 0
         field_widths = [v for v in self.column_header_widths.values()]
@@ -150,5 +153,6 @@ class ColumnHeaderPrinter:
         self._create_header_breaker_line()
 
     def print_headers(self):
+        print('\n')
         print(self.header_line)
         print(self.header_breaker_line)

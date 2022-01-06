@@ -11,6 +11,8 @@ from timer_reports.layout.report_configuration import REPORT_HEADER_FOOTER_FIELD
 from timer_reports.report_constructor.report_constructor import ReportPrep
 from timer_reports.report_constructor.report_constructor import ReportTreeCreator
 from timer_reports.report_constructor.report_constructor import ReportConstructor
+from timer_reports.report_constructor.report_constructor import total_duration_helper
+
 from timer_reports.report_constructor.report_tree.report_nodes import ProjectNode
 from timer_reports.report_constructor.report_tree.report_nodes import SessionNode
 from timer_reports.report_constructor.report_tree.report_nodes import LogNode
@@ -136,7 +138,6 @@ def test_report_tree_creator(create_report_prep_for_test):
     assert tree.root.reporting_on == 'cat & cadabada'
     assert tree.root.reporting_period == '11/15/2021 to 11/22/2021'
     assert len(tree.root.children) == 2
-    assert tree.root.duration == timedelta(seconds=10864)
     # checking structure
     for child in tree.root.children:
         assert isinstance(child, ProjectNode)
@@ -156,50 +157,69 @@ def create_tree(create_report_prep_for_test):
     return tree_constructor.get_tree()
 
 
+def test_duration_calculation(create_tree):
+    total_duration_helper(create_tree)
+    for project in create_tree.root.children:
+        print(project.duration)
+        for session in project.children:
+            print(session.duration)
+            for log in session.children:
+                print(log.duration)
+
+
 def test_report_constructor(create_tree):
-    report_constructor = ReportConstructor(create_tree, 1, LogNode, [ProjectNode, SessionNode])
+    total_duration_helper(create_tree)
+    report_constructor = ReportConstructor(create_tree, 2, LogNode, [ProjectNode, SessionNode])
     report_constructor.construct()
     result = report_constructor.get_report_components()
     print('\n')
     for r in result:
+        r.compile_data()
+        print('\n---------------')
         print(r)
+        pprint(r.data)
     assert len(result) == 16
 
 
 @pytest.fixture
 def create_report_components(create_tree):
-    report_constructor = ReportConstructor(create_tree, 1, LogNode, [ProjectNode, SessionNode])
+    total_duration_helper(create_tree)
+    report_constructor = ReportConstructor(create_tree, 2, SessionNode, [ProjectNode])
     report_constructor.construct()
     return report_constructor.get_report_components()
 
 
 def test_printers(create_report_components):
     print('\n')
-    header_footer = ReportHeadFootPrinter(150, REPORT_HEADER_FOOTER_FIELD_LAYOUTS[1])
+    header_footer = ReportHeadFootPrinter(100, REPORT_HEADER_FOOTER_FIELD_LAYOUTS[2])
     header_footer.configure()
-    section = SectionPrinter(150, SECTION_FIELD_LAYOUTS[1])
+    section = SectionPrinter(100, SECTION_FIELD_LAYOUTS[2])
     section.configure()
-    row = RowPrinter(150, ROW_FIELD_LAYOUTS[1])
+    row = RowPrinter(100, ROW_FIELD_LAYOUTS[2])
     row.configure_row()
-    row.set_column_head_printer()
 
     current_section = None
     head_component = None
 
+    print('\n')
     for component in create_report_components:
+        component.compile_data()
         if isinstance(component, ReportHeaderSummary):
             header_footer.print_report_header(component)
             head_component = component
         elif isinstance(component, Section):
-            section.print_section_header(component)
             if not component.is_sub_section(): # Where are sections being made primary and sub?
                 if current_section is None:
                     current_section = component
+                    section.print_section_header(component)
+
                 else:
                     section.print_section_foot(current_section)
                     current_section = component
+                    section.print_section_header(component)
             else:
-                row.column_head_printer.print_headers()
+                section.print_section_header(component)
+            row.column_head_printer.print_headers()
         elif isinstance(component, Row):
             row.generate_row(component)
     section.print_section_foot(current_section)

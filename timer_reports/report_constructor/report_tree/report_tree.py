@@ -19,7 +19,6 @@ class ReportTree:
         self._root = node
 
     def add_node(self, parent, node: LogNode):
-        parent.duration = node.duration
         if isinstance(parent, RootNode):
             project = [x for x in parent.children if x.project_id == node.project_id]
             if len(project) == 0:
@@ -34,17 +33,14 @@ class ReportTree:
             else:
                 session = session[0]
                 session.add_child(node)
-                session.duration = node.duration
 
     def _add_project_node(self, node: LogNode):
         new_node = ProjectNode(node.project_name, node.project_id)
-        new_node.duration = node.duration
         self.root.add_child(new_node)
         self._add_session_node(new_node, node)
 
     @staticmethod
     def _add_session_node(parent: ProjectNode, node: LogNode):
         new_node = SessionNode(node.session_id)
-        new_node.duration = node.duration
         parent.add_child(new_node)
         new_node.add_child(node)

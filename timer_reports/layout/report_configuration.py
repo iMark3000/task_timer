@@ -31,6 +31,16 @@ FIELD_MAPPING = {
     'reporting_period':  ['REPORTING PERIOD', HeaderTextField]
 }
 
+REPORT_STRUCTURE = {
+    1: {"row_node": LogNode,
+        "section_nodes": [ProjectNode, SessionNode]},
+    2: {"row_node": LogNode,
+        "section_nodes": [ProjectNode]},
+    3: {"row_node": ProjectNode,
+        "section_nodes": []}
+}
+
+
 ROW_FIELD_LAYOUTS = {
     1: {"row_fields": ['log_id',
                        'start_time',
@@ -61,7 +71,7 @@ SECTION_FIELD_LAYOUTS = {
                     'duration',
                     'average_SessionNode',
                     'percent_RootNode']},
-    2: {"headers": ['project_name', 'session_id'],
+    2: {"headers": ['project_name'],
         "footers": ['count_SessionNode',
                     'duration',
                     'average_SessionNode',

@@ -1,4 +1,5 @@
 from typing import Union
+from collections import defaultdict
 
 from timer_reports.report_constructor.report_tree.report_nodes import RootNode
 from timer_reports.report_constructor.report_tree.report_nodes import ProjectNode
@@ -20,7 +21,7 @@ class ReportComponent:
         self._fields = fields
         self._data = dict()
         self.sub_section = sub_section
-        self._count_container = dict()
+        self._count_container = defaultdict()
 
     def _calculate_fields(self, fields):
         for field in fields:
@@ -28,13 +29,13 @@ class ReportComponent:
                 self._data[field] = getattr(self._node, f'_{field}')
             elif 'count' in field and not isinstance(self._node, LogNode):
                 count_node_type = field.split('_')[1]
-                self._count_container[count_node_type] = count_helper(self._node, count_node_type)
-                self._data[field] = self._count_container[count_node_type][0]
+                count = count_helper(self._node, count_node_type)
+                self._data[field] = count
+                self._count_container[count_node_type] = count
             elif 'average' in field:
                 ave_node_type = field.split('_')[1]
-                count, duration = self._count_container[ave_node_type]
-                print(f'\nNode: {self._node}\nCount: {count} duration: {duration}')
-                self._data[field] = duration / count
+                count = self._count_container[ave_node_type]
+                self._data[field] = self.node.duration / count
             elif 'percent' in field:
                 whole_node_type = field.split('_')[1]
                 self._data[field] = percent_helper(self._node, whole_node_type)
@@ -92,7 +93,6 @@ class ReportHeaderSummary(ReportComponent):
 
 
 def count_helper(node, count_node_type, count=0):
-    print(f'FUNC NODE: {node}')
     node_type = NODE_LOOKUP[count_node_type]
     for child in node.children:
         if type(child) == node_type:
@@ -105,18 +105,6 @@ def count_helper(node, count_node_type, count=0):
     return count
 
 
-def total_duration_helper(node, duration=None):
-    for child in node.children:
-        if isinstance(child, LogNode):
-            if duration is None:
-                duration = child.duration
-            else:
-                duration += child.duration
-        else:
-            total_duration_helper(child, duration=duration)
-    return duration
-
-
 def percent_helper(node, whole_node_type):
     node_duration = node.duration
     whole_node_type = NODE_LOOKUP[whole_node_type]
@@ -126,7 +114,7 @@ def percent_helper(node, whole_node_type):
 
 
 def get_correct_whole_node(parent, node_type):
-    if type(parent) == node_type:
+    if isinstance(parent, node_type):
         return parent
-    else:
+    elif hasattr(parent, 'parent'):
         return get_correct_whole_node(parent.parent, node_type)
