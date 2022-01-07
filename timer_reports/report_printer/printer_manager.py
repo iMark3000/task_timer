@@ -1,8 +1,8 @@
 from typing import Union
 
-from report_head_foot_component_printer import ReportHeadFootPrinter
-from section_component_printer import SectionPrinter
-from row_component_printer import RowPrinter
+from timer_reports.report_printer.report_head_foot_component_printer import ReportHeadFootPrinter
+from timer_reports.report_printer.section_component_printer import SectionPrinter
+from timer_reports.report_printer.row_component_printer import RowPrinter
 
 from timer_reports.report_constructor.report_componenets import Row
 from timer_reports.report_constructor.report_componenets import Section
@@ -17,31 +17,32 @@ class ReportPrinter:
         self.layout = report_layout
         self._report_header_summary_printer: Union[ReportHeadFootPrinter, None] = None
         self._section_printer: Union[SectionPrinter, None] = None
-        self._row_printer: Union[ReportPrinter, None] = None
+        self._row_printer: Union[RowPrinter, None] = None
         self._current_primary_section: Union[Section, None] = None
-        self._report_footer: Union[ReportHeaderSummary, None] = None
-        self._row_printing_flag: bool = False
+        self._report_header_footer_component: Union[ReportHeaderSummary, None] = None
         self._row_Queue: RowQueue = RowQueue()
 
     def set_up_component_printers(self) -> None:
-        self._report_header_summary_printer = ReportHeadFootPrinter(self.layout.report_header_footer_fields,
-                                                                    self.layout.report_width)
-        self._row_printer = RowPrinter(self.layout.report_row_fields, self.layout.report_width)
+        self._report_header_summary_printer = ReportHeadFootPrinter(self.layout.report_width,
+                                                                    self.layout.report_header_footer_fields)
+        self._report_header_summary_printer.configure()
+        self._row_printer = RowPrinter(self.layout.report_width, self.layout.report_row_fields)
+        self._row_printer.configure_row()
         if self.layout.report_sections:
-            self._section_printer = SectionPrinter(self.layout.report_section_fields, self.layout.report_width)
+            self._section_printer = SectionPrinter(self.layout.report_width, self.layout.report_section_fields)
+            self._section_printer.configure()
 
     def print_component(self, component: Union[Row, Section, ReportHeaderSummary]) -> None:
         if isinstance(component, ReportHeaderSummary):
-            if self._row_printing_flag:
-                pass
-            self._handle_header_footer_print(component)
+            if not self._row_Queue.empty:
+                self._print_row_queue()
+            self._report_header_footer_component = component
+            self._handle_header_footer_print(self._report_header_footer_component)
         elif isinstance(component, Section):
-            if self._row_printing_flag:
-                pass
+            if not self._row_Queue.empty:
+                self._print_row_queue()
             self._handle_section_print(component)
         elif isinstance(component, Row):
-            if not self._row_printing_flag:
-                self._row_printing_flag = True
             self._handle_row_print(component)
 
     def _handle_section_print(self, section: Section):
@@ -56,28 +57,39 @@ class ReportPrinter:
                 self._current_primary_section = section
                 self._section_printer.print_section_header(section)
 
-    def _handle_header_footer_print(self, head_foot: ReportHeaderSummary):
+    def _handle_header_footer_print(self, head_foot: ReportHeaderSummary) -> None:
         self._report_header_summary_printer.print_report_header(head_foot)
 
-    def _handle_row_print(self, row: Row):
-        pass
+    def _handle_row_print(self, row: Row) -> None:
+        self._row_Queue.add(row)
 
-    def print_report_footer(self):
-        self._report_header_summary_printer.print_report_summary(self._report_footer)
+    def _print_row_queue(self):
+        self._row_printer.column_head_printer.print_headers()
+        for row in self._row_Queue.get_elements():
+            self._row_printer.generate_row(row)
+        self._row_Queue = RowQueue()
+        print('\n')
 
-
+    def print_report_footer(self) -> None:
+        self._print_row_queue()
+        self._section_printer.print_section_foot(self._current_primary_section)
+        self._report_header_summary_printer.print_report_summary(self._report_header_footer_component)
 
 
 class RowQueue:
 
     def __init__(self):
         self._queue = list()
-        self._is_empty = True
+        self._empty = True
 
-    def add(self, element):
+    def add(self, element: Row) -> None:
         self._queue.append(element)
-        if self._is_empty:
-            self._is_empty = False
+        if self._empty:
+            self._empty = False
 
-    def get_elements(self):
+    def get_elements(self) -> list:
         return self._queue
+
+    @property
+    def empty(self) -> bool:
+        return self._empty

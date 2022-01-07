@@ -4,9 +4,7 @@ from datetime import timedelta
 import pytest
 from pprint import pprint
 
-from timer_reports.layout.report_configuration import ROW_FIELD_LAYOUTS
-from timer_reports.layout.report_configuration import SECTION_FIELD_LAYOUTS
-from timer_reports.layout.report_configuration import REPORT_HEADER_FOOTER_FIELD_LAYOUTS
+from timer_reports.layout.layout_manager import LayoutManager
 
 from timer_reports.report_constructor.report_constructor import ReportPrep
 from timer_reports.report_constructor.report_constructor import ReportTreeCreator
@@ -17,6 +15,8 @@ from timer_reports.report_constructor.report_tree.report_nodes import ProjectNod
 from timer_reports.report_constructor.report_tree.report_nodes import SessionNode
 from timer_reports.report_constructor.report_tree.report_nodes import LogNode
 
+from timer_reports.report import create_report
+
 from timer_reports.report_constructor.report_componenets import Row
 from timer_reports.report_constructor.report_componenets import Section
 from timer_reports.report_constructor.report_componenets import ReportHeaderSummary
@@ -25,6 +25,8 @@ from timer_reports.report_constructor.report_componenets import ReportHeaderSumm
 from timer_reports.report_printer.row_component_printer import RowPrinter
 from timer_reports.report_printer.section_component_printer import SectionPrinter
 from timer_reports.report_printer.report_head_foot_component_printer import ReportHeadFootPrinter
+
+from timer_reports.report_printer.printer_manager import ReportPrinter
 
 
 @pytest.fixture
@@ -167,9 +169,45 @@ def test_duration_calculation(create_tree):
                 print(log.duration)
 
 
-def test_report_constructor(create_tree):
+def test_create_layout_manager_config_1():
+    manager = LayoutManager(1)
+    manager.set_up_layout()
+    assert manager.report_width == 118
+    assert manager.report_row == LogNode
+    assert len(manager.report_sections) == 2
+    assert len(manager.report_header_footer_fields) == 2
+    assert len(manager.report_section_fields) == 2
+    assert len(manager.report_row_fields) == 1
+
+
+def test_create_layout_manager_config_2():
+    manager = LayoutManager(2)
+    manager.set_up_layout()
+    assert manager.report_width == 118
+    assert manager.report_row == SessionNode
+    assert len(manager.report_sections) == 1
+    assert len(manager.report_header_footer_fields) == 2
+    assert len(manager.report_section_fields) == 2
+    assert len(manager.report_row_fields) == 1
+
+
+@pytest.fixture
+def create_layout_manager_config1():
+    manager = LayoutManager(1)
+    manager.set_up_layout()
+    return manager
+
+
+@pytest.fixture
+def create_layout_manager_config2():
+    manager = LayoutManager(2)
+    manager.set_up_layout()
+    return manager
+
+
+def test_report_constructor(create_tree, create_layout_manager_config1):
     total_duration_helper(create_tree)
-    report_constructor = ReportConstructor(create_tree, 2, LogNode, [ProjectNode, SessionNode])
+    report_constructor = ReportConstructor(create_tree, create_layout_manager_config1)
     report_constructor.construct()
     result = report_constructor.get_report_components()
     print('\n')
@@ -182,46 +220,35 @@ def test_report_constructor(create_tree):
 
 
 @pytest.fixture
-def create_report_components(create_tree):
+def create_report_components(create_tree, create_layout_manager_config1):
     total_duration_helper(create_tree)
-    report_constructor = ReportConstructor(create_tree, 2, SessionNode, [ProjectNode])
+    report_constructor = ReportConstructor(create_tree, create_layout_manager_config1)
     report_constructor.construct()
     return report_constructor.get_report_components()
 
 
-def test_printers(create_report_components):
+def test_printers(create_report_components, create_layout_manager_config1):
+    report_printer = ReportPrinter(create_layout_manager_config1)
+    report_printer.set_up_component_printers()
     print('\n')
-    header_footer = ReportHeadFootPrinter(100, REPORT_HEADER_FOOTER_FIELD_LAYOUTS[2])
-    header_footer.configure()
-    section = SectionPrinter(100, SECTION_FIELD_LAYOUTS[2])
-    section.configure()
-    row = RowPrinter(100, ROW_FIELD_LAYOUTS[2])
-    row.configure_row()
-
-    current_section = None
-    head_component = None
+    for component in create_report_components:
+        component.compile_data()
+        print(f'{component.data}')
 
     print('\n')
     for component in create_report_components:
         component.compile_data()
-        if isinstance(component, ReportHeaderSummary):
-            header_footer.print_report_header(component)
-            head_component = component
-        elif isinstance(component, Section):
-            if not component.is_sub_section(): # Where are sections being made primary and sub?
-                if current_section is None:
-                    current_section = component
-                    section.print_section_header(component)
+        report_printer.print_component(component)
+    report_printer.print_report_footer()
 
-                else:
-                    section.print_section_foot(current_section)
-                    current_section = component
-                    section.print_section_header(component)
-            else:
-                section.print_section_header(component)
-            row.column_head_printer.print_headers()
-        elif isinstance(component, Row):
-            row.generate_row(component)
-    section.print_section_foot(current_section)
-    header_footer.print_report_summary(head_component)
 
+def test_create_report_func(query_data):
+    data = dict()
+    dates = ('11/15/2021', '11/22/2021')
+    p_ids = ('4', '3')
+    data["reporting_period"] = dates
+    data["reporting_on"] = p_ids
+    data["reporting_level"] = 2
+    data["report_query"] = query_data
+
+    create_report(data)

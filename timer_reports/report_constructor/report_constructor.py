@@ -71,7 +71,7 @@ class ReportPrep:
         self._calculate_durations()
 
     def export_data_for_tree(self):
-        """Getter for Report Tree"""
+        """Getter for data to be fed to ReportTree"""
         export = {
             "reporting_on": self.project_names,
             "reporting_period": self.report_dates,
@@ -147,9 +147,9 @@ class ReportConstructor:
 
 def total_duration_helper(tree: ReportTree):
     """Entry point to traverse tree and sum durations"""
-    nodes = [SessionNode, ProjectNode, RootNode]
-    for node in nodes:
-        _total_duration_traversal(node, tree.root)
+    node_types = [SessionNode, ProjectNode, RootNode]
+    for node_type in node_types:
+        _total_duration_traversal(node_type, tree.root)
 
 
 def _total_duration_traversal(node_type, node):

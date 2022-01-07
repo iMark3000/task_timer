@@ -60,14 +60,18 @@ class SectionPrinter:
 
         Primary sections are formatted as full line breaks.
         """
+
         for index, field in enumerate(self.header_fields):
             if field in section.data.keys():
                 data = self.header_field_obj[index].print_field(section.data[field])
                 if section.is_sub_section():
-                    print(f'>>>>{self.header_field_names[index]}: {data}')
+                    print(f'<<<< {self.header_field_names[index]}: {data} >>>>')
                 else:
                     head = f' {self.header_field_names[index]}: {data.upper()} '
                     print('{0:{fill}{align}{length}}'.format(head, fill='-', align='^', length=self.report_width))
+
+        if not section.is_sub_section():
+            print('\n')
 
     def print_section_foot(self, section: Section):
         """
@@ -76,6 +80,7 @@ class SectionPrinter:
 
         Sub sections do not have footers.
         """
+        print('\n')
         if not section.is_sub_section():
             print('SECTION SUMMARY')
             print('---------------')
@@ -83,3 +88,4 @@ class SectionPrinter:
                 if field in section.data.keys():
                     data = self.footer_field_obj[index].print_field(section.data[field])
                     print(f'{self.footer_field_names[index]}: {data}')
+        print('\n')

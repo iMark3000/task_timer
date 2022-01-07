@@ -157,6 +157,7 @@ class NoteField(Field):
         self.padding = padding
 
     def print_field(self, value: str, padding=None) -> str:
+        value = super()._truncate(value)
         if self.end_note:
             first_str = '{0:{fill}{align}{length}}'.format('', fill='', align='<', length=self.padding)
             second_str = '{0:{fill}{align}{length}}'.format(value, fill='', align='<', length=self._field_width)

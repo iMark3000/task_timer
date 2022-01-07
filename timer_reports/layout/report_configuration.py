@@ -6,6 +6,10 @@ from timer_reports.report_printer.report_fields import IntField
 from timer_reports.report_printer.report_fields import HeaderTextField
 from timer_reports.report_printer.report_fields import PercentField
 
+from timer_reports.report_constructor.report_tree.report_nodes import ProjectNode
+from timer_reports.report_constructor.report_tree.report_nodes import SessionNode
+from timer_reports.report_constructor.report_tree.report_nodes import LogNode
+
 
 FIELD_MAPPING = {
     'average_LogNode': ['LOG AVE', DurationField],
@@ -34,7 +38,7 @@ FIELD_MAPPING = {
 REPORT_STRUCTURE = {
     1: {"row_node": LogNode,
         "section_nodes": [ProjectNode, SessionNode]},
-    2: {"row_node": LogNode,
+    2: {"row_node": SessionNode,
         "section_nodes": [ProjectNode]},
     3: {"row_node": ProjectNode,
         "section_nodes": []}
