@@ -70,7 +70,7 @@ class ReportPrinter:
         self._row_Queue = RowQueue()
         print('\n')
 
-    def print_report_footer(self) -> None:
+    def end_report_printing_process(self) -> None:
         self._print_row_queue()
         self._section_printer.print_section_foot(self._current_primary_section)
         self._report_header_summary_printer.print_report_summary(self._report_header_footer_component)

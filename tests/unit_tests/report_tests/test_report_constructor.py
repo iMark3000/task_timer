@@ -17,15 +17,6 @@ from timer_reports.report_constructor.report_tree.report_nodes import LogNode
 
 from timer_reports.report import create_report
 
-from timer_reports.report_constructor.report_componenets import Row
-from timer_reports.report_constructor.report_componenets import Section
-from timer_reports.report_constructor.report_componenets import ReportHeaderSummary
-
-
-from timer_reports.report_printer.row_component_printer import RowPrinter
-from timer_reports.report_printer.section_component_printer import SectionPrinter
-from timer_reports.report_printer.report_head_foot_component_printer import ReportHeadFootPrinter
-
 from timer_reports.report_printer.printer_manager import ReportPrinter
 
 
@@ -239,7 +230,7 @@ def test_printers(create_report_components, create_layout_manager_config1):
     for component in create_report_components:
         component.compile_data()
         report_printer.print_component(component)
-    report_printer.print_report_footer()
+    report_printer.end_report_printing_process()
 
 
 def test_create_report_func(query_data):

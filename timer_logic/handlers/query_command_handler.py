@@ -4,6 +4,7 @@ from .command_handler_base_class import Handler
 from command_classes.commands import QueryCommand
 from timer_database.dbManager import DbQueryReport
 
+
 class QueryCommandHandler(Handler):
 
     def __init__(self, command: QueryCommand):
@@ -18,6 +19,7 @@ class QueryCommandHandler(Handler):
             pass
 
     def _quick_query_translation(self):
-
+        pass
 
     def handle(self):
+        print(self.command)

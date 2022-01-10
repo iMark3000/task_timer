@@ -15,10 +15,10 @@ class DbManager:
 
     def dbConnect(self):
         if os.path.exists(self.db_path):
-            return sqlite3.connect(self.db_path)
+            return sqlite3.connect(self.db_path, detect_types=sqlite3.PARSE_DECLTYPES | sqlite3.PARSE_COLNAMES)
         else:
             run_db_setup(self.db_path)
-            return sqlite3.connect(self.db_path)
+            return sqlite3.connect(self.db_path, detect_types=sqlite3.PARSE_DECLTYPES | sqlite3.PARSE_COLNAMES)
 
 
 class DbQueryUtility(DbManager):
@@ -136,3 +136,12 @@ class DbQueryReport(DbManager):
         results = cur.fetchall()
         conn.close()
         return results
+
+    def query_by_date_range(self):
+        pass
+
+    def query_before_date(self):
+        pass
+
+    def query_after_date(self):
+        pass

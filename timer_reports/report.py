@@ -1,4 +1,3 @@
-import pprint
 
 from timer_reports.report_constructor.report_constructor import ReportPrep
 from timer_reports.report_constructor.report_constructor import ReportTreeCreator
@@ -43,4 +42,4 @@ def create_report(data):
     for component in report_components:
         component.compile_data()
         report_printer.print_component(component)
-    report_printer.print_report_footer()
+    report_printer.end_report_printing_process()
