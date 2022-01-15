@@ -112,7 +112,6 @@ class QueryCommand(Command):
         self._query_projects = None
         self._query_level = None
         self._query_time_period = None
-        self._chron = False
         super().__init__(command, **kwargs)
 
     @property
@@ -126,10 +125,6 @@ class QueryCommand(Command):
     @property
     def query_time_period(self):
         return self._query_time_period
-
-    @property
-    def is_chron(self):
-        return self._chron
 
 
 # ~~~~~~~~~~~UPDATE COMMAND FAMILY~~~~~~~~~~~~~~~~~~~~

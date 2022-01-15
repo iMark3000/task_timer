@@ -39,7 +39,7 @@ class TimeDateStrToDateTimeObj:
 
     def _convert_time_to_int(self):
         self.date_cont.convert_to_int()
-        if self.pm:  # Todo: Figure hour why the multiple conditions were not working
+        if self.pm:
             if self.date_cont.hour < 12:
                 self.date_cont.hour += 12
 
@@ -133,7 +133,11 @@ class DateContainer:
     def minute(self, value):
         self._minute = value
 
+    def __str__(self):
+        return f'M: {self.month} D: {self.day} Y: {self.year}'
+
     def convert_to_int(self):
+        print(self)
         for att in vars(self):
             value = self.__getattribute__(att)
             if isinstance(value, str):

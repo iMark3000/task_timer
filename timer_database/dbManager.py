@@ -15,10 +15,10 @@ class DbManager:
 
     def dbConnect(self):
         if os.path.exists(self.db_path):
-            return sqlite3.connect(self.db_path)
+            return sqlite3.connect(self.db_path, detect_types=sqlite3.PARSE_DECLTYPES | sqlite3.PARSE_COLNAMES)
         else:
             run_db_setup(self.db_path)
-            return sqlite3.connect(self.db_path)
+            return sqlite3.connect(self.db_path, detect_types=sqlite3.PARSE_DECLTYPES | sqlite3.PARSE_COLNAMES)
 
 
 class DbQueryUtility(DbManager):
@@ -118,15 +118,15 @@ class DbQueryReport(DbManager):
         proj = ', '.join(['?'] * len(pid))
         statement = """
         SELECT 
-        projects.name AS project,
+        projects.name AS project_name,
         projects.id AS project_id,
-        sessions.id AS session, 
-        sessions.note AS note,
-        time_log.id AS logID, 
-        time_log.start_timestamp AS startTime, 
-        time_log.end_timestamp AS endTime, 
-        time_log.start_note AS startLogNote, 
-        time_log.end_note AS endLogNote
+        sessions.id AS session_id, 
+        sessions.note AS session_note,
+        time_log.id AS log_id, 
+        time_log.start_timestamp AS start_time, 
+        time_log.end_timestamp AS end_time, 
+        time_log.start_note AS start_log_note, 
+        time_log.end_note AS end_log_note
         FROM projects 
         INNER JOIN sessions ON sessions.project_id = projects.id 
         INNER JOIN time_log ON time_log.session_id = sessions.id 
@@ -136,3 +136,12 @@ class DbQueryReport(DbManager):
         results = cur.fetchall()
         conn.close()
         return results
+
+    def query_by_date_range(self):
+        pass
+
+    def query_before_date(self):
+        pass
+
+    def query_after_date(self):
+        pass

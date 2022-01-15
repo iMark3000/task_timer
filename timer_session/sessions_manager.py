@@ -28,7 +28,6 @@ class SessionManager:
         else:
             self.sessions.sort(key=lambda x: x.current_session)
             current_session = self.sessions[-1]
-            # Todo: Do you really want to make this assertion?
             assert current_session.current_session is True, "Current session must be True"
             self.sessions.sort(key=lambda x: x.project_id)
             return current_session
@@ -50,7 +49,7 @@ class SessionManager:
         current = self.get_current_session()
         if current is not None:
             current.current_session = False
-            new_current = self._recursive_search(self.sessions, pid)
+            new_current = self._get_session(pid)
             if new_current is not None:
                 new_current.current_session = True
             else:
@@ -84,25 +83,19 @@ class SessionManager:
             return None
 
     def check_for_session(self, pid: int):
-        if not self._recursive_search(self.sessions, pid):
-            return False
-        else:
+        session_project_ids = [x.project_id for x in self.sessions]
+        if pid in session_project_ids:
             return True
-
-    def _recursive_search(self, ls: list, pid: int):
-        if len(ls) == 1:
-            index = 0
         else:
-            index = math.floor(len(ls) / 2)
-
-        if pid == ls[index].project_id:
-            return ls[index]
-        elif index == 0:
             return False
-        elif pid > ls[index].project_id:
-            return self._recursive_search(ls[index:], pid)
-        elif pid < ls[index].project_id:
-            return self._recursive_search(ls[:index], pid)
+
+    def _get_session(self, pid: int):
+        for s in self.sessions:
+            if s.project_id == pid:
+                return s
+            else:
+                pass
+        print('Session not found.')
 
     def count_of_concurrent_sessions(self):
         return len(self.sessions)

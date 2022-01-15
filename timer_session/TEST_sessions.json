@@ -1,37 +1,17 @@
 [
   {
-    "_project_name": "fart",
+    "_project_name": "hello hello hello",
     "_project_id": 1,
-    "_last_command": "NO_SESSION",
-    "_session_id": "None",
-    "_session_start_time": "None",
-    "_last_command_time": "None",
-    "_last_command_log_note": "None",
-    "_current_session": "False"
-  },
-  {
-    "_project_name": "cat",
-    "_project_id": 3,
-    "_last_command": "NO_SESSION",
-    "_session_id": "None",
-    "_session_start_time": "None",
-    "_last_command_time": "None",
+    "_last_command": "START",
+    "_session_id": 4,
+    "_session_start_time": "01/10/2022_11:11:00",
+    "_last_command_time": "01/10/2022_11:11:00",
     "_last_command_log_note": "None",
     "_current_session": "True"
   },
   {
-    "_project_name": "cadabada",
-    "_project_id": 4,
-    "_last_command": "NO_SESSION",
-    "_session_id": "None",
-    "_session_start_time": "None",
-    "_last_command_time": "None",
-    "_last_command_log_note": "None",
-    "_current_session": "False"
-  },
-  {
-    "_project_name": "park",
-    "_project_id": 5,
+    "_project_name": "funky monkey",
+    "_project_id": 2,
     "_last_command": "NO_SESSION",
     "_session_id": "None",
     "_session_start_time": "None",

@@ -3,7 +3,7 @@ import sqlite3
 
 def run_db_setup(path):
 
-	conn = sqlite3.connect(path)
+	conn = sqlite3.connect(path, detect_types=sqlite3.PARSE_DECLTYPES | sqlite3.PARSE_COLNAMES)
 	cur = conn.cursor()
 
 	cur.execute(
@@ -25,8 +25,8 @@ def run_db_setup(path):
 		"""CREATE TABLE IF NOT EXISTS time_log (
 			id integer PRIMARY Key, 
 			session_id integer NOT NULL, 
-			start_timestamp datetime NOT NULL, 
-			end_timestamp datetime NOT NULL,
+			start_timestamp timestamp NOT NULL, 
+			end_timestamp timestamp NOT NULL,
 			start_note TEXT,
 			end_note TEXT, 
 			FOREIGN KEY (session_id) REFERENCES sessions (id))"""
