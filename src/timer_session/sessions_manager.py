@@ -3,9 +3,9 @@ from datetime import datetime
 from typing import Union
 
 from .session import Session
-from src.config import ConfigFetch
+from src.config.config_manager import ConfigFetch
 from .session_datetime_converter import DateTimeConverter
-from utils.command_enums import InputType
+from src.utils.command_enums import InputType
 
 
 SESSION_JSON_PATH = ConfigFetch().fetch_current_env()['PATHS']['SESSION_PATH']

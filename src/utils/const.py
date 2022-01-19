@@ -1,6 +1,6 @@
 from string import ascii_lowercase
 
-from utils.command_enums import InputType
+from src.utils.command_enums import InputType
 
 #  TODO LOG is not included below
 LOG_COMMANDS = [

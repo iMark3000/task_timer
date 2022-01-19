@@ -6,7 +6,7 @@ from src.command_classes.commands import ResumeCommand
 from src.command_classes.commands import PauseCommand
 from src.command_classes.commands import StopCommand
 
-from utils.command_enums import InputType
+from src.utils.command_enums import InputType
 
 
 class LogCommandFactory(CommandAbstractFactory):

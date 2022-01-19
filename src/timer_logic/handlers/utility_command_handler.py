@@ -1,11 +1,11 @@
 from .command_handler_base_class import Handler
-from timer_database.dbManager import DbUpdate
-from timer_database.dbManager import DbQueryUtility
+from src.timer_database.dbManager import DbUpdate
+from src.timer_database.dbManager import DbQueryUtility
 from src.command_classes.commands import UtilityCommand
 
-from timer_session.sessions_manager import SessionManager
-from timer_session.sessions_manager import FetchSessionHelper
-from utils.command_enums import InputType
+from src.timer_session.sessions_manager import SessionManager
+from src.timer_session.sessions_manager import FetchSessionHelper
+from src.utils.command_enums import InputType
 
 
 class UtilityCommandHandler(Handler):
