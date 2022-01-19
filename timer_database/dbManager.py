@@ -1,5 +1,6 @@
 import sqlite3
 import os
+from datetime import date
 from typing import Tuple, List
 
 from config.config_manager import ConfigFetch
@@ -75,7 +76,7 @@ class DbUpdate(DbManager):
         #  data -> project_ind (int) start_time(datetime) end_time(None) note(str or None)
         conn = self.dbConnect()
         cur = conn.cursor()
-        sql_statement = """INSERT INTO sessions(project_id,start_date,end_date,note) VALUES(?,?,?,?)"""
+        sql_statement = """INSERT IN: datetimeTO sessions(project_id,start_date,end_date,note) VALUES(?,?,?,?)"""
         cur.execute(sql_statement, data)
         session_id = cur.lastrowid
         conn.commit()
@@ -83,7 +84,7 @@ class DbUpdate(DbManager):
         return session_id
 
     def close_session(self, data: tuple) -> None:
-        # Param - (end_date, id)
+        # Param - (end_date, id): datetime
         conn = self.dbConnect()
         cur = conn.cursor()
         sql_statement = """UPDATE sessions SET end_date = ? WHERE id = ?"""
@@ -95,7 +96,7 @@ class DbUpdate(DbManager):
         #  Tuple needs to be int and two date objects
         conn = self.dbConnect()
         cur = conn.cursor()
-        sql_statement = """INSERT INTO time_log(
+        sql_statement = """INSERT IN: datetimeTO time_log(
         session_id,start_timestamp,end_timestamp,start_note,end_note) VALUES(?,?,?,?,?)"""
         cur.execute(sql_statement, data)
         conn.commit()
@@ -111,37 +112,85 @@ class DbUpdate(DbManager):
 
 class DbQueryReport(DbManager):
 
-    def get_sessions_by_project(self, pid: tuple):
+    def query_sessions_by_project_id(self, project_ids: Tuple[str]):
         conn = sqlite3.connect(self.db_path)
         conn.row_factory = lambda c, r: dict([(col[0], r[idx]) for idx, col in enumerate(c.description)])
         cur = conn.cursor()
-        proj = ', '.join(['?'] * len(pid))
+        proj = ', '.join(['?'] * len(project_ids))
         statement = """
-        SELECT 
-        projects.name AS project_name,
-        projects.id AS project_id,
-        sessions.id AS session_id, 
-        sessions.note AS session_note,
-        time_log.id AS log_id, 
-        time_log.start_timestamp AS start_time, 
-        time_log.end_timestamp AS end_time, 
-        time_log.start_note AS start_log_note, 
-        time_log.end_note AS end_log_note
-        FROM projects 
-        INNER JOIN sessions ON sessions.project_id = projects.id 
-        INNER JOIN time_log ON time_log.session_id = sessions.id 
-        WHERE projects.id IN ({p})	
-        """.format(p=proj)
-        cur.execute(statement, pid)
+            SELECT sessions.id, sessions.project_id 
+                FROM sessions 
+                WHERE sessions.project_id IN ({p})
+            """.format(p=proj)
+        cur.execute(statement, project_ids)
         results = cur.fetchall()
         conn.close()
         return results
 
-    def query_by_date_range(self):
-        pass
+    def query_for_project_name(self, project_ids: Tuple[str]):
+        conn = sqlite3.connect(self.db_path)
+        conn.row_factory = lambda c, r: dict([(col[0], r[idx]) for idx, col in enumerate(c.description)])
+        cur = conn.cursor()
+        proj = ', '.join(['?'] * len(project_ids))
+        statement = 'SELECT projects.id, projects.name FROM projects WHERE projects.id IN ({p})'.format(p=proj)
+        cur.execute(statement, project_ids)
+        results = cur.fetchall()
+        conn.close()
+        return results
 
-    def query_before_date(self):
-        pass
+    def query_by_date_range(self, session_ids: List[str], start: date, end: date):
+        conn = sqlite3.connect(self.db_path)
+        conn.row_factory = lambda c, r: dict([(col[0], r[idx]) for idx, col in enumerate(c.description)])
+        cur = conn.cursor()
+        sessions = ', '.join(session_ids)
+        statement = """
+            SELECT timer.* 
+                FROM (
+                    SELECT * FROM time_log 
+                    WHERE time_log.session_id IN ({s})
+                    ) as timer
+            WHERE timer.start_timestamp OR timer.end_timestamp BETWEEN :start AND :end
+        """.format(s=sessions)
+        param = {'start': start, 'end': end}
+        cur.execute(statement, param)
+        result = cur.fetchall()
+        conn.close()
+        return result
 
-    def query_after_date(self):
-        pass
+    def query_before_date(self, session_ids: List[str], query_date: date):
+        conn = sqlite3.connect(self.db_path)
+        conn.row_factory = lambda c, r: dict([(col[0], r[idx]) for idx, col in enumerate(c.description)])
+        cur = conn.cursor()
+        sessions = ', '.join(session_ids)
+        statement = """
+            SELECT timer.* 
+                FROM (
+                    SELECT * FROM time_log 
+                    WHERE time_log.session_id IN ({s})
+                    ) as timer
+            WHERE timer.start_timestamp < :query_date
+        """.format(s=sessions)
+        param = {'query_date': query_date}
+        cur.execute(statement, param)
+        result = cur.fetchall()
+        conn.close()
+        return result
+
+    def query_after_date(self, session_ids: List[str], query_date: date):
+        conn = sqlite3.connect(self.db_path)
+        conn.row_factory = lambda c, r: dict([(col[0], r[idx]) for idx, col in enumerate(c.description)])
+        cur = conn.cursor()
+        sessions = ', '.join(session_ids)
+        statement = """
+            SELECT timer.* 
+                FROM (
+                    SELECT * FROM time_log 
+                    WHERE time_log.session_id IN ({s})
+                    ) as timer
+            WHERE timer.start_timestamp > :query_date
+        """.format(s=sessions)
+        param = {'query_date': query_date}
+        cur.execute(statement, param)
+        result = cur.fetchall()
+        conn.close()
+        return result
