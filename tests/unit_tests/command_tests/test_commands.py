@@ -1,7 +1,6 @@
 import pytest
 import datetime
 
-from command_classes.commands import *
 from utils.command_enums import InputType
 
 

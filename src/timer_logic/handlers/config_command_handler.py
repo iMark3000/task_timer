@@ -1,10 +1,7 @@
-from typing import Union
-
 from .command_handler_base_class import Handler
-from timer_database.dbManager import DbUpdate, DbQueryUtility
-from command_classes.commands import ConfigCommand
+from src.command_classes.commands import ConfigCommand
 
-from config.config_manager import ConfigUpdater
+from src.config import ConfigUpdater
 from utils.exceptions import InvalidConfigArgument
 
 

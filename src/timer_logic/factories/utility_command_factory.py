@@ -1,13 +1,11 @@
-from collections import namedtuple
-
 from .command_factory_base_class import CommandAbstractFactory
 
-from command_classes.commands import UtilityCommand
-from command_classes.commands import NewCommand
-from command_classes.commands import FetchProject
-from command_classes.commands import StatusCheck
-from command_classes.commands import SwitchCommand
-from command_classes.commands import ProjectsCommand
+from src.command_classes.commands import UtilityCommand
+from src.command_classes.commands import NewCommand
+from src.command_classes.commands import FetchProject
+from src.command_classes.commands import StatusCheck
+from src.command_classes.commands import SwitchCommand
+from src.command_classes.commands import ProjectsCommand
 
 from utils.command_enums import InputType
 

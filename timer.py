@@ -10,7 +10,7 @@ from utils.exceptions import RequiredArgMissing
 from utils.exceptions import InvalidArgument
 from utils.exceptions import TooManyCommandArgs
 from utils.exceptions import HandlerNotFound
-from config.config_manager import ConfigFetch
+from src.config import ConfigFetch
 
 
 def intake(args):

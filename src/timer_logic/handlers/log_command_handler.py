@@ -5,7 +5,6 @@ from typing import Union
 
 from .command_handler_base_class import Handler
 from timer_database.dbManager import DbUpdate
-from command_classes.commands import *
 from timer_session.sessions_manager import SessionManager
 from utils.exceptions import CommandSequenceError, TimeSequenceError
 from utils.command_enums import InputType

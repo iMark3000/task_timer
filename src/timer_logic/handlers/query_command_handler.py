@@ -1,9 +1,7 @@
-import datetime
 from typing import List
 
 from .command_handler_base_class import Handler
-from command_classes.commands import QueryCommand
-from timer_database.dbManager import DbQueryReport
+from src.command_classes.commands import QueryCommand
 
 
 class QueryCommandHandler(Handler):

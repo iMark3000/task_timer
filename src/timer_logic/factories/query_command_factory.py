@@ -1,9 +1,8 @@
 
 from .command_factory_base_class import CommandAbstractFactory
-from command_classes.commands import QueryCommand
+from src.command_classes.commands import QueryCommand
 
 # Todo: Make Commands for Query
-from command_classes.commands import *
 
 
 class QueryCommandFactory(CommandAbstractFactory):

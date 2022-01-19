@@ -1,7 +1,7 @@
 import pytest
 import pprint
 
-from command_classes.commands import QueryCommand
+from src.command_classes.commands import QueryCommand
 from utils.command_enums import InputType
 from timer_logic.handlers.query_command_handler import QueryCommandHandler
 

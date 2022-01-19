@@ -1,10 +1,9 @@
 import json
-import math
 from datetime import datetime
 from typing import Union
 
 from .session import Session
-from config.config_manager import ConfigFetch
+from src.config import ConfigFetch
 from .session_datetime_converter import DateTimeConverter
 from utils.command_enums import InputType
 

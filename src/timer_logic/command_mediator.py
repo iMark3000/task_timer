@@ -1,13 +1,11 @@
-from collections import namedtuple
-
 from timer_session.sessions_manager import start_manager
 from timer_logic.factories.factory_router import command_factory_router
 
-from command_classes.commands import LogCommand
-from command_classes.commands import QueryCommand
-from command_classes.commands import UtilityCommand
-from command_classes.commands import UpdateCommand
-from command_classes.commands import ConfigCommand
+from src.command_classes.commands import LogCommand
+from src.command_classes.commands import QueryCommand
+from src.command_classes.commands import UtilityCommand
+from src.command_classes.commands import UpdateCommand
+from src.command_classes.commands import ConfigCommand
 
 from .handlers.update_command_handler import UpdateCommandHandler
 from .handlers.log_command_handler import LogCommandHandler
