@@ -44,7 +44,7 @@ class DbQueryUtility(DbManager):
     def fetch_project(self, project_id: tuple) -> tuple:
         conn = self.dbConnect()
         cur = conn.cursor()
-        cur.execute("SELECT * FROM projects WHERE id=?", project_id)
+        cur.execute("SELECT * FROM projects WHERE project_id=?", project_id)
         result = cur.fetchone()
         conn.close()
         return result
@@ -55,7 +55,7 @@ class DbUpdate(DbManager):
     def create_project(self, data: tuple) -> None:
         conn = self.dbConnect()
         cur = conn.cursor()
-        sql_statement = """INSERT INTO projects(name,status) VALUES(?,?)"""
+        sql_statement = """INSERT INTO projects(project_name,status) VALUES(?,?)"""
         cur.execute(sql_statement, data)
         conn.commit()
         conn.close()
@@ -76,7 +76,7 @@ class DbUpdate(DbManager):
         #  data -> project_ind (int) start_time(datetime) end_time(None) note(str or None)
         conn = self.dbConnect()
         cur = conn.cursor()
-        sql_statement = """INSERT IN: datetimeTO sessions(project_id,start_date,end_date,note) VALUES(?,?,?,?)"""
+        sql_statement = """INSERT INTO sessions(project_id,start_date,end_date,note) VALUES(?,?,?,?)"""
         cur.execute(sql_statement, data)
         session_id = cur.lastrowid
         conn.commit()
@@ -87,7 +87,7 @@ class DbUpdate(DbManager):
         # Param - (end_date, id): datetime
         conn = self.dbConnect()
         cur = conn.cursor()
-        sql_statement = """UPDATE sessions SET end_date = ? WHERE id = ?"""
+        sql_statement = """UPDATE sessions SET end_date = ? WHERE session_id = ?"""
         cur.execute(sql_statement, data)
         conn.commit()
         conn.close()
@@ -96,7 +96,7 @@ class DbUpdate(DbManager):
         #  Tuple needs to be int and two date objects
         conn = self.dbConnect()
         cur = conn.cursor()
-        sql_statement = """INSERT IN: datetimeTO time_log(
+        sql_statement = """INSERT INTO time_log(
         session_id,start_timestamp,end_timestamp,start_note,end_note) VALUES(?,?,?,?,?)"""
         cur.execute(sql_statement, data)
         conn.commit()
@@ -118,7 +118,7 @@ class DbQueryReport(DbManager):
         cur = conn.cursor()
         proj = ', '.join(['?'] * len(project_ids))
         statement = """
-            SELECT sessions.id, sessions.project_id 
+            SELECT sessions.session_id, sessions.project_id, sessions.note 
                 FROM sessions 
                 WHERE sessions.project_id IN ({p})
             """.format(p=proj)
@@ -132,7 +132,7 @@ class DbQueryReport(DbManager):
         conn.row_factory = lambda c, r: dict([(col[0], r[idx]) for idx, col in enumerate(c.description)])
         cur = conn.cursor()
         proj = ', '.join(['?'] * len(project_ids))
-        statement = 'SELECT projects.id, projects.name FROM projects WHERE projects.id IN ({p})'.format(p=proj)
+        statement = 'SELECT projects.project_id, projects.project_name FROM projects WHERE projects.project_id IN ({p})'.format(p=proj)
         cur.execute(statement, project_ids)
         results = cur.fetchall()
         conn.close()

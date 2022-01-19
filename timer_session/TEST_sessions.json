@@ -1,22 +1,12 @@
 [
   {
-    "_project_name": "hello hello hello",
+    "_project_name": "air bud",
     "_project_id": 1,
-    "_last_command": "START",
-    "_session_id": 4,
-    "_session_start_time": "01/10/2022_11:11:00",
-    "_last_command_time": "01/10/2022_11:11:00",
+    "_last_command": "RESUME",
+    "_session_id": 3,
+    "_session_start_time": "01/02/2022_13:00:00",
+    "_last_command_time": "01/02/2022_13:44:00",
     "_last_command_log_note": "None",
     "_current_session": "True"
-  },
-  {
-    "_project_name": "funky monkey",
-    "_project_id": 2,
-    "_last_command": "NO_SESSION",
-    "_session_id": "None",
-    "_session_start_time": "None",
-    "_last_command_time": "None",
-    "_last_command_log_note": "None",
-    "_current_session": "False"
   }
 ]

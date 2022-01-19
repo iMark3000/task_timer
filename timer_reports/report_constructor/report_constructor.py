@@ -42,13 +42,13 @@ class ReportPrep:
     def _convert_times_to_datetime(self):
         """Converts start and end dates to datetime objects"""
         for d in self.query_data:
-            d['start_time'] = self._convert_to_datetime(self._handle_microseconds(d['start_time']))
-            d['end_time'] = self._convert_to_datetime(self._handle_microseconds(d['end_time']))
+            d['start_timestamp'] = self._convert_to_datetime(self._handle_microseconds(d['start_time']))
+            d['end_timestamp'] = self._convert_to_datetime(self._handle_microseconds(d['end_time']))
 
     def _calculate_durations(self):
         """Calculates durations for each line of data"""
         for d in self.query_data:
-            d['duration'] = d['end_time'] - d['start_time']
+            d['duration'] = d['end_timestamp'] - d['start_timestamp']
 
     @staticmethod
     def _handle_microseconds(tstamp):

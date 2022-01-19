@@ -8,13 +8,13 @@ def run_db_setup(path):
 
 	cur.execute(
 		"""CREATE TABLE IF NOT EXISTS projects ( 
-			id integer PRIMARY Key, 
-			name text NOT NULL, 
+			project_id integer PRIMARY Key, 
+			project_name text NOT NULL, 
 			status integer NOT NULL)"""
 	)
 	cur.execute(
 		"""CREATE TABLE IF NOT EXISTS sessions (
-			id integer PRIMARY Key, 
+			session_id integer PRIMARY Key, 
 			project_id integer NOT NULL, 
 			start_date date NOT NULL, 
 			end_date date,
@@ -23,7 +23,7 @@ def run_db_setup(path):
 	)
 	cur.execute(
 		"""CREATE TABLE IF NOT EXISTS time_log (
-			id integer PRIMARY Key, 
+			log_id integer PRIMARY Key, 
 			session_id integer NOT NULL, 
 			start_timestamp timestamp NOT NULL, 
 			end_timestamp timestamp NOT NULL,
