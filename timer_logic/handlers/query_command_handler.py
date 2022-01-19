@@ -11,14 +11,16 @@ class QueryCommandHandler(Handler):
         self.command = command
         super().__init__(command)
 
-    def _report_all_time(self):
+    def _check_for_dates(self):
+        """Checks command args for dates"""
         pass
 
-    def _create_query_time_period(self):
-        if self.command.query_time_period in ['W', 'M', 'Y', 'CY', 'AT']:
-            pass
+    def _check_for_time_period(self):
+        """Checks for time period if dates do not exist"""
+        pass
 
-    def _quick_query_translation(self):
+    def _check_for_project_ids(self):
+        """Checks for project ids; if no project ids, query dates first"""
         pass
 
     def handle(self):
