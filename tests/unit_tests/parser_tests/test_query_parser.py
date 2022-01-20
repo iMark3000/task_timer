@@ -229,6 +229,7 @@ def test_start_and_end_date(basic_args_WO_dates):
     q = QueryCommandArgParser(command, basic_args_WO_dates)
     result = q.parse()
     print(f'\n{result}')
+    result[0]
     assert 'start_date' in result[1].keys()
     assert result[1]['start_date'] == datetime.date(year=2021, month=10, day=15)
     assert 'end_date' in result[1].keys()
