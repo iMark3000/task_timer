@@ -2,40 +2,35 @@ from typing import List, Tuple
 from datetime import datetime
 from datetime import timedelta
 
-from timer_reports.report_constructor.report_tree.report_tree import ReportTree
+from src.timer_reports.report_constructor.report_tree.report_tree import ReportTree
 
-from timer_reports.report_constructor.report_tree.report_nodes import RootNode
-from timer_reports.report_constructor.report_tree.report_nodes import ProjectNode
-from timer_reports.report_constructor.report_tree.report_nodes import SessionNode
-from timer_reports.report_constructor.report_tree.report_nodes import LogNode
+from src.timer_reports.report_constructor.report_tree.report_nodes import RootNode
+from src.timer_reports.report_constructor.report_tree.report_nodes import ProjectNode
+from src.timer_reports.report_constructor.report_tree.report_nodes import SessionNode
+from src.timer_reports.report_constructor.report_tree.report_nodes import LogNode
 
-from timer_reports.layout.layout_manager import LayoutManager
+from src.timer_reports.layout.layout_manager import LayoutManager
 
-from timer_reports.report_constructor.report_componenets import Section
-from timer_reports.report_constructor.report_componenets import Row
-from timer_reports.report_constructor.report_componenets import ReportHeaderSummary
+from src.timer_reports.report_constructor.report_componenets import Section
+from src.timer_reports.report_constructor.report_componenets import Row
+from src.timer_reports.report_constructor.report_componenets import ReportHeaderSummary
 
 
 class ReportPrep:
 
-    def __init__(self, dates: Tuple[str, str], project_ids: Tuple[str], query_data: List[dict]):
-        self.project_ids = project_ids
+    def __init__(self, dates: Tuple[str, str], query_data: List[dict]):
         self.project_names = None
         self.report_dates = dates[0] + " to " + dates[1]
         self.query_data = query_data
 
     def _set_report_name(self):
         """Setting names and time period for Report"""
-        name_list = list()
-        if len(self.project_ids) < 3:
-            for d in self.query_data:
-                if d["project_name"] not in name_list:
-                    name_list.append(d["project_name"])
-                    if len(name_list) == 2:
-                        self.project_names = ' & '.join(name_list)
-                        break
-            if len(name_list) < 2:
-                self.project_names = name_list[0]
+        name_set = set()
+        for d in self.query_data:
+            name_set.add(d["project_name"])
+
+        if len(name_set) <= 2:
+            self.project_names = list(name_set)
         else:
             self.project_names = 'MULTIPLE PROJECTS'
 
@@ -52,7 +47,7 @@ class ReportPrep:
 
     @staticmethod
     def _handle_microseconds(tstamp):
-        """Removes milliseconds from time strings so duration can be calculated"""
+        """Removes millisecondsself.project_ids from time strings so duration can be calculated"""
         # Todo: Make better; Can timestamps w/o milliseconds have milliseconds added?
         if '.' in tstamp:
             return tstamp.split('.')[0]

@@ -4,20 +4,20 @@ from datetime import timedelta
 import pytest
 from pprint import pprint
 
-from timer_reports.layout.layout_manager import LayoutManager
+from src.timer_reports.layout.layout_manager import LayoutManager
 
-from timer_reports.report_constructor.report_constructor import ReportPrep
-from timer_reports.report_constructor.report_constructor import ReportTreeCreator
-from timer_reports.report_constructor.report_constructor import ReportConstructor
-from timer_reports.report_constructor.report_constructor import total_duration_helper
+from src.timer_reports.report_constructor.report_constructor import ReportPrep
+from src.timer_reports.report_constructor.report_constructor import ReportTreeCreator
+from src.timer_reports.report_constructor.report_constructor import ReportConstructor
+from src.timer_reports.report_constructor.report_constructor import total_duration_helper
 
-from timer_reports.report_constructor.report_tree.report_nodes import ProjectNode
-from timer_reports.report_constructor.report_tree.report_nodes import SessionNode
-from timer_reports.report_constructor.report_tree.report_nodes import LogNode
+from src.timer_reports.report_constructor.report_tree.report_nodes import ProjectNode
+from src.timer_reports.report_constructor.report_tree.report_nodes import SessionNode
+from src.timer_reports.report_constructor.report_tree.report_nodes import LogNode
 
-from timer_reports.report import create_report
+from src.timer_reports.report import create_report
 
-from timer_reports.report_printer.printer_manager import ReportPrinter
+from src.timer_reports.report_printer.printer_manager import ReportPrinter
 
 
 @pytest.fixture

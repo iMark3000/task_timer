@@ -1,15 +1,15 @@
 
-from timer_reports.report_constructor.report_constructor import ReportPrep
-from timer_reports.report_constructor.report_constructor import ReportTreeCreator
-from timer_reports.report_constructor.report_constructor import ReportConstructor
-from timer_reports.report_constructor.report_constructor import total_duration_helper
+from src.timer_reports.report_constructor.report_constructor import ReportPrep
+from src.timer_reports.report_constructor.report_constructor import ReportTreeCreator
+from src.timer_reports.report_constructor.report_constructor import ReportConstructor
+from src.timer_reports.report_constructor.report_constructor import total_duration_helper
 
-from timer_reports.report_printer.printer_manager import ReportPrinter
+from src.timer_reports.report_printer.printer_manager import ReportPrinter
 
-from timer_reports.layout.layout_manager import LayoutManager
+from src.timer_reports.layout.layout_manager import LayoutManager
 
 
-def create_report(data):
+def create_report(data: dict):
     """
     data from Query Command needs to supply these arguments to make teh report work
 
@@ -23,7 +23,7 @@ def create_report(data):
         the project_id, project_name, and session_id
     """
 
-    report_data = ReportPrep(data["reporting_period"], data["reporting_on"], data["report_query"])
+    report_data = ReportPrep(data["reporting_period"], data["report_query"])
     report_data.prep_report()
     report_tree_creator = ReportTreeCreator(**report_data.export_data_for_tree())
     report_tree_creator.build_tree()
