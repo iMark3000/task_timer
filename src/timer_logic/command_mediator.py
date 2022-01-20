@@ -1,5 +1,5 @@
-from timer_session.sessions_manager import start_manager
-from timer_logic.factories.factory_router import command_factory_router
+from src.timer_session.sessions_manager import start_manager
+from src.timer_logic.factories.factory_router import command_factory_router
 
 from src.command_classes.commands import LogCommand
 from src.command_classes.commands import QueryCommand
@@ -13,9 +13,9 @@ from .handlers.query_command_handler import QueryCommandHandler
 from .handlers.utility_command_handler import UtilityCommandHandler
 from .handlers.config_command_handler import ConfigCommandHandler
 
-from utils.exceptions import HandlerNotFound
-from utils.exceptions import TimeSequenceError
-from utils.exceptions import CommandSequenceError
+from src.utils.exceptions import HandlerNotFound
+from src.utils.exceptions import TimeSequenceError
+from src.utils.exceptions import CommandSequenceError
 
 
 def run_mediator(command_args: tuple):

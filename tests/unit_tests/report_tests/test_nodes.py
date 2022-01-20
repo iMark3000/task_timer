@@ -61,7 +61,7 @@ def test_log_node(node_data):
     assert node.project_name == 'cat'
     assert node.session_id == 3
     assert node.log_id == 5
-    assert node.start_time == datetime(year=2021, month=11, day=17, hour=11, minute=7, second=11)
+    assert node.start_timetstamp == datetime(year=2021, month=11, day=17, hour=11, minute=7, second=11)
     assert node.end_time == datetime(year=2021, month=11, day=17, hour=11, minute=7, second=37)
     assert node.start_log_note == 'Test note'
     assert node.end_log_note == 'Test note...again'

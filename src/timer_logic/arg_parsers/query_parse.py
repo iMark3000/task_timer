@@ -85,14 +85,10 @@ class QueryCommandArgParser(CommandArgParser):
                 except ValueError:
                     raise InvalidArgument('Project ID must be an int')
             self.arg_dict['query_projects'] = tuple(project_ids)
-        else:
-            # Default if arg not provided
-            self.arg_dict['query_projects'] = (0,)
 
     def _no_args_provided(self):
         """This func provides default arguments If no arguments are provided"""
         self.arg_dict['query_time_period'] = 'W'
-        self.arg_dict['query_projects'] = (0,)
         self.arg_dict['query_level'] = 1
 
     def parse(self):

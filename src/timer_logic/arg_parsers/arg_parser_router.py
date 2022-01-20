@@ -7,12 +7,12 @@ from .utility_parse import UtilityCommandArgParser
 from .update_parse import UpdateCommandArgParser
 from .config_parser import ConfigCommandArgParser
 
-from utils.command_enums import InputType
-from utils.const import LOG_COMMANDS
-from utils.const import QUERY_COMMANDS
-from utils.const import UTILITY_COMMANDS
-from utils.const import UPDATE_COMMANDS
-from utils.const import CONFIG_COMMANDS
+from src.utils.command_enums import InputType
+from src.utils.const import LOG_COMMANDS
+from src.utils.const import QUERY_COMMANDS
+from src.utils.const import UTILITY_COMMANDS
+from src.utils.const import UPDATE_COMMANDS
+from src.utils.const import CONFIG_COMMANDS
 
 
 def arg_router(command: InputType, command_args: list) -> tuple:

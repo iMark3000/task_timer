@@ -1,7 +1,7 @@
 from .command_handler_base_class import Handler
 from src.command_classes.commands import ConfigCommand
 
-from src.config import ConfigUpdater
+from src.config.config_manager import ConfigUpdater
 from src.utils.exceptions import InvalidConfigArgument
 
 

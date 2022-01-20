@@ -1,7 +1,7 @@
 from collections import namedtuple
 
 from .arg_parse_base_class import CommandArgParser
-from utils.command_enums import InputType
+from src.utils.command_enums import InputType
 
 
 class ConfigCommandArgParser(CommandArgParser):

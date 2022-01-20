@@ -136,7 +136,7 @@ def test_combine_queries_projects_to_session_log(create_project_query, create_lo
 @pytest.fixture
 def create_query_command():
     tup = (InputType.QUERY,
-           {'query_projects': (123,),
+           {'query_projects': (1, 2),
             'query_level': 1,
             'end_date': date(year=2022, month=1, day=12),
             'start_date': date(year=2021, month=10, day=15),
@@ -164,3 +164,8 @@ def test_process_queries_bottom_up(create_query_command):
     handler = QueryCommandHandler(create_query_command)
     result = handler._process_queries_bottom_up(d)
     pprint.pprint(result)
+
+
+def test_handle(create_query_command):
+    handler = QueryCommandHandler(create_query_command)
+    handler.handle()

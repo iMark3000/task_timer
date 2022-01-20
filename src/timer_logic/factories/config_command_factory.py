@@ -2,7 +2,7 @@ from typing import Union
 from .command_factory_base_class import CommandAbstractFactory
 
 from src.command_classes.commands import ConfigCommand
-from utils.command_enums import InputType
+from src.utils.command_enums import InputType
 
 
 class ConfigCommandFactory(CommandAbstractFactory):

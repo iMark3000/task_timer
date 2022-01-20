@@ -7,7 +7,7 @@ from src.command_classes.commands import StatusCheck
 from src.command_classes.commands import SwitchCommand
 from src.command_classes.commands import ProjectsCommand
 
-from utils.command_enums import InputType
+from src.utils.command_enums import InputType
 
 
 class UtilityCommandFactory(CommandAbstractFactory):

@@ -1,14 +1,14 @@
 from typing import Union
 
-from timer_reports.report_printer.report_head_foot_component_printer import ReportHeadFootPrinter
-from timer_reports.report_printer.section_component_printer import SectionPrinter
-from timer_reports.report_printer.row_component_printer import RowPrinter
+from src.timer_reports.report_printer.report_head_foot_component_printer import ReportHeadFootPrinter
+from src.timer_reports.report_printer.section_component_printer import SectionPrinter
+from src.timer_reports.report_printer.row_component_printer import RowPrinter
 
-from timer_reports.report_constructor.report_componenets import Row
-from timer_reports.report_constructor.report_componenets import Section
-from timer_reports.report_constructor.report_componenets import ReportHeaderSummary
+from src.timer_reports.report_constructor.report_componenets import Row
+from src.timer_reports.report_constructor.report_componenets import Section
+from src.timer_reports.report_constructor.report_componenets import ReportHeaderSummary
 
-from timer_reports.layout.layout_manager import LayoutManager
+from src.timer_reports.layout.layout_manager import LayoutManager
 
 
 class ReportPrinter:

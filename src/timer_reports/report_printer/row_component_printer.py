@@ -1,6 +1,6 @@
 
 from ..layout.report_configuration import FIELD_MAPPING
-from timer_reports.report_constructor.report_componenets import Row
+from src.timer_reports.report_constructor.report_componenets import Row
 from .report_fields import Field
 from .report_fields import NoteField
 from typing import List

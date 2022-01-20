@@ -1,6 +1,7 @@
 
 from .command_factory_base_class import CommandAbstractFactory
 from src.command_classes.commands import QueryCommand
+from src.utils.command_enums import InputType
 
 # Todo: Make Commands for Query
 

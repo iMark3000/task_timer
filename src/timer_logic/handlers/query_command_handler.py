@@ -22,17 +22,6 @@ class QueryCommandHandler(Handler):
         self.command = command
         self.db_query = DbQueryReport()
 
-    def _query_for_project_names(self):
-        """Checks for project ids; if no project ids, query dates first"""
-        pass
-
-    def _query_for_sessions(self):
-        """Checks for project ids; if no project ids, query dates first"""
-        pass
-
-    def _query_for_logs(self):
-        pass
-
     def _create_time_stamps_for_query_time_period(self) -> dict:
         end_date = date.today()
         if self.command.query_time_period == 'CY':
@@ -82,10 +71,10 @@ class QueryCommandHandler(Handler):
         return query_data
 
     def handle(self):
-        print(self.command)
+
         dates = dict()
         # Check for both start and end dates
-        if self.command.start_date and self.command.end_date is None:
+        if self.command.start_date is None and self.command.end_date is None:
             dates.update(self._create_time_stamps_for_query_time_period())
         else:
             if self.command.start_date:
@@ -99,10 +88,9 @@ class QueryCommandHandler(Handler):
             query_results = self._process_queries_bottom_up(dates)
 
         # TODO: reporting_on is gone....check that this doesn't create bugs
-        # TODO: reporting_period is a tuple of date objects; not strings. This will need to be fixed in ReportPrep
         report_data = {
             "reporting_level": self.command.query_level,
-            "reporting_period": (self.command.start_date, self.command.end_date),
+            "reporting_period": (dates["start_date"], dates["end_date"]),
             "report_query": query_results
         }
 

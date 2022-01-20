@@ -1,10 +1,10 @@
 from typing import Union
 from collections import defaultdict
 
-from timer_reports.report_constructor.report_tree.report_nodes import RootNode
-from timer_reports.report_constructor.report_tree.report_nodes import ProjectNode
-from timer_reports.report_constructor.report_tree.report_nodes import SessionNode
-from timer_reports.report_constructor.report_tree.report_nodes import LogNode
+from src.timer_reports.report_constructor.report_tree.report_nodes import RootNode
+from src.timer_reports.report_constructor.report_tree.report_nodes import ProjectNode
+from src.timer_reports.report_constructor.report_tree.report_nodes import SessionNode
+from src.timer_reports.report_constructor.report_tree.report_nodes import LogNode
 
 NODE_LOOKUP = {
     'LogNode': LogNode,

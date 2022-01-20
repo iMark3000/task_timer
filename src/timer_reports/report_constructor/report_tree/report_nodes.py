@@ -118,8 +118,8 @@ class LogNode:
         self._project_id = None
         self._session_id = None
         self._log_id = None
-        self._start_time = None
-        self._end_time = None
+        self._start_timestamp = None
+        self._end_timestamp = None
         self._duration = None
         self._start_log_note = None
         self._end_log_note = None
@@ -145,12 +145,12 @@ class LogNode:
         return self._log_id
 
     @property
-    def start_time(self):
-        return self._start_time
+    def start_timetstamp(self):
+        return self._start_timestamp
 
     @property
-    def end_time(self):
-        return self._end_time
+    def end_timestamp(self):
+        return self._end_timestamp
 
     @property
     def duration(self):

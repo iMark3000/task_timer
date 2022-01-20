@@ -18,9 +18,9 @@ from src.timer_reports.report_constructor.report_componenets import ReportHeader
 
 class ReportPrep:
 
-    def __init__(self, dates: Tuple[str, str], query_data: List[dict]):
+    def __init__(self, dates: Tuple[datetime, datetime], query_data: List[dict]):
         self.project_names = None
-        self.report_dates = dates[0] + " to " + dates[1]
+        self.report_dates = dates
         self.query_data = query_data
 
     def _set_report_name(self):
@@ -30,15 +30,16 @@ class ReportPrep:
             name_set.add(d["project_name"])
 
         if len(name_set) <= 2:
-            self.project_names = list(name_set)
+            name_set = list(name_set)
+            self.project_names = f'{name_set[0]} and {name_set[1]}'
         else:
             self.project_names = 'MULTIPLE PROJECTS'
 
     def _convert_times_to_datetime(self):
         """Converts start and end dates to datetime objects"""
         for d in self.query_data:
-            d['start_timestamp'] = self._convert_to_datetime(self._handle_microseconds(d['start_time']))
-            d['end_timestamp'] = self._convert_to_datetime(self._handle_microseconds(d['end_time']))
+            d['start_timestamp'] = self._convert_to_datetime(self._handle_microseconds(d['start_timestamp']))
+            d['end_timestamp'] = self._convert_to_datetime(self._handle_microseconds(d['end_timestamp']))
 
     def _calculate_durations(self):
         """Calculates durations for each line of data"""
@@ -59,6 +60,11 @@ class ReportPrep:
         _format = "%Y-%m-%d %H:%M:%S"
         return datetime.strptime(time, _format)
 
+    def _create_report_date_string(self):
+        _format = "%Y-%m-%d"
+        return f'{datetime.strftime(self.report_dates[0], _format)} to ' \
+               f'{datetime.strftime(self.report_dates[1], _format)}'
+
     def prep_report(self):
         """Driver method"""
         self._set_report_name()
@@ -69,7 +75,7 @@ class ReportPrep:
         """Getter for data to be fed to ReportTree"""
         export = {
             "reporting_on": self.project_names,
-            "reporting_period": self.report_dates,
+            "reporting_period": self._create_report_date_string(),
             "report_data_for_tree": self.query_data,
         }
         return export

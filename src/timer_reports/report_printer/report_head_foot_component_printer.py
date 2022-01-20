@@ -1,4 +1,4 @@
-from timer_reports.report_constructor.report_constructor import ReportHeaderSummary
+from src.timer_reports.report_constructor.report_constructor import ReportHeaderSummary
 from ..layout.report_configuration import FIELD_MAPPING
 
 

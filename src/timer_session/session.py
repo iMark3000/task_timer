@@ -1,8 +1,8 @@
 from datetime import datetime
 from typing import Union
 
-from utils.command_enums import InputType
-from utils.const import LOG_COMMANDS
+from src.utils.command_enums import InputType
+from src.utils.const import LOG_COMMANDS
 
 
 class Session:

@@ -4,10 +4,12 @@ import datetime
 from typing import Union
 
 from .command_handler_base_class import Handler
-from timer_database.dbManager import DbUpdate
-from timer_session.sessions_manager import SessionManager
-from utils.exceptions import CommandSequenceError, TimeSequenceError
-from utils.command_enums import InputType
+from src.command_classes.commands import LogCommand
+from src.command_classes.commands import StartCommand
+from src.timer_database.dbManager import DbUpdate
+from src.timer_session.sessions_manager import SessionManager
+from src.utils.exceptions import CommandSequenceError, TimeSequenceError
+from src.utils.command_enums import InputType
 
 
 class LogCommandHandler(Handler):
