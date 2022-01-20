@@ -1,7 +1,7 @@
 import json
 import os
 
-from utils.exceptions import InvalidConfigArgument
+from src.utils.exceptions import InvalidConfigArgument
 
 
 class ConfigManager:

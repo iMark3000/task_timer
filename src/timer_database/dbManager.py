@@ -3,8 +3,8 @@ import os
 from datetime import date
 from typing import Tuple, List
 
-from src.config import ConfigFetch
-from utils.database_setup import run_db_setup
+from src.config.config_manager import ConfigFetch
+from src.utils.database_setup import run_db_setup
 
 DB_PATH = ConfigFetch().fetch_current_env()['PATHS']['DB_PATH']
 
@@ -226,6 +226,10 @@ def log_query_creator(**kwargs):
         # Where clause with one date
         data['params']['query_date'] = kwargs['end_date']
         statement_string.append('WHERE timer.start_timestamp < :query_date')
+    elif 'end_date' not in kwargs.keys():
+        # Where clause with one date
+        data['params']['query_date'] = kwargs['start_date']
+        statement_string.append('WHERE timer.start_timestamp > :query_date')
     else:
         # where clause with both dates
         data['params']['start'] = kwargs['start_date']

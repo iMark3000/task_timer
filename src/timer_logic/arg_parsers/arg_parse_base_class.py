@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-from utils.command_enums import InputType
+from src.utils.command_enums import InputType
 
 
 class CommandArgParser(ABC):

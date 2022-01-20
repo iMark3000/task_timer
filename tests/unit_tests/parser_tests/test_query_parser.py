@@ -2,8 +2,8 @@ import datetime
 
 import pytest
 
-from timer_logic.arg_parsers.query_parse import QueryCommandArgParser
-from utils.command_enums import InputType
+from src.timer_logic.arg_parsers.query_parse import QueryCommandArgParser
+from src.utils.command_enums import InputType
 
 
 @pytest.fixture

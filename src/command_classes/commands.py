@@ -2,8 +2,8 @@ from abc import ABC, abstractmethod
 from datetime import datetime
 from typing import Union
 
-from utils.exceptions import CommandSequenceError
-from utils.command_enums import InputType
+from src.utils.exceptions import CommandSequenceError
+from src.utils.command_enums import InputType
 
 
 class Command(ABC):
@@ -112,6 +112,8 @@ class QueryCommand(Command):
         self._query_projects = None
         self._query_level = None
         self._query_time_period = None
+        self._start_date = None
+        self._end_date = None
         super().__init__(command, **kwargs)
 
     @property
@@ -126,6 +128,13 @@ class QueryCommand(Command):
     def query_time_period(self):
         return self._query_time_period
 
+    @property
+    def start_date(self):
+        return self._start_date
+
+    @property
+    def end_date(self):
+        return self._end_date
 
 # ~~~~~~~~~~~UPDATE COMMAND FAMILY~~~~~~~~~~~~~~~~~~~~
 # Update commands update records in the database
