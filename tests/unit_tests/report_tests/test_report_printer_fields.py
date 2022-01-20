@@ -3,12 +3,12 @@ from pytest_mock import mocker
 from datetime import datetime
 from datetime import timedelta
 
-from timer_reports.report_printer.report_fields import ProjectField
-from timer_reports.report_printer.report_fields import TimeField
-from timer_reports.report_printer.report_fields import IntField
-from timer_reports.report_printer.report_fields import DurationField
-from timer_reports.report_printer.report_fields import PercentField
-from timer_reports.report_printer.report_fields import NoteField
+from src.timer_reports.report_printer.report_fields import ProjectField
+from src.timer_reports.report_printer.report_fields import TimeField
+from src.timer_reports.report_printer.report_fields import IntField
+from src.timer_reports.report_printer.report_fields import DurationField
+from src.timer_reports.report_printer.report_fields import PercentField
+from src.timer_reports.report_printer.report_fields import NoteField
 
 
 def test_project_field():

@@ -3,20 +3,20 @@ from datetime import timedelta
 from datetime import datetime
 
 # Importing Nodes
-from timer_reports.report_constructor.report_tree.report_nodes import RootNode
-from timer_reports.report_constructor.report_tree.report_nodes import ProjectNode
-from timer_reports.report_constructor.report_tree.report_nodes import SessionNode
-from timer_reports.report_constructor.report_tree.report_nodes import LogNode
+from src.timer_reports.report_constructor.report_tree.report_nodes import RootNode
+from src.timer_reports.report_constructor.report_tree.report_nodes import ProjectNode
+from src.timer_reports.report_constructor.report_tree.report_nodes import SessionNode
+from src.timer_reports.report_constructor.report_tree.report_nodes import LogNode
 
 # Importing Report Components
-from timer_reports.report_constructor.report_componenets import ReportHeaderSummary
-from timer_reports.report_constructor.report_componenets import Section
-from timer_reports.report_constructor.report_componenets import Row
+from src.timer_reports.report_constructor.report_componenets import ReportHeaderSummary
+from src.timer_reports.report_constructor.report_componenets import Section
+from src.timer_reports.report_constructor.report_componenets import Row
 
 # Importing Report Configurations
-from timer_reports.layout.report_configuration import ROW_FIELD_LAYOUTS
-from timer_reports.layout.report_configuration import SECTION_FIELD_LAYOUTS
-from timer_reports.layout.report_configuration import REPORT_HEADER_FOOTER_FIELD_LAYOUTS
+from src.timer_reports.layout.report_configuration import ROW_FIELD_LAYOUTS
+from src.timer_reports.layout.report_configuration import SECTION_FIELD_LAYOUTS
+from src.timer_reports.layout.report_configuration import REPORT_HEADER_FOOTER_FIELD_LAYOUTS
 
 
 @pytest.fixture

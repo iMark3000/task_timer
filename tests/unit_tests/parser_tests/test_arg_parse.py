@@ -1,15 +1,15 @@
 import pytest
 import datetime
 
-from timer_logic.arg_parsers.log_parse import LogCommandArgParser
-from timer_logic.arg_parsers.log_parse import StartCommandArgParser
-from timer_logic.arg_parsers.utility_parse import UtilityCommandArgParser
-from timer_logic.arg_parsers.arg_parser_router import arg_router
-from utils.command_enums import InputType
+from src.timer_logic.arg_parsers.log_parse import LogCommandArgParser
+from src.timer_logic.arg_parsers.log_parse import StartCommandArgParser
+from src.timer_logic.arg_parsers.utility_parse import UtilityCommandArgParser
+from src.timer_logic.arg_parsers.arg_parser_router import arg_router
+from src.utils.command_enums import InputType
 
-from utils.exceptions import RequiredArgMissing
-from utils.exceptions import InvalidArgument
-from utils.exceptions import TooManyCommandArgs
+from src.utils.exceptions import RequiredArgMissing
+from src.utils.exceptions import InvalidArgument
+from src.utils.exceptions import TooManyCommandArgs
 
 
 @pytest.fixture

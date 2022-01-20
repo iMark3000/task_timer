@@ -2,13 +2,13 @@ import pytest
 from datetime import datetime
 from datetime import timedelta
 
-from timer_reports.report_printer.row_component_printer import RowPrinter
-from timer_reports.report_constructor.report_componenets import Row
-from timer_reports.report_constructor.report_tree.report_nodes import RootNode
-from timer_reports.report_constructor.report_tree.report_nodes import SessionNode
-from timer_reports.report_constructor.report_tree.report_nodes import ProjectNode
-from timer_reports.layout.report_configuration import ROW_FIELD_LAYOUTS
-from timer_reports.report_constructor.report_tree.report_nodes import LogNode
+from src.timer_reports.report_printer.row_component_printer import RowPrinter
+from src.timer_reports.report_constructor.report_componenets import Row
+from src.timer_reports.report_constructor.report_tree.report_nodes import RootNode
+from src.timer_reports.report_constructor.report_tree.report_nodes import SessionNode
+from src.timer_reports.report_constructor.report_tree.report_nodes import ProjectNode
+from src.timer_reports.layout.report_configuration import ROW_FIELD_LAYOUTS
+from src.timer_reports.report_constructor.report_tree.report_nodes import LogNode
 
 
 @pytest.fixture

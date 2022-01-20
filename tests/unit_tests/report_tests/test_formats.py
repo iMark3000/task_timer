@@ -1,8 +1,8 @@
 import pytest
 from pytest_mock import mocker
 
-from timer_reports.layout_and_format.report_format import ReportFormatTemplate
-from timer_reports.layout_and_format.report_format import ReportFormatCreator
+from src.timer_reports.layout.layout_manager import ReportFormatTemplate
+from src.timer_reports.layout_and_format.report_format import ReportFormatCreator
 
 
 def test_log_level(mocker):

@@ -1,7 +1,7 @@
 import pytest
 import datetime
 
-from utils.time_string_converter import *
+from src.utils.time_string_converter import *
 
 
 def test_all_numbers():

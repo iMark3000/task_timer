@@ -1,14 +1,14 @@
 import pytest
 from pytest_mock import mocker
 
-from utils.command_enums import InputType
-from timer_session.session_datetime_converter import DateTimeConverter
+from src.utils.command_enums import InputType
+from src.timer_session.session_datetime_converter import DateTimeConverter
 
 # Objects for testing
-from timer_session.sessions_manager import create_session
-from timer_session.sessions_manager import convert_data_for_session_object
-from timer_session.sessions_manager import start_manager
-from timer_session.session import Session
+from src.timer_session.sessions_manager import create_session
+from src.timer_session.sessions_manager import convert_data_for_session_object
+from src.timer_session.sessions_manager import start_manager
+from src.timer_session.session import Session
 
 
 @pytest.fixture
