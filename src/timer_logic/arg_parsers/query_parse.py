@@ -49,11 +49,15 @@ class QueryCommandArgParser(CommandArgParser):
     def _set_report_level_param(self, arg):
         """Maps the '+' argument to the appropriate report level param; Also handles multiple '+' arguments - will
         defer to the lowest level provided"""
+        if arg not in ['+l', '+s', '+p']:
+            arg = '+l'
         if 'query_level' in self.arg_dict.keys():
             # Handling multiple '+' arguments
             if self.arg_dict['query_level'] > QUERY_PARAMS[arg]:
                 self.arg_dict['query_level'] = QUERY_PARAMS[arg]
-        else:
+            else:
+                self.arg_dict['query_level'] = QUERY_PARAMS[arg]
+        elif 'query_level' not in self.arg_dict.keys():
             self.arg_dict['query_level'] = QUERY_PARAMS[arg]
 
     def _eval_start_end_args(self):
@@ -66,11 +70,9 @@ class QueryCommandArgParser(CommandArgParser):
     def _eval_day_arg(self):
         """Evaluates 'd=' argument; Defaults to 'W' if argument not provided"""
         if 'query_time_period' in self.arg_dict.keys():
+            self.arg_dict['query_time_period'] = self.arg_dict['query_time_period'].upper()
             if self.arg_dict['query_time_period'].upper() not in NON_INT_TIME_PERIOD_INPUT:
-                try:
-                    self.arg_dict['query_time_period'] = int(self.arg_dict['query_time_period'])
-                except ValueError:
-                    raise InvalidArgument('Time must be an int or str values of "W", "M" "Y", "CY" or "AT"')
+                raise InvalidArgument('"d=" value must be "W", "M" "Y", "CY" or "AT"')
         else:
             # Default if arg not provided
             self.arg_dict['query_time_period'] = 'W'
@@ -86,10 +88,13 @@ class QueryCommandArgParser(CommandArgParser):
                     raise InvalidArgument('Project ID must be an int')
             self.arg_dict['query_projects'] = tuple(project_ids)
 
-    def _no_args_provided(self):
+    def _fill_in_missing_args(self):
         """This func provides default arguments If no arguments are provided"""
-        self.arg_dict['query_time_period'] = 'W'
-        self.arg_dict['query_level'] = 1
+        if 'start_date' and 'end_date' not in self.arg_dict.keys():
+            if 'query_time_period' not in self.arg_dict.keys():
+                self.arg_dict['query_time_period'] = 'W'
+        if 'query_level' not in self.arg_dict.keys():
+            self.arg_dict['query_level'] = 1
 
     def parse(self):
         if len(self.command_args) != 0:
@@ -97,12 +102,12 @@ class QueryCommandArgParser(CommandArgParser):
             while param_search:
                 param_search = self._identify_query_args()
 
+            self._identify_query_args()
             self._eval_start_end_args()
             self._eval_day_arg()
             self._eval_project_id_arg()
-        else:
-            self._no_args_provided()
 
+        self._fill_in_missing_args()
         return super().get_command_tuple()
 
 

@@ -113,7 +113,6 @@ class DbUpdate(DbManager):
 class DbQueryReport(DbManager):
 
     def query_for_project_name(self, project_ids: Tuple[int]):
-        print(project_ids)
         conn = sqlite3.connect(self.db_path)
         conn.row_factory = lambda c, r: dict([(col[0], r[idx]) for idx, col in enumerate(c.description)])
         cur = conn.cursor()
@@ -193,7 +192,7 @@ def log_query_creator(**kwargs):
         # where clause with both dates
         data['params']['start'] = kwargs['start_date']
         data['params']['end'] = kwargs['end_date']
-        statement_string.append('WHERE timer.start_timestamp OR timer.end_timestamp '
+        statement_string.append('WHERE timer.start_timestamp BETWEEN :start AND :end OR timer.end_timestamp '
                                 'BETWEEN :start AND :end')
 
     data['statement'] = ' '.join(statement_string)

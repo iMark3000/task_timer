@@ -27,7 +27,7 @@ class ReportHeadFootPrinter:
             if field in FIELD_MAPPING.keys():
                 field_obj = FIELD_MAPPING[field][1]
                 field_obj = field_obj(row_field=False)
-                field_obj.set_field_width(self.report_width - (len(field) + 2))
+                field_obj.set_field_width(self.report_width - (len(field) + 5))
                 self.header_field_obj.append(field_obj)
 
     def set_footer_field_names(self):

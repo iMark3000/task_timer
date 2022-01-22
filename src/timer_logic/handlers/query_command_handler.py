@@ -1,3 +1,5 @@
+import sys
+
 from typing import List, Tuple
 from datetime import date
 from datetime import timedelta
@@ -29,7 +31,7 @@ class QueryCommandHandler(Handler):
             start_date = date(year=year, month=1, day=1)
             return {"start_date": start_date, "end_date": end_date}
         elif self.command.query_time_period == 'AT':
-            return {"end_date": end_date}
+            return {"end_date": end_date, "start_date": None}
         else:
             days = QUERY_TIME_PERIOD_MAP[self.command.query_time_period] * -1
             td = timedelta(days=days)
@@ -76,22 +78,26 @@ class QueryCommandHandler(Handler):
         # Check for both start and end dates
         if self.command.start_date is None and self.command.end_date is None:
             dates.update(self._create_time_stamps_for_query_time_period())
+        elif self.command.end_date is None:
+            dates["start_date"] = self.command.start_date
+            dates["end_date"] = date.today()
         else:
-            if self.command.start_date:
-                dates["start_date"] = self.command.start_date
-            if self.command.end_date:
-                dates["end_date"] = self.command.end_date
+            dates["start_date"] = self.command.start_date
+            dates["end_date"] = self.command.end_date
 
-        if self.command.query_projects:
-            query_results = self._process_queries_top_down(self.command.query_projects, dates)
-        else:
-            query_results = self._process_queries_bottom_up(dates)
+        try:
+            if self.command.query_projects:
+                query_results = self._process_queries_top_down(self.command.query_projects, dates)
+            else:
+                query_results = self._process_queries_bottom_up(dates)
+        except IndexError:
+            sys.exit('Query yielded 0 results.')
 
-        # TODO: reporting_on is gone....check that this doesn't create bugs
         report_data = {
             "reporting_level": self.command.query_level,
             "reporting_period": (dates["start_date"], dates["end_date"]),
             "report_query": query_results
         }
 
-        create_report(report_data)
+        if len(report_data["report_query"]) != 0:
+            create_report(report_data)

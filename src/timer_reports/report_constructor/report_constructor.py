@@ -29,7 +29,10 @@ class ReportPrep:
         for d in self.query_data:
             name_set.add(d["project_name"])
 
-        if len(name_set) <= 2:
+        if len(name_set) == 1:
+            name_set = list(name_set)
+            self.project_names = f'{name_set[0]}'
+        elif len(name_set) == 2:
             name_set = list(name_set)
             self.project_names = f'{name_set[0]} and {name_set[1]}'
         else:
@@ -62,8 +65,13 @@ class ReportPrep:
 
     def _create_report_date_string(self):
         _format = "%Y-%m-%d"
-        return f'{datetime.strftime(self.report_dates[0], _format)} to ' \
-               f'{datetime.strftime(self.report_dates[1], _format)}'
+        if self.report_dates[0] is None:
+            return f'All time up to {datetime.strftime(self.report_dates[1], _format)}'
+        elif self.report_dates[1] is None:
+            return f'Since {datetime.strftime(self.report_dates[0], _format)}'
+        else:
+            return f'{datetime.strftime(self.report_dates[0], _format)} to ' \
+                   f'{datetime.strftime(self.report_dates[1], _format)}'
 
     def prep_report(self):
         """Driver method"""

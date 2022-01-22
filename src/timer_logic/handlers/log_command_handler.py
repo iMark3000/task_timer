@@ -95,7 +95,7 @@ class LogCommandHandler(Handler):
 
     def _close_session(self):
         session_id = self.session.session_id
-        data = datetime.today(), session_id
+        data = datetime.datetime.today(), session_id
         DbUpdate().close_session(data)
 
     def handle(self):
