@@ -91,3 +91,6 @@ class Session:
     @current_session.setter
     def current_session(self, _bool: bool):
         self._current_session = _bool
+
+    def __str__(self) -> str:
+        return f'Session: {self._project_name} [{self._project_id}] -- Current? {self._current_session}'

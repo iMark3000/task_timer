@@ -9,40 +9,43 @@ from src.timer_session.sessions_manager import create_session
 from src.timer_session.sessions_manager import convert_data_for_session_object
 from src.timer_session.sessions_manager import start_manager
 from src.timer_session.session import Session
+from src.timer_session.sessions_manager import ExportSessionsToJSON
+from src.timer_session.sessions_manager import FetchSessionHelper
+from src.timer_session.sessions_manager import SessionManager
 
 
 @pytest.fixture
 def json_data_multiple_sessions():
     data = [
         {
-            "project_name": "world",
-            "project_id": 7,
-            "last_command": "NO_SESSION",
-            "session_id": 66,
-            "session_start_time": "None",
-            "last_command_time": "None",
-            "last_command_log_note": "None",
-            "current_session": "False"
+            "_project_name": "world",
+            "_project_id": 7,
+            "_last_command": "NO_SESSION",
+            "_session_id": 66,
+            "_session_start_time": "None",
+            "_last_command_time": "None",
+            "_last_command_log_note": "None",
+            "_current_session": 0
         },
         {
-            "project_name": "hello",
-            "project_id": 3,
-            "last_command": "PAUSE",
-            "session_id": 124,
-            "session_start_time": "10/05/21_15:12:37",
-            "last_command_time": "10/05/21_19:24:52",
-            "last_command_log_note": "Gotta use the restroom",
-            "current_session": "False"
+            "_project_name": "hello",
+            "_project_id": 3,
+            "_last_command": "PAUSE",
+            "_session_id": 124,
+            "_session_start_time": "10/05/21_15:12:37",
+            "_last_command_time": "10/05/21_19:24:52",
+            "_last_command_log_note": "Gotta use the restroom",
+            "_current_session": 0
         },
         {
-            "project_name": "pony",
-            "project_id": 15,
-            "last_command": "RESUME",
-            "session_id": 123,
-            "session_start_time": "10/06/21_09:12:28",
-            "last_command_time": "10/06/21_22:10:43",
-            "last_command_log_note": "Gotta finish this by midnight",
-            "current_session": "True"
+            "_project_name": "pony",
+            "_project_id": 15,
+            "_last_command": "RESUME",
+            "_session_id": 123,
+            "_session_start_time": "10/06/21_09:12:28",
+            "_last_command_time": "10/06/21_22:10:43",
+            "_last_command_log_note": "Gotta finish this by midnight",
+            "_current_session": 1
         }
 
     ]
@@ -53,14 +56,14 @@ def json_data_multiple_sessions():
 def json_data_one_session():
     data = [
         {
-            "project_name": "pony",
-            "project_id": 15,
-            "last_command": "RESUME",
-            "session_id": 123,
-            "session_start_time": "10/06/21_09:12:28",
-            "last_command_time": "10/06/21_22:10:43",
-            "last_command_log_note": "Gotta finish this by midnight",
-            "current_session": "True"
+            "_project_name": "pony",
+            "_project_id": 15,
+            "_last_command": "RESUME",
+            "_session_id": 123,
+            "_session_start_time": "10/06/21_09:12:28",
+            "_last_command_time": "10/06/21_22:10:43",
+            "_last_command_log_note": "Gotta finish this by midnight",
+            "_current_session": "True"
         }
     ]
     return data
@@ -92,13 +95,13 @@ def test_create_session(json_data_one_session):
 
 
 def test_start_manager(mocker, json_data_multiple_sessions):
-    mocker.patch('timer_session.sessions_manager.load_session', return_value=json_data_multiple_sessions)
+    mocker.patch('src.timer_session.sessions_manager.load_session', return_value=json_data_multiple_sessions)
     manager = start_manager()
     assert len(manager.sessions) == 3
 
 
 def test_start_manager_remove_session(mocker, json_data_multiple_sessions):
-    mocker.patch('timer_session.sessions_manager.load_session', return_value=json_data_multiple_sessions)
+    mocker.patch('src.timer_session.sessions_manager.load_session', return_value=json_data_multiple_sessions)
     manager = start_manager()
     assert len(manager.sessions) == 3
     manager.remove_session(3)
@@ -106,10 +109,15 @@ def test_start_manager_remove_session(mocker, json_data_multiple_sessions):
 
 
 def test_start_manager_assign_current(mocker, json_data_multiple_sessions):
-    mocker.patch('timer_session.sessions_manager.load_session', return_value=json_data_multiple_sessions)
+    mocker.patch('src.timer_session.sessions_manager.load_session', return_value=json_data_multiple_sessions)
     manager = start_manager()
-    manager.remove_session(3)
+    print('\n')
+    for session in manager.sessions:
+        print(session)
+    manager.remove_session(15)
     assert len(manager.sessions) == 2
+    for session in manager.sessions:
+        print(session)
 
 # Todo: Test that config settings work
 
@@ -203,3 +211,44 @@ def test_session_time_add_with_two_time_entries(mocker, json_data_two_times):
     assert session.last_command_time() == new_time
     assert len(session.get_time_log()) == 2
 """
+
+
+@pytest.fixture
+def create_manager_obj(mocker, json_data_multiple_sessions):
+    mocker.patch('src.timer_session.sessions_manager.load_session', return_value=json_data_multiple_sessions)
+    manager = start_manager()
+    return manager
+
+
+def test_binary_search(create_manager_obj):
+    t1 = create_manager_obj._session_bin_search(7)
+    assert t1 == 1
+    t2 = create_manager_obj._session_bin_search(3)
+    assert t2 == 0
+    t3 = create_manager_obj._session_bin_search(15)
+    assert t3 == 2
+    t4 = create_manager_obj._session_bin_search(404)
+    assert t4 == -1
+
+
+def test_get_current_session(create_manager_obj):
+    session = create_manager_obj.get_current_session()
+    assert session.project_id == 15
+
+
+def test_switch_current_session(create_manager_obj):
+    print('\n')
+    for session in create_manager_obj.sessions:
+        print(session)
+    create_manager_obj.switch_current_session(3)
+    assert create_manager_obj.sessions[create_manager_obj._session_bin_search(3)].current_session is True
+    assert create_manager_obj.sessions[create_manager_obj._session_bin_search(15)].current_session is False
+    for session in create_manager_obj.sessions:
+        print(session)
+
+
+def test_check_for_session(create_manager_obj):
+    t1 = create_manager_obj.check_for_session(3)
+    assert t1 is True
+    t2 = create_manager_obj.check_for_session(404)
+    assert t2 is False

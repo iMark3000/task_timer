@@ -20,6 +20,7 @@ class SessionManager:
     def add_session(self, session: Session):
         if CONCURRENT_SESSIONS == 0 or len(self.sessions) < CONCURRENT_SESSIONS:
             self.sessions.append(session)
+            self.sessions.sort(key=lambda x: x.project_id)
 
     def get_current_session(self):
         if len(self.sessions) == 0:
@@ -41,22 +42,38 @@ class SessionManager:
         self.display_sessions()
 
     def display_sessions(self):
+        print('\n-- Current Sessions --')
         for session in self.sessions:
             print(f'{session.project_name} --- {session.project_id}')
 
     def switch_current_session(self, pid: int):
         current = self.get_current_session()
         if current is not None:
-            current.current_session = False
-            new_current = self._get_session(pid)
-            if new_current is not None:
-                new_current.current_session = True
+            find_session = self._session_bin_search(pid)
+            if find_session != -1:
+                new_current_session = self.sessions[find_session]
+                new_current_session.current_session = True
+                current.current_session = False
             else:
                 raise KeyError(f'Project ID #{pid} is not in sessions.')
         else:
             raise KeyError('No Current Session found')
 
-    def determine_new_current_pid(self) -> Union[int, None]:
+    def _session_bin_search(self, project_id: int) -> int:
+        """Binary search function for session. Will return index if session exists; return -1 if not exists"""
+        left, right = 0, len(self.sessions) - 1
+        self.sessions = sorted(self.sessions, key=lambda x: x.project_id)
+        while left <= right:
+            mid = (left + right) // 2
+            if self.sessions[mid].project_id == project_id:
+                return mid
+            elif self.sessions[mid].project_id > project_id:
+                right = mid - 1
+            else:
+                left = mid + 1
+        return -1
+
+    def stop_select_new_current_session(self) -> Union[int, None]:
         """
         This method is called by STOP command. It is called right before the
         current session that is being stopped is removed from self.sessions.
@@ -82,19 +99,11 @@ class SessionManager:
             return None
 
     def check_for_session(self, pid: int):
-        session_project_ids = [x.project_id for x in self.sessions]
-        if pid in session_project_ids:
+        search = self._session_bin_search(pid)
+        if search != -1:
             return True
         else:
             return False
-
-    def _get_session(self, pid: int):
-        for s in self.sessions:
-            if s.project_id == pid:
-                return s
-            else:
-                pass
-        print('Session not found.')
 
     def count_of_concurrent_sessions(self):
         return len(self.sessions)
