@@ -124,9 +124,9 @@ def convert_data_for_session_object(data: dict) -> dict:
             data[k] = DateTimeConverter(v).get_datetime_obj()
         elif v == 'None':
             data[k] = None
-        elif v == 'True':
+        elif v == 1:
             data[k] = True
-        elif v == 'False':
+        elif v == 0:
             data[k] = False
 
     return data
@@ -160,7 +160,7 @@ class ExportSessionsToJSON:
         return obj_attr
 
     @staticmethod
-    def convert_session_data_to_valid_json(val: Union[InputType, bool, datetime, None]) -> str:
+    def convert_session_data_to_valid_json(val: Union[InputType, bool, datetime, None]) -> Union[str, int]:
         if val is None:
             return 'None'
         elif isinstance(val, datetime):
@@ -169,9 +169,9 @@ class ExportSessionsToJSON:
             return val.name
         elif isinstance(val, bool):
             if val:
-                return 'True'
+                return 1
             else:
-                return 'False'
+                return 0
 
 
 class FetchSessionHelper:
