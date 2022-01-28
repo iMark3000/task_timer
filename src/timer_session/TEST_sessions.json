@@ -1,12 +1,22 @@
 [
   {
-    "_project_name": "air bud",
-    "_project_id": 1,
-    "_last_command": "RESUME",
-    "_session_id": 3,
-    "_session_start_time": "01/02/2022_13:00:00",
-    "_last_command_time": "01/02/2022_13:44:00",
+    "_project_name": "park fark lark",
+    "_project_id": 4,
+    "_last_command": "NO_SESSION",
+    "_session_id": "None",
+    "_session_start_time": "None",
+    "_last_command_time": "None",
     "_last_command_log_note": "None",
     "_current_session": 1
+  },
+  {
+    "_project_name": "waaaaahoooo",
+    "_project_id": 5,
+    "_last_command": "NO_SESSION",
+    "_session_id": "None",
+    "_session_start_time": "None",
+    "_last_command_time": "None",
+    "_last_command_log_note": "None",
+    "_current_session": 0
   }
 ]

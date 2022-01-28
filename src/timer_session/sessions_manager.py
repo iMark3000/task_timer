@@ -52,8 +52,11 @@ class SessionManager:
             find_session = self._session_bin_search(pid)
             if find_session != -1:
                 new_current_session = self.sessions[find_session]
-                new_current_session.current_session = True
-                current.current_session = False
+                if current == new_current_session:
+                    print(f'{current.project_name} is already current')
+                else:
+                    new_current_session.current_session = True
+                    current.current_session = False
             else:
                 raise KeyError(f'Project ID #{pid} is not in sessions.')
         else:
@@ -133,10 +136,11 @@ def convert_data_for_session_object(data: dict) -> dict:
             data[k] = DateTimeConverter(v).get_datetime_obj()
         elif v == 'None':
             data[k] = None
-        elif v == 1:
-            data[k] = True
-        elif v == 0:
-            data[k] = False
+        elif k == '_current_session':
+            if v == 1:
+                data[k] = True
+            elif v == 0:
+                data[k] = False
 
     return data
 
@@ -194,7 +198,7 @@ class FetchSessionHelper:
         self._session_start_time = "None"
         self._last_command_time = "None"
         self._last_command_log_note = "None"
-        self._current_session = "False"
+        self._current_session = 0
 
     def fetch(self):
         if self._should_be_active():
