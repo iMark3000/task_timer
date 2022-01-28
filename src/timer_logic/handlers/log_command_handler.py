@@ -69,7 +69,7 @@ class LogCommandHandler(Handler):
             self._close_session()
 
         # Getting new current session
-        new_current_pid = self.session_manager.determine_new_current_pid()
+        new_current_pid = self.session_manager.stop_select_new_current_session()
         if new_current_pid is not None:
             self.session_manager.switch_current_session(new_current_pid)
 

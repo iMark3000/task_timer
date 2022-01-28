@@ -252,3 +252,4 @@ def test_check_for_session(create_manager_obj):
     assert t1 is True
     t2 = create_manager_obj.check_for_session(404)
     assert t2 is False
+
