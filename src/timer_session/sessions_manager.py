@@ -33,13 +33,17 @@ class SessionManager:
             return current_session
 
     def export_sessions_to_json(self):
-        ExportSessionsToJSON(self.sessions).dump_sessions_to_json()
+        export = ExportSessionsToJSON(self.sessions)
+        export.dump_sessions_to_json()
 
     def remove_session(self, pid: int):
-        self.display_sessions()
-        new_session_list = [x for x in self.sessions if x.project_id != pid]
-        self.sessions = new_session_list
-        self.display_sessions()
+        session_to_remove= self._session_bin_search(pid)
+        if session_to_remove != -1:
+            print('Hello')
+            self.sessions.pop(session_to_remove)
+            print(self.sessions)
+        else:
+            raise KeyError('Session to remove not found')
 
     def display_sessions(self):
         print('\n-- Current Sessions --')
@@ -98,7 +102,7 @@ class SessionManager:
                 pid = self.sessions[0].project_id
                 return pid
 
-        elif len(self.sessions) == 1:
+        elif len(self.sessions) == 0:
             return None
 
     def check_for_session(self, pid: int):
@@ -157,9 +161,13 @@ class ExportSessionsToJSON:
 
     def dump_sessions_to_json(self):
         sessions = list()
-        for s in self._session_data:
-            attr = self.convert_session_obj_to_dict_for_json(s)
-            sessions.append(attr)
+        if self._session_data:
+            for s in self._session_data:
+                attr = self.convert_session_obj_to_dict_for_json(s)
+                sessions.append(attr)
+                with open(SESSION_JSON_PATH, 'w') as file:
+                    json.dump(sessions, file, indent=2)
+        else:
             with open(SESSION_JSON_PATH, 'w') as file:
                 json.dump(sessions, file, indent=2)
 

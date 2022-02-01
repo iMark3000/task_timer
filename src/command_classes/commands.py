@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 from datetime import datetime
 from typing import Union
 
-from src.utils.exceptions import CommandSequenceError
+from src.utils.exceptions import CommandSequenceError, TimeSequenceError
 from src.utils.command_enums import InputType
 
 
@@ -46,6 +46,13 @@ class LogCommand(Command):
     @abstractmethod
     def validate_sequence(self, previous_command: InputType):
         pass
+
+    def validate_time(self, previous_command_time: InputType):
+        if previous_command_time:
+            if self._time < previous_command_time:
+                raise TimeSequenceError('Error: New time is before old time')
+            elif self._time > datetime.now():
+                raise TimeSequenceError('Error: Cannot enter a time in the future')
 
 
 class StartCommand(LogCommand):

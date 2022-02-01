@@ -1,6 +1,6 @@
 from sqlite3 import IntegrityError
 import datetime
-
+from sys import exit
 from typing import Union
 
 from .command_handler_base_class import Handler
@@ -20,26 +20,14 @@ class LogCommandHandler(Handler):
         self.command = command
 
     def _validate_command(self):
-        try:
-            self.command.validate_sequence(self.session.last_command)
-        except CommandSequenceError as e:
-            print(e)
-        try:
-            self._validate_command_time()
-        except TimeSequenceError as e:
-            print(e)
-
-    def _validate_command_time(self):
-        # Todo: Time cannot be in future
-        if self.session.last_command_time:
-            if self.command.time < self.session.last_command_time:
-                raise TimeSequenceError('Error: New time is before old time')
+        self.command.validate_sequence(self.session.last_command)
+        self._validate_command_time()
 
     def _start_command(self):
         try:
             # Creating new session SPECIFIC TO START
             project = self.session.project_id
-            date = self.command.time.strftime('%Y-%m-%d')  # ToDo - not a datetime object, refactor
+            date = self.command.time.strftime('%Y-%m-%d')
             note = self.command.session_note
             session_data = project, date, None, note
             session_id = DbUpdate().create_session(session_data)
@@ -60,11 +48,11 @@ class LogCommandHandler(Handler):
         self._update_session()
 
     def _stop_command(self):
-        # Logging data for START and RESUME to DB
+        # Logging data to db if START or RESUME are previous commands
         if self.session.last_command != InputType.PAUSE or InputType.NO_SESSION:
             self._log_time_to_db()
 
-        # Closing session of all except NO_SESSION
+        # Closing session of all previous command types except NO_SESSION
         if self.session.last_command != InputType.NO_SESSION:
             self._close_session()
 
@@ -100,7 +88,11 @@ class LogCommandHandler(Handler):
 
     def handle(self):
         try:
-            self._validate_command()
+            self.command.validate_sequence(self.session.last_command)
+            self.command.validate_time(self.session.last_command_time)
+        except (TimeSequenceError, CommandSequenceError) as e:
+            print(e)
+        else:
             if self.command.command == InputType.START:
                 self._start_command()
             elif self.command.command == InputType.PAUSE:
@@ -109,11 +101,7 @@ class LogCommandHandler(Handler):
                 self._resume_command()
             elif self.command.command == InputType.STOP:
                 self._stop_command()
-            else:
-                pass
             self._display_command_summary()
-        except (TimeSequenceError, CommandSequenceError) as e:
-            print(e)
 
     def _display_command_summary(self):
         print(f'{self.command.get_command_name().capitalize()} {self.session.project_name} session at '
