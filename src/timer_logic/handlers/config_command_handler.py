@@ -13,9 +13,5 @@ class ConfigCommandHandler(Handler):
     def handle(self):
         if self.command.is_view():
             ConfigUpdater().view()
-        else:
-            try:
-                ConfigUpdater().update(self.command.get_key(), self.command.get_value())
-            except(KeyError, InvalidConfigArgument) as e:
-                print(e)
-
+        elif self.command.toggle() is not None:
+            ConfigUpdater().toggle_param(self.command.toggle())

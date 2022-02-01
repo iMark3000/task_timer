@@ -15,11 +15,9 @@ class ConfigCommandArgParser(CommandArgParser):
         self.arg_dict['config_value'] = None
 
     def parse(self) -> tuple:
-        if not self.command_args:
-            self.arg_dict['view'] = True
-        elif self.command_args[0].upper() == 'VIEW':
-            self.arg_dict['view'] = True
-        else:
-            self.arg_dict['key'], self.arg_dict['value'], *_ = self.command_args
-
+        for c in self.command_args:
+            if c.lower() == 'view':
+                self.arg_dict['view'] = True
+            elif c.lower() == 'fetch' or c.lower() == 'switch' or c.lower() == 'test':
+                self.arg_dict['config_toggle'] = c.lower()
         return super().get_command_tuple()

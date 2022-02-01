@@ -1,22 +1,13 @@
 [
   {
-    "PROJECT_PATH": "/home/m/PycharmProjects/timer_log/src/",
-    "TEST_ON": "TRUE",
-    "ENV": {
-      "PROD_RESOURCES": {
-        "CONCURRENT_SESSIONS": 10,
-        "PATHS": {
-          "SESSION_JSON_PATH": "timer_session/sessions.json",
-          "TIMER_DB_PATH": "timer_database/timerDatabase.db"
-        }
-      },
-      "TEST_RESOURCES": {
-        "CONCURRENT_SESSIONS": 10,
-        "PATHS": {
-          "SESSION_JSON_PATH": "timer_session/TEST_sessions.json",
-          "TIMER_DB_PATH": "timer_database/TEST_timerDatabase.db"
-        }
-      }
+    "test_on": 1,
+    "test_vars": {
+      "auto_fetch": 0,
+      "auto_switch": 0
+    },
+    "production_vars": {
+      "auto_fetch": 0,
+      "auto_switch": 1
     }
   }
 ]

@@ -8,8 +8,7 @@ from .session_datetime_converter import DateTimeConverter
 from src.utils.command_enums import InputType
 
 
-SESSION_JSON_PATH = ConfigFetch().fetch_current_env()['PATHS']['SESSION_PATH']
-CONCURRENT_SESSIONS = ConfigFetch().fetch_current_env()['CONCURRENT_SESSIONS']
+SESSION_JSON_PATH = ConfigFetch().fetch_session_path()
 
 
 class SessionManager:
@@ -18,9 +17,8 @@ class SessionManager:
         self.sessions = list()
 
     def add_session(self, session: Session):
-        if CONCURRENT_SESSIONS == 0 or len(self.sessions) < CONCURRENT_SESSIONS:
-            self.sessions.append(session)
-            self.sessions.sort(key=lambda x: x.project_id)
+        self.sessions.append(session)
+        self.sessions.sort(key=lambda x: x.project_id)
 
     def get_current_session(self):
         if len(self.sessions) == 0:

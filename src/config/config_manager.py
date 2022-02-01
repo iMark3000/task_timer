@@ -1,21 +1,43 @@
 import json
 import os
 
-from src.utils.exceptions import InvalidConfigArgument
+from .configurations import TEST_CONFIGURATION
+from .configurations import PRODUCTION_CONFIGURATION
+from .configurations import PROJECT_PATH
 
 
 class ConfigManager:
 
-    CONFIG_FILE = os.path.join(os.path.dirname(__file__), 'configuration.json')
+    STORED_CONFIG_VARS = os.path.join(os.path.dirname(__file__), 'configuration.json')
 
     def __init__(self):
         self.config_data = None
-        self.config_data_loader()
+        self._test_on = None
+        self.config_set()
 
-    def config_data_loader(self):
-        with open(self.CONFIG_FILE, 'r') as file:
+    def config_set(self):
+        config_vars = self.config_var_loader()
+
+        self._test_on = config_vars["test_on"]
+
+        if self._test:
+            self.config_data = PRODUCTION_CONFIGURATION
+            self.config_data.update(config_vars["test_vars"])
+        else:
+            self.config_data = TEST_CONFIGURATION
+            self.config_data.update(config_vars["production_vars"])
+        self.config_data["test_on"] = config_vars["test_on"]
+
+    def config_var_loader(self):
+        with open(self.STORED_CONFIG_VARS, 'r') as file:
             data = json.load(file)
-            self.config_data = data[0]
+            return data[0]
+
+    def _test(self):
+        if self._test_on == 0:
+            return False
+        else:
+            return True
 
 
 class ConfigUpdater(ConfigManager):
@@ -24,42 +46,58 @@ class ConfigUpdater(ConfigManager):
         super().__init__()
 
     def view(self) -> None:
-        self._recursive_view(self.config_data)
-
-    # TODO: You tried getting fancy. Fix This.
-    def _recursive_view(self, d):
-        print('\n')
-        for k, v in d.items():
-            if isinstance(v, dict):
-                print(f'====={k}====')
-                self._recursive_view(v)
-            else:
-                print(f'{k}...{v}')
-
-    def update(self, param: str, val: str) -> None:
-        if param:
-            if param.upper() not in self.config_data.keys():
-                raise KeyError(f'{param} is not a configuration')
-            elif param.upper() == 'TEST_ON':
-                if self._validate_test(val):
-                    self.config_data[param.upper()] = val.upper()
+        if self._test():
+            print("TEST MODE ON")
+        else:
+            print("PRODUCTION MODE ON")
+        for k, v in self.config_data.items():
+            if "auto" in k:
+                if v == 0:
+                    self._print_config(k, "False")
                 else:
-                    raise InvalidConfigArgument('Value must be TRUE or FALSE')
-            elif param.upper() == "CONCURRENT_SESSIONS":
-                self.config_data[param] = int(val)
-
-        self._config_save()
+                    self._print_config(k, "True")
+            elif "PATH" in k:
+                self._print_config(k, os.path.join(PROJECT_PATH, v))
+            else:
+                pass
 
     @staticmethod
-    def _validate_test(val) -> bool:
-        if val.upper() == 'TRUE' or 'FALSE':
-            return True
-        else:
-            return False
+    def _print_config(k, value):
+        print(f'{k}: {value}')
 
-    def _config_save(self) -> None:
-        data = [self.config_data]
-        with open(self.CONFIG_FILE, 'w') as file:
+    def toggle_param(self, param):
+        TOGGLE_PARAMS = {"test": "test_on", "fetch": "auto_fetch", "switch": "auto_switch"}
+
+        test_flag = False
+
+        if param == "test":
+            test_flag = True
+
+        if param.lower() in TOGGLE_PARAMS.keys():
+            if self.config_data[TOGGLE_PARAMS[param]] == 0:
+                self.config_data[TOGGLE_PARAMS[param]] = 1
+                print(f'{TOGGLE_PARAMS[param].upper()} toggled on.')
+            else:
+                self.config_data[TOGGLE_PARAMS[param]] = 0
+                print(f'{TOGGLE_PARAMS[param].upper()} toggled off.')
+
+        self._config_save(test_flag)
+
+    def _config_save(self, test_flag) -> None:
+        data = self.config_var_loader()
+
+        if test_flag:
+            data["test_on"] = self.config_data["test_on"]
+        else:
+            if self._test():
+                key = "test_vars"
+            else:
+                key = "production_vars"
+            for k in data[key].keys():
+                data[key][k] = self.config_data[k]
+
+        with open(self.STORED_CONFIG_VARS, 'w') as file:
+            data = [data]
             json.dump(data, file, indent=2)
 
 
@@ -69,30 +107,10 @@ class ConfigFetch(ConfigManager):
         super().__init__()
 
     def fetch_test_status(self) -> bool:
-        if self.config_data['TEST_ON'] == 'TRUE':
-            return True
-        else:
-            return False
+        return self._test()
 
-    def fetch_current_env(self) -> dict:
-        if self.fetch_test_status():
-            paths = self._package_paths(self.config_data['ENV']['TEST_RESOURCES']["PATHS"])
-            concurrent_sessions = self.config_data['ENV']['TEST_RESOURCES']['CONCURRENT_SESSIONS']
-        else:
-            paths = self._package_paths(self.config_data['ENV']['PROD_RESOURCES']["PATHS"])
-            concurrent_sessions = self.config_data['ENV']['PROD_RESOURCES']['CONCURRENT_SESSIONS']
+    def fetch_session_path(self):
+        return os.path.join(PROJECT_PATH, self.config_data["SESSION_JSON_PATH"])
 
-        return {'CONCURRENT_SESSIONS': concurrent_sessions, 'PATHS': paths}
-
-    def _package_paths(self, env: dict) -> dict:
-        packaged_env_paths = dict()
-        for k, v in env.items():
-            if k == 'TIMER_DB_PATH':
-                packaged_env_paths['DB_PATH'] = self._compile_path(v)
-            else:
-                packaged_env_paths['SESSION_PATH'] = self._compile_path(v)
-
-        return packaged_env_paths
-
-    def _compile_path(self, file: str) -> os:
-        return os.path.join(self.config_data["PROJECT_PATH"], file)
+    def fetch_db_path(self):
+        return os.path.join(PROJECT_PATH, self.config_data["TIMER_DB_PATH"])

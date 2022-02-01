@@ -253,16 +253,12 @@ class SwitchCommand(SessionUtilityCommands):
 class ConfigCommand(Command):
 
     def __init__(self, command: InputType, **kwargs):
-        self.view = None
-        self.config_key = None
-        self.config_value = None
+        self._view = None
+        self._config_toggle = None
         super().__init__(command, **kwargs)
 
     def is_view(self):
-        return self.view
+        return self._view
 
-    def get_key(self) -> Union[str, None]:
-        return self.config_key
-
-    def get_value(self) -> Union[str, int, None]:
-        return self.config_value
+    def toggle(self) -> Union[str, None]:
+        return self._config_toggle
