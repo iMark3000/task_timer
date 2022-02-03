@@ -32,7 +32,11 @@ class LayoutManager:
     @staticmethod
     def _get_width() -> int:
         try:
-            return get_terminal_size().columns
+            width = get_terminal_size().columns
+            if width < 118:
+                print(f'Minimum screen width for report viewing 118. Current width {width}')
+                width = 118
+            return width
         except OSError:
             return 118
 

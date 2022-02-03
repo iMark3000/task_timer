@@ -65,7 +65,7 @@ class UtilityCommandArgParser(CommandArgParser):
                 self.arg_dict['project_id'] = int(self.command_args[0])
                 return super().get_command_tuple()
             except ValueError:
-                print('SWITCH need an int.')
+                print('SWITCH needs to be an int.')
         else:
             raise InvalidArgument('SWITCH requires one argument: project_id(int)')
 

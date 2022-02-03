@@ -26,7 +26,6 @@ class SessionManager:
         else:
             self.sessions.sort(key=lambda x: x.current_session)
             current_session = self.sessions[-1]
-            assert current_session.current_session is True, "Current session must be True"
             self.sessions.sort(key=lambda x: x.project_id)
             return current_session
 

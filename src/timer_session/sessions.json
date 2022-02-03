@@ -1,12 +1,12 @@
 [
   {
     "_project_name": "Timer Project",
-    "_project_id": 5,
+    "_project_id": 2,
     "_last_command": "START",
-    "_session_id": 15,
-    "_session_start_time": "11/05/2021_09:30:00",
-    "_last_command_time": "11/05/2021_09:30:00",
+    "_session_id": 2,
+    "_session_start_time": "02/02/2022_16:30:00",
+    "_last_command_time": "02/02/2022_16:30:00",
     "_last_command_log_note": "None",
-    "_current_session": 1
+    "_current_session": "True"
   }
 ]
