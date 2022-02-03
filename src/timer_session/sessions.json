@@ -2,11 +2,21 @@
   {
     "_project_name": "Timer Project",
     "_project_id": 2,
-    "_last_command": "START",
-    "_session_id": 2,
-    "_session_start_time": "02/02/2022_16:30:00",
-    "_last_command_time": "02/02/2022_16:30:00",
+    "_last_command": "NO_SESSION",
+    "_session_id": "None",
+    "_session_start_time": "None",
+    "_last_command_time": "None",
     "_last_command_log_note": "None",
-    "_current_session": "True"
+    "_current_session": 0
+  },
+  {
+    "_project_name": "leetcode",
+    "_project_id": 3,
+    "_last_command": "START",
+    "_session_id": 5,
+    "_session_start_time": "02/02/2022_17:31:08",
+    "_last_command_time": "02/02/2022_17:31:08",
+    "_last_command_log_note": "None",
+    "_current_session": 1
   }
 ]

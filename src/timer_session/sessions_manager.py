@@ -36,9 +36,7 @@ class SessionManager:
     def remove_session(self, pid: int):
         session_to_remove= self._session_bin_search(pid)
         if session_to_remove != -1:
-            print('Hello')
             self.sessions.pop(session_to_remove)
-            print(self.sessions)
         else:
             raise KeyError('Session to remove not found')
 
@@ -207,7 +205,7 @@ class FetchSessionHelper:
 
     def fetch(self):
         if self._should_be_active():
-            self._current_session = "True"
+            self._current_session = 1
         data = self._package_data()
         session = create_session(data)
         if not self._session_manager.check_for_session(session.project_id):
