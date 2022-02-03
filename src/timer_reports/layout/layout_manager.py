@@ -34,7 +34,7 @@ class LayoutManager:
         try:
             width = get_terminal_size().columns
             if width < 118:
-                print(f'Minimum screen width for report viewing 118. Current width {width}')
+                print(f'\n------> FIY: MIN SCREEN WIDTH FOR QUERY VIEWING IS 118. CURRENT WIDTH {width} <------\n')
                 width = 118
             return width
         except OSError:
