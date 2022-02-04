@@ -4,7 +4,7 @@ from src.timer_logic.factories.factory_router import command_factory_router
 from ..command_classes.log_commands import LogCommand
 from ..command_classes.query_commands import QueryCommand
 from ..command_classes.utility_commands import UtilityCommand
-from src.command_classes.commands import UpdateCommand
+from ..command_classes.update_commands import UpdateCommand
 from ..command_classes.config_commands import ConfigCommand
 
 from .handlers.update_command_handler import UpdateCommandHandler

@@ -1,6 +1,6 @@
 from .command_handler_base_class import Handler
 
-from src.command_classes.commands import UpdateCommand
+from ...command_classes.update_commands import UpdateCommand
 
 
 class UpdateCommandHandler(Handler):

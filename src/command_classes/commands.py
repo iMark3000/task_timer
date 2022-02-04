@@ -20,34 +20,3 @@ class Command(ABC):
 
     def __str__(self):
         return f'{self.command}: {self.__dict__}'
-
-
-# ~~~~~~~~~~~QUERY COMMAND FAMILY~~~~~~~~~~~~~~~~~~~~
-# Query commands query the database via the query module
-
-# ~~~~~~~~~~~UPDATE COMMAND FAMILY~~~~~~~~~~~~~~~~~~~~
-# Update commands update records in the database
-
-class UpdateCommand(Command):
-    pass
-
-
-class DeactivateCommand(UpdateCommand):
-    pass
-
-
-class ReactivateCommand(UpdateCommand):
-    pass
-
-
-class EditCommand(UpdateCommand):
-    pass
-
-
-class MergeCommand(UpdateCommand):
-    pass
-
-
-class RenameCommand(UpdateCommand):
-    pass
-
