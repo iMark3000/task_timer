@@ -1,7 +1,7 @@
-from src.command_classes.commands import Command
+from src.command_classes.commands_base_class import CommandBaseClass
 
 
-class UpdateCommand(Command):
+class UpdateCommand(CommandBaseClass):
     pass
 
 

@@ -1,8 +1,8 @@
-from src.command_classes.commands import Command
+from src.command_classes.commands_base_class import CommandBaseClass
 from src.utils.command_enums import InputType
 
 
-class UtilityCommand(Command):
+class UtilityCommand(CommandBaseClass):
 
     def __init__(self, command: InputType, **kwargs):
         super().__init__(command, **kwargs)

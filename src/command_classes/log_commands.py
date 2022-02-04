@@ -1,12 +1,12 @@
 from abc import abstractmethod
 from datetime import datetime
 
-from src.command_classes.commands import Command
+from src.command_classes.commands_base_class import CommandBaseClass
 from src.utils.command_enums import InputType
 from src.utils.exceptions import TimeSequenceError, CommandSequenceError
 
 
-class LogCommand(Command):
+class LogCommand(CommandBaseClass):
     """Base Class for Log Commands"""
     def __init__(self, command: InputType, **kwargs):
         self._time = None

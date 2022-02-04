@@ -3,7 +3,7 @@ from abc import ABC
 from src.utils.command_enums import InputType
 
 
-class Command(ABC):
+class CommandBaseClass(ABC):
     """Abstract Base Class for all command classes"""
     def __init__(self, command: InputType, **kwargs):
         self._command = command
