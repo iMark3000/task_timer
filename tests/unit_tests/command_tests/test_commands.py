@@ -10,7 +10,7 @@ from src.command_classes.commands import ProjectsCommand
 from src.command_classes.commands import NewCommand
 from src.command_classes.commands import FetchProject
 from src.command_classes.commands import SwitchCommand
-from src.command_classes.commands import QueryCommand
+from src.command_classes.query_commands import QueryCommand
 
 
 @pytest.fixture

@@ -5,7 +5,7 @@ from datetime import date
 from datetime import timedelta
 
 from .command_handler_base_class import Handler
-from src.command_classes.commands import QueryCommand
+from ...command_classes.query_commands import QueryCommand
 from src.timer_database.dbManager import DbQueryReport
 from src.timer_database.dbManager import log_query_creator
 

@@ -2,7 +2,7 @@ import pytest
 import pprint
 from datetime import date
 
-from src.command_classes.commands import QueryCommand
+from src.command_classes.query_commands import QueryCommand
 from src.utils.command_enums import InputType
 from src.timer_logic.handlers.query_command_handler import QueryCommandHandler
 
