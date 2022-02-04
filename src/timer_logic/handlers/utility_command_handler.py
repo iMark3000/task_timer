@@ -1,7 +1,7 @@
 from .command_handler_base_class import Handler
 from src.timer_database.dbManager import DbUpdate
 from src.timer_database.dbManager import DbQueryUtility
-from src.command_classes.commands import UtilityCommand
+from ...command_classes.utility_commands import UtilityCommand
 
 from src.timer_session.sessions_manager import SessionManager
 from src.timer_session.sessions_manager import FetchSessionHelper

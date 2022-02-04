@@ -5,11 +5,7 @@ from datetime import date
 from src.utils.command_enums import InputType
 
 from src.command_classes.log_commands import StartCommand, PauseCommand, ResumeCommand, StopCommand
-from src.command_classes.commands import StatusCheck
-from src.command_classes.commands import ProjectsCommand
-from src.command_classes.commands import NewCommand
-from src.command_classes.commands import FetchProject
-from src.command_classes.commands import SwitchCommand
+from src.command_classes.utility_commands import StatusCheck, ProjectsCommand, NewCommand, FetchProject, SwitchCommand
 from src.command_classes.query_commands import QueryCommand
 
 

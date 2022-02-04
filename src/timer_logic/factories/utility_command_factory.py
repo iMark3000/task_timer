@@ -1,11 +1,7 @@
 from .command_factory_base_class import CommandAbstractFactory
 
-from src.command_classes.commands import UtilityCommand
-from src.command_classes.commands import NewCommand
-from src.command_classes.commands import FetchProject
-from src.command_classes.commands import StatusCheck
-from src.command_classes.commands import SwitchCommand
-from src.command_classes.commands import ProjectsCommand
+from ...command_classes.utility_commands import UtilityCommand, StatusCheck, ProjectsCommand, NewCommand, FetchProject, \
+    SwitchCommand
 
 from src.utils.command_enums import InputType
 
