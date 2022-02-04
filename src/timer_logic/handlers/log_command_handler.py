@@ -4,8 +4,7 @@ from sys import exit
 from typing import Union
 
 from .command_handler_base_class import Handler
-from src.command_classes.commands import LogCommand
-from src.command_classes.commands import StartCommand
+from ...command_classes.log_commands import LogCommand, StartCommand
 from src.timer_database.dbManager import DbUpdate
 from src.timer_session.sessions_manager import SessionManager
 from src.utils.exceptions import CommandSequenceError, TimeSequenceError

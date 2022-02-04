@@ -4,10 +4,7 @@ from datetime import date
 
 from src.utils.command_enums import InputType
 
-from src.command_classes.commands import StartCommand
-from src.command_classes.commands import PauseCommand
-from src.command_classes.commands import ResumeCommand
-from src.command_classes.commands import StopCommand
+from src.command_classes.log_commands import StartCommand, PauseCommand, ResumeCommand, StopCommand
 from src.command_classes.commands import StatusCheck
 from src.command_classes.commands import ProjectsCommand
 from src.command_classes.commands import NewCommand

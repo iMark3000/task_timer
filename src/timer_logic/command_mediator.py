@@ -1,7 +1,7 @@
 from src.timer_session.sessions_manager import start_manager
 from src.timer_logic.factories.factory_router import command_factory_router
 
-from src.command_classes.commands import LogCommand
+from ..command_classes.log_commands import LogCommand
 from src.command_classes.commands import QueryCommand
 from src.command_classes.commands import UtilityCommand
 from src.command_classes.commands import UpdateCommand
