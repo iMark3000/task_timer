@@ -1,5 +1,4 @@
 from abc import ABC
-from typing import Union
 
 from src.utils.command_enums import InputType
 
@@ -52,26 +51,3 @@ class MergeCommand(UpdateCommand):
 class RenameCommand(UpdateCommand):
     pass
 
-
-# ~~~~~~~~~~~UTILITY COMMAND FAMILY~~~~~~~~~~~~~~~~~~~~
-# Utility commands are helper commands that add
-# functionality or make small db queries but do not
-# update the database
-
-
-# ~~~~~~~~~~~CONFIG COMMAND FAMILY~~~~~~~~~~~~~~~~~~~~
-# This command did not feel like it fell under any of the
-# other groups
-
-class ConfigCommand(Command):
-
-    def __init__(self, command: InputType, **kwargs):
-        self._view = None
-        self._config_toggle = None
-        super().__init__(command, **kwargs)
-
-    def is_view(self):
-        return self._view
-
-    def toggle(self) -> Union[str, None]:
-        return self._config_toggle

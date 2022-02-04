@@ -5,7 +5,7 @@ from ..command_classes.log_commands import LogCommand
 from ..command_classes.query_commands import QueryCommand
 from ..command_classes.utility_commands import UtilityCommand
 from src.command_classes.commands import UpdateCommand
-from src.command_classes.commands import ConfigCommand
+from ..command_classes.config_commands import ConfigCommand
 
 from .handlers.update_command_handler import UpdateCommandHandler
 from .handlers.log_command_handler import LogCommandHandler
