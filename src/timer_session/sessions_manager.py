@@ -41,7 +41,7 @@ class SessionManager:
             raise KeyError('Session to remove not found')
 
     def display_sessions(self):
-        print('\n-- Current Sessions --')
+        print('-- Sessions in Queue --')
         for session in self.sessions:
             print(f'{session.project_name} --- {session.project_id}')
 

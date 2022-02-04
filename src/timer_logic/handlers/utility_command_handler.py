@@ -47,14 +47,17 @@ class UtilityCommandHandler(Handler):
         if session is None:
             print('No sessions are in progress')
         elif session.project_name and session.last_command != InputType.NO_SESSION:
-            print(f'Current project: {session.project_name}')
+            print(f'\nCurrent project: {session.project_name}')
             print(f'Session started on {session.session_start_time}')
-            print(f'Last command {session.last_command.name.upper()} on {session.last_command_time}')
-            print(f'There are {self.session_manager.count_of_concurrent_sessions()} concurrent sessions.')
+            print(f'\nLast command: {session.last_command.name.upper()}')
+            print(f'Last command time: {session.last_command_time}')
+            print(f'\nThere are {self.session_manager.count_of_concurrent_sessions()} concurrent sessions.')
+            self.session_manager.display_sessions()
         elif session.project_name:
             print(f'Project Queued Up: {session.project_name}')
             print(f'No session in progress')
-            print(f'There are {self.session_manager.count_of_concurrent_sessions()} concurrent sessions.')
+            print(f'There are {self.session_manager.count_of_concurrent_sessions()} concurrent session(s).')
+            self.session_manager.display_sessions()
 
     def _get_projects(self):
         # Todo: break this up
