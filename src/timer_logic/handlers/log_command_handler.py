@@ -1,3 +1,4 @@
+import time
 from sqlite3 import IntegrityError
 import datetime
 from sys import exit
@@ -17,10 +18,6 @@ class LogCommandHandler(Handler):
         self.session = session_manager.get_current_session()
         self.session_manager = session_manager
         self.command = command
-
-    def _validate_command(self):
-        self.command.validate_sequence(self.session.last_command)
-        self._validate_command_time()
 
     def _start_command(self):
         try:
@@ -104,6 +101,6 @@ class LogCommandHandler(Handler):
 
     def _display_command_summary(self):
         print(f'{self.command.get_command_name().capitalize()} {self.session.project_name} session at '
-              f'{self.session.last_command_time}')
+              f'{self.command.time.strftime("%H:%M:%S")}')
         if self.command.command == InputType.STOP:
             print('Queue has been cleared. Use FETCH to queue another project.')

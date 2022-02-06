@@ -81,6 +81,6 @@ class UtilityCommandHandler(Handler):
         if self.session_manager.check_for_session(self.command.project_id):
             self.session_manager.switch_current_session(self.command.project_id)
             self.session_manager.export_sessions_to_json()
-            print(f'{self.command.project_name} is queued up! Use START to start a session.')
+            print(f'{self.command.project_id} is queued up! Use START to start a session.')
         else:
             print(f'{self.command.project_id} is not in queue. Use FETCH to add project or NEW to create project.')
