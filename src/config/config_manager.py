@@ -13,18 +13,18 @@ class ConfigManager:
     def __init__(self):
         self.config_data = None
         self._test_on = None
-        self.config_set()
+        self._config_set()
 
-    def config_set(self):
+    def _config_set(self):
         config_vars = self.config_var_loader()
 
         self._test_on = config_vars["test_on"]
 
-        if self._test:
-            self.config_data = PRODUCTION_CONFIGURATION
+        if self._test():
+            self.config_data = TEST_CONFIGURATION
             self.config_data.update(config_vars["test_vars"])
         else:
-            self.config_data = TEST_CONFIGURATION
+            self.config_data = PRODUCTION_CONFIGURATION
             self.config_data.update(config_vars["production_vars"])
         self.config_data["test_on"] = config_vars["test_on"]
 
@@ -93,7 +93,7 @@ class ConfigUpdater(ConfigManager):
                 key = "test_vars"
             else:
                 key = "production_vars"
-            for k in data[key].keys():
+            for k in data[key]:
                 data[key][k] = self.config_data[k]
 
         with open(self.STORED_CONFIG_VARS, 'w') as file:
