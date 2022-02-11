@@ -5,7 +5,7 @@ from .arg_parse_base_class import CommandArgParser
 from src.utils.command_enums import InputType
 from src.utils.const import VALID_TIME_CHARACTERS
 from src.utils.const import VALID_NAME_CHARACTERS
-from src.utils.time_string_converter import TimeDateStrToDateTimeObj
+from src.utils.time_string_converter import StrToDatetimeObjConverter
 
 from src.utils.exceptions import TimeError
 
@@ -45,9 +45,13 @@ class LogCommandArgParser(CommandArgParser):
     @staticmethod
     def _convert_to_date_time_obj(date, time):
         if time and date:
-            datetime_obj = TimeDateStrToDateTimeObj(time, date).get_datetime_obj()
+            converter = StrToDatetimeObjConverter(time, date)
+            converter.construct_datetime_obj()
+            datetime_obj = converter.get_datetime_obj()
         elif time:
-            datetime_obj = TimeDateStrToDateTimeObj(time).get_datetime_obj()
+            converter = StrToDatetimeObjConverter(time)
+            converter.construct_datetime_obj()
+            datetime_obj = converter.get_datetime_obj()
         else:
             datetime_obj = datetime.now()
 

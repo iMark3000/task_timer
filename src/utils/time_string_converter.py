@@ -6,7 +6,7 @@ from .exceptions import TooManyNumsTimeFormatError
 from .exceptions import NonNumberTimeFormatError
 
 
-class TimeDateStrToDateTimeObj:
+class StrToDatetimeObjConverter:
 
     def __init__(self, t: str, date=None):
         self.time_str = t.lower()
@@ -14,7 +14,6 @@ class TimeDateStrToDateTimeObj:
         self.pm = False
         self.date_cont = DateContainer()
         self.datetime_obj = None
-        self._construct_datetime_obj()
 
     @staticmethod
     def _check_for_pm(s):
@@ -57,7 +56,7 @@ class TimeDateStrToDateTimeObj:
         self.date_cont.month = today.month
         self.date_cont.day = today.day
 
-    def _construct_datetime_obj(self) -> None:
+    def construct_datetime_obj(self) -> None:
         self._time_string_parser()
         if self.date is None:
             self._get_todays_date()
