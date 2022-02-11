@@ -35,8 +35,9 @@ class LogCommandArgParser(CommandArgParser):
                     return True
 
     def _identify_date(self):
+        """Iterates through arguments from CLI looking for an arg containing '/' """
         for index, arg in enumerate(self.command_args):
-            if "/" in arg:
+            if '/' in arg:
                 return index
             elif index + 1 == len(self.command_args):
                 return None
@@ -70,7 +71,8 @@ class LogCommandArgParser(CommandArgParser):
         else:
             return None
 
-    def _compute_date_time(self):
+    def _handle_date_time(self):
+        """Call functions to identify dates and times and passes them to func to create datetime object"""
         date = self._identify_date()
         if date is not None:
             date = self.command_args.pop(date)
@@ -84,7 +86,7 @@ class LogCommandArgParser(CommandArgParser):
             print(e)
 
     def parse(self) -> tuple:
-        self.arg_dict['time'] = self._compute_date_time()
+        self.arg_dict['time'] = self._handle_date_time()
         log_note = self._parse_log_note()
         if log_note is not None:
             self.arg_dict['log_note'] = log_note

@@ -16,7 +16,11 @@ from src.utils.const import CONFIG_COMMANDS
 
 
 def arg_router(command: InputType, command_args: list) -> tuple:
-    # Each ArgParser returns the args in a named tuple
+    """
+    Input type and commands from CLI routed to appropriate parser.
+    Each parser returns a named tuple with the command type and any
+    identified command parameters.
+    """
     if command == InputType.START:
         return StartCommandArgParser(command, command_args).parse()
     elif command in LOG_COMMANDS:
