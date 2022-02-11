@@ -1,4 +1,5 @@
 from datetime import datetime
+from typing import Union
 
 from .arg_parse_base_class import CommandArgParser
 
@@ -43,13 +44,10 @@ class LogCommandArgParser(CommandArgParser):
                 return None
 
     @staticmethod
-    def _convert_to_date_time_obj(date, time):
-        if time and date:
+    def _handle_str_to_datetime_conversion(time: Union[str, None], date: Union[str, None]) -> datetime:
+        """Creates datetime object using StrToDatetimeObjConverter if time is not None"""
+        if time:
             converter = StrToDatetimeObjConverter(time, date)
-            converter.construct_datetime_obj()
-            datetime_obj = converter.get_datetime_obj()
-        elif time:
-            converter = StrToDatetimeObjConverter(time)
             converter.construct_datetime_obj()
             datetime_obj = converter.get_datetime_obj()
         else:
@@ -85,7 +83,7 @@ class LogCommandArgParser(CommandArgParser):
         if time is not None:
             time = self.command_args.pop(time)
         try:
-            return self._convert_to_date_time_obj(date, time)
+            return self._handle_str_to_datetime_conversion(date, time)
         except TimeError as e:
             print(e)
 
