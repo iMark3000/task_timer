@@ -100,8 +100,6 @@ def count_helper(node, count_node_type, count=0):
         else:
             if len(child.children) != 0:
                 return count_helper(child, count_node_type, count=count)
-            else:
-                pass
     return count
 
 

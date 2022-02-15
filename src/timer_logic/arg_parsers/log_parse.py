@@ -83,7 +83,7 @@ class LogCommandArgParser(CommandArgParser):
         if time is not None:
             time = self.command_args.pop(time)
         try:
-            return self._handle_str_to_datetime_conversion(date, time)
+            return self._handle_str_to_datetime_conversion(time, date)
         except TimeError as e:
             print(e)
 
@@ -123,7 +123,7 @@ class StartCommandArgParser(LogCommandArgParser):
                         return True
                     elif index == len(name):
                         return False
-            except AttributeError as e:
+            except AttributeError:
                 # Ignoring non Alpha Characters in Name
                 index += 1
 
@@ -157,7 +157,7 @@ class StartCommandArgParser(LogCommandArgParser):
             return None
 
     def parse(self) -> tuple:
-        self.arg_dict['time'] = self._compute_date_time()
+        self.arg_dict['time'] = self._handle_date_time()
 
         session_note = self._parse_session_note()
         if session_note is not None:
@@ -166,4 +166,3 @@ class StartCommandArgParser(LogCommandArgParser):
         if log_note is not None:
             self.arg_dict['log_note'] = log_note
         return super().get_command_tuple()
-

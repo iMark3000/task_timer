@@ -15,25 +15,104 @@ from src.timer_reports.layout.report_configuration import ROW_FIELD_LAYOUTS
 from src.timer_reports.layout.report_configuration import SECTION_FIELD_LAYOUTS
 from src.timer_reports.layout.report_configuration import REPORT_HEADER_FOOTER_FIELD_LAYOUTS
 from src.timer_reports.report_constructor.report_componenets import count_helper
-from src.timer_reports.report_constructor.report_componenets import total_duration_helper
+from src.timer_reports.report_constructor.report_constructor import total_duration_helper
 from src.timer_reports.report_constructor.report_componenets import percent_helper
+from src.timer_reports.report_constructor.report_constructor import ReportPrep
+from src.timer_reports.report_constructor.report_constructor import ReportTreeCreator
 
 
 @pytest.fixture
 def node_data():
-    return {
-        'end_log_note': 'Test note...again',
-        'end_time': datetime(year=2021, month=11, day=17, hour=11, minute=7, second=37),
-        'session_note': None,
-        'session_id': 3,
-        'log_id': 5,
-        'start_log_note': 'Test note',
-        'start_time': datetime(year=2021, month=11, day=17, hour=11, minute=7, second=11),
-        'project_name': 'cat',
-        'project_id': 3,
-        'duration': timedelta(hours=1)
-    }
+    return [
+        {'project_name': 'cat',
+         'project_id': 3,
+         'session_id': 3,
+         'session_note': None,
+         'log_id': 5,
+         'start_time': '2021-11-17 11:07:11',
+         'end_time': '2021-11-17 11:07:37.923870',
+         'start_log_note': None,
+         'end_log_note': None},
+        {'project_name': 'cat',
+         'project_id': 3,
+         'session_id': 4,
+         'session_note': None,
+         'log_id': 6,
+         'start_time': '2021-11-17 11:26:58',
+         'end_time': '2021-11-17 11:27:10.419275',
+         'start_log_note': 'Testing this out',
+         'end_log_note': 'How do you handle this?'},
+        {'project_name': 'cat',
+         'project_id': 3,
+         'session_id': 5,
+         'session_note': None,
+         'log_id': 7,
+         'start_time': '2021-11-17 11:20:00',
+         'end_time': '2021-11-17 11:34:00',
+         'start_log_note': None,
+         'end_log_note': None},
+        {'project_name': 'cat',
+         'project_id': 3,
+         'session_id': 5,
+         'session_note': None,
+         'log_id': 8,
+         'start_time': '2021-11-17 11:40:00',
+         'end_time': '2021-11-17 11:55:42.765024',
+         'start_log_note': None,
+         'end_log_note': None},
+        {'project_name': 'cat',
+         'project_id': 3,
+         'session_id': 6,
+         'session_note': None,
+         'log_id': 9,
+         'start_time': '2021-11-17 11:20:00',
+         'end_time': '2021-11-17 11:34:00',
+         'start_log_note': None,
+         'end_log_note': None},
+        {'project_name': 'cat',
+         'project_id': 3,
+         'session_id': 6,
+         'session_note': None,
+         'log_id': 10,
+         'start_time': '2021-11-17 11:40:00',
+         'end_time': '2021-11-17 12:08:42.438854',
+         'start_log_note': None,
+         'end_log_note': None},
+        {'project_name': 'cadabada',
+         'project_id': 4,
+         'session_id': 8,
+         'session_note': None,
+         'log_id': 12,
+         'start_time': '2021-11-17 10:23:00',
+         'end_time': '2021-11-17 11:05:00',
+         'start_log_note': None,
+         'end_log_note': None},
+        {'project_name': 'cadabada',
+         'project_id': 4,
+         'session_id': 8,
+         'session_note': None,
+         'log_id': 13,
+         'start_time': '2021-11-17 11:05:00',
+         'end_time': '2021-11-17 12:11:02.103525',
+         'start_log_note': None,
+         'end_log_note': None}]
 
+
+@pytest.fixture
+def create_report_prep_for_test(node_data):
+    dates = ('11/15/2021', '11/22/2021')
+    p_ids = ('4', '3')
+    return ReportPrep(dates, p_ids, node_data)
+
+
+@pytest.fixture()
+def create_tree(create_report_prep_for_test):
+    report = create_report_prep_for_test
+    report.prep_report()
+    report_data = report.export_data_for_tree()
+    tree_constructor = ReportTreeCreator(**report_data)
+    tree_constructor.build_tree()
+    return tree_constructor.get_tree()
 
 @pytest.fixture
 def node_setup(node_data):
@@ -168,7 +247,7 @@ def count_data(node_data):
     node2._duration = timedelta(minutes=5)
 
     session.add_child(node1)
-    session.add_child(node1)
+    session.add_child(node2)
 
     return {'root': root, 'proj': proj, 'session': session}
 

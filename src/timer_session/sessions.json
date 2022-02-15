@@ -1,15 +1,5 @@
 [
   {
-    "_project_name": "Timer Project",
-    "_project_id": 2,
-    "_last_command": "NO_SESSION",
-    "_session_id": "None",
-    "_session_start_time": "None",
-    "_last_command_time": "None",
-    "_last_command_log_note": "None",
-    "_current_session": 1
-  },
-  {
     "_project_name": "leetcode",
     "_project_id": 3,
     "_last_command": "NO_SESSION",
@@ -17,7 +7,7 @@
     "_session_start_time": "None",
     "_last_command_time": "None",
     "_last_command_log_note": "None",
-    "_current_session": 0
+    "_current_session": 1
   },
   {
     "_project_name": "FIFA",
