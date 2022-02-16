@@ -28,7 +28,7 @@ def run_mediator(command_args: tuple):
             QueryCommandHandler(command_obj).handle()
         elif isinstance(command_obj, UtilityCommand):
             session_manager = start_manager()
-            UtilityCommandHandler(command_obj, session_manager).handle()
+            UtilityCommandHandler(session_manager).handle(command_obj)
         elif isinstance(command_obj, UpdateCommand):
             # Todo: need a session?
             UpdateCommandHandler(command_obj).handle()
