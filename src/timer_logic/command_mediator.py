@@ -30,10 +30,10 @@ def run_mediator(command_args: tuple):
             session_manager = start_manager()
             UtilityCommandHandler(session_manager).handle(command_obj)
         elif isinstance(command_obj, UpdateCommand):
-            # Todo: need a session?
+            # TODO: SET THIS UP
             UpdateCommandHandler(command_obj).handle()
         elif isinstance(command_obj, ConfigCommand):
-            ConfigCommandHandler(command_obj).handle()
+            ConfigCommandHandler().handle(command_obj)
         else:
             raise HandlerNotFound("Mediator was unable to find a handler for given command.")
     except (TimeSequenceError, CommandSequenceError) as e:
