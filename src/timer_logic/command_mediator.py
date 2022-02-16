@@ -25,7 +25,7 @@ def run_mediator(command_args: tuple):
             session_manager = start_manager()
             LogCommandHandler(session_manager).handle(command_obj)
         elif isinstance(command_obj, QueryCommand):
-            QueryCommandHandler(command_obj).handle()
+            QueryCommandHandler().handle(command_obj)
         elif isinstance(command_obj, UtilityCommand):
             session_manager = start_manager()
             UtilityCommandHandler(session_manager).handle(command_obj)

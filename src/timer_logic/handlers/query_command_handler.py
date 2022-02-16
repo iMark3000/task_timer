@@ -20,20 +20,20 @@ QUERY_TIME_PERIOD_MAP = {
 
 class QueryCommandHandler(Handler):
 
-    def __init__(self, command: QueryCommand):
-        self.command = command
+    def __init__(self):
         self.db_query = DbQueryReport()
 
-    def _create_time_stamps_for_query_time_period(self) -> dict:
+    @staticmethod
+    def _create_time_stamps_for_query_time_period(command: QueryCommand) -> dict:
         end_date = date.today()
-        if self.command.query_time_period == 'CY':
+        if command.query_time_period == 'CY':
             year = end_date.year
             start_date = date(year=year, month=1, day=1)
             return {"start_date": start_date, "end_date": end_date}
-        elif self.command.query_time_period == 'AT':
+        elif command.query_time_period == 'AT':
             return {"end_date": end_date, "start_date": None}
         else:
-            days = QUERY_TIME_PERIOD_MAP[self.command.query_time_period] * -1
+            days = QUERY_TIME_PERIOD_MAP[command.query_time_period] * -1
             td = timedelta(days=days)
             start_date = end_date + td
             return {"start_date": start_date, "end_date": end_date}
@@ -72,29 +72,29 @@ class QueryCommandHandler(Handler):
         query_data = self.combine_queries(projects, query_data)
         return query_data
 
-    def handle(self):
+    def handle(self, command: QueryCommand):
 
         dates = dict()
         # Check for both start and end dates
-        if self.command.start_date is None and self.command.end_date is None:
-            dates.update(self._create_time_stamps_for_query_time_period())
-        elif self.command.end_date is None:
-            dates["start_date"] = self.command.start_date
+        if command.start_date is None and command.end_date is None:
+            dates.update(self._create_time_stamps_for_query_time_period(command))
+        elif command.end_date is None:
+            dates["start_date"] = command.start_date
             dates["end_date"] = date.today()
         else:
-            dates["start_date"] = self.command.start_date
-            dates["end_date"] = self.command.end_date
+            dates["start_date"] = command.start_date
+            dates["end_date"] = command.end_date
 
         try:
-            if self.command.query_projects:
-                query_results = self._process_queries_top_down(self.command.query_projects, dates)
+            if command.query_projects:
+                query_results = self._process_queries_top_down(command.query_projects, dates)
             else:
                 query_results = self._process_queries_bottom_up(dates)
         except IndexError:
             sys.exit('Query yielded 0 results.')
 
         report_data = {
-            "reporting_level": self.command.query_level,
+            "reporting_level": command.query_level,
             "reporting_period": (dates["start_date"], dates["end_date"]),
             "report_query": query_results
         }
