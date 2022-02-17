@@ -35,7 +35,7 @@ class LogCommandHandler(Handler):
             self.session.session_id = session_id
             self.session.session_start_time = command.time
             # UPDATE SESSION and WRITE TO JSON
-            self._update_session()
+            self._update_session(command)
         except IntegrityError as e:
             print(e)
 
