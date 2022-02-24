@@ -23,7 +23,7 @@ class ReportPrep:
         self.report_dates = dates
         self.query_data = query_data
 
-    def _set_report_name(self):
+    def _set_report_name(self) -> None:
         """Setting names and time period for Report"""
         name_set = set()
         for d in self.query_data:
@@ -38,21 +38,23 @@ class ReportPrep:
         else:
             self.project_names = 'MULTIPLE PROJECTS'
 
-    def _convert_times_to_datetime(self):
+    def _convert_times_to_datetime(self) -> None:
         """Converts start and end dates to datetime objects"""
         for d in self.query_data:
             d['start_timestamp'] = self._convert_to_datetime(self._handle_microseconds(d['start_timestamp']))
             d['end_timestamp'] = self._convert_to_datetime(self._handle_microseconds(d['end_timestamp']))
 
-    def _calculate_durations(self):
-        """Calculates durations for each line of data"""
+    def _calculate_durations(self) -> None:
+        """Calculates durations for each line of data; Durations will be timedelta objects"""
         for d in self.query_data:
             d['duration'] = d['end_timestamp'] - d['start_timestamp']
 
     @staticmethod
-    def _handle_microseconds(tstamp):
-        """Removes millisecondsself.project_ids from time strings so duration can be calculated"""
-        # Todo: Make better; Can timestamps w/o milliseconds have milliseconds added?
+    def _handle_microseconds(tstamp) -> None:
+        """
+        Datetime objects without microseconds have been causing errors when calculating durations.
+        This func removes microseconds as a workaround
+        """
         if '.' in tstamp:
             return tstamp.split('.')[0]
         else:

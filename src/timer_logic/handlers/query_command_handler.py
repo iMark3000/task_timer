@@ -33,7 +33,7 @@ class QueryCommandHandler(Handler):
         elif command.query_time_period == 'AT':
             return {"end_date": end_date, "start_date": None}
         else:
-            days = QUERY_TIME_PERIOD_MAP[command.query_time_period] * -1
+            days = QUERY_TIME_PERIOD_MAP[command.query_time_period.upper()] * -1
             td = timedelta(days=days)
             start_date = end_date + td
             return {"start_date": start_date, "end_date": end_date}
@@ -50,6 +50,8 @@ class QueryCommandHandler(Handler):
         return combined_list
 
     def _process_queries_top_down(self, project_ids: Tuple[int], q_dates: dict):
+        """Combines the data from the three queries need for the report starting with the
+        projects data"""
         projects = self.db_query.query_for_project_name(project_ids)
         sessions = self.db_query.query_sessions_by_project_id(project_ids)
         q_dates["session_ids"] = [x["session_id"] for x in sessions]
@@ -61,6 +63,8 @@ class QueryCommandHandler(Handler):
         return query_data
 
     def _process_queries_bottom_up(self, q_dates: dict):
+        """Combines the data from the three queries need for the report starting with the
+        log data"""
         log_query_data = log_query_creator(**q_dates)
         logs = self.db_query.log_query(**log_query_data)
         session_ids = tuple([x["session_id"] for x in logs])

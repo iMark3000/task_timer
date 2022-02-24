@@ -9,7 +9,8 @@ from src.timer_logic.handlers.query_command_handler import QueryCommandHandler
 
 @pytest.fixture
 def create_command():
-    return QueryCommand(InputType.QUERY)
+    data = {"query_time_period": 'w'}
+    return QueryCommand(InputType.QUERY, **data)
 
 
 @pytest.fixture
@@ -106,28 +107,28 @@ def create_log_session_combined_query():
 
 
 def test_combine_queries_project_to_session(create_project_query, create_session_query, create_command):
-    handler = QueryCommandHandler(create_command)
+    handler = QueryCommandHandler().handle(create_command)
     result = handler.combine_queries(create_project_query, create_session_query)
     print('\n')
     pprint.pprint(result)
 
 
 def test_combine_queries_log_to_session_projects(create_log_query, create_session_project_combined_query, create_command):
-    handler = QueryCommandHandler(create_command)
+    handler = QueryCommandHandler().handle(create_command)
     result = handler.combine_queries(create_log_query, create_session_project_combined_query)
     print('\n')
     pprint.pprint(result)
 
 
 def test_combine_queries_session_to_log(create_log_query, create_session_query, create_command):
-    handler = QueryCommandHandler(create_command)
+    handler = QueryCommandHandler().handle(create_command)
     result = handler.combine_queries(create_session_query, create_log_query)
     print('\n')
     pprint.pprint(result)
 
 
 def test_combine_queries_projects_to_session_log(create_project_query, create_log_session_combined_query, create_command):
-    handler = QueryCommandHandler(create_command)
+    handler = QueryCommandHandler().handle(create_command)
     result = handler.combine_queries(create_project_query, create_log_session_combined_query)
     print('\n')
     pprint.pprint(result)
@@ -146,7 +147,7 @@ def create_query_command():
 
 
 def test_create__create_time_stamps_for_query_time_period(create_query_command):
-    handler = QueryCommandHandler(create_query_command)
+    handler = QueryCommandHandler().handle(create_query_command)
     result = handler._create_time_stamps_for_query_time_period()
     print(result)
 
@@ -154,18 +155,17 @@ def test_create__create_time_stamps_for_query_time_period(create_query_command):
 def test_process_queries_top_down(create_query_command):
     pids = (1, 2)
     d = {"start_date": create_query_command.start_date, "end_date": create_query_command.end_date}
-    handler = QueryCommandHandler(create_query_command)
+    handler = QueryCommandHandler().handle(create_query_command)
     result = handler._process_queries_top_down(pids, d)
     pprint.pprint(result)
 
 
 def test_process_queries_bottom_up(create_query_command):
     d = {"start_date": create_query_command.start_date, "end_date": create_query_command.end_date}
-    handler = QueryCommandHandler(create_query_command)
+    handler = QueryCommandHandler().handle(create_query_command)
     result = handler._process_queries_bottom_up(d)
     pprint.pprint(result)
 
 
 def test_handle(create_query_command):
-    handler = QueryCommandHandler(create_query_command)
-    handler.handle()
+    handler = QueryCommandHandler().handle(create_query_command)
