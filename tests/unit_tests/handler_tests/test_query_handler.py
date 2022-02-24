@@ -61,7 +61,7 @@ def create_session_project_combined_query():
     return [
         {'note': None, 'project_id': 1, 'project_name': 'air bud', 'session_id': 1},
         {'note': None, 'project_id': 1, 'project_name': 'air bud', 'session_id': 3},
-        {'note': None, 'project_id': 2, 'project_name': 'milo and ottis', 'session_id': 2}]
+        {'note': None, 'project_id': 2, 'project_name': 'milo and otis', 'session_id': 2}]
 
 
 @pytest.fixture
@@ -90,7 +90,7 @@ def create_log_session_combined_query():
          'log_id': 3,
          'note': None,
          'project_id': 2,
-         'project_name': 'milo and ottis',
+         'project_name': 'milo and otis',
          'session_id': 2,
          'start_note': None,
          'start_timestamp': '2022-01-01 13:00:00'},
@@ -99,7 +99,7 @@ def create_log_session_combined_query():
          'log_id': 4,
          'note': None,
          'project_id': 2,
-         'project_name': 'milo and ottis',
+         'project_name': 'milo and otis',
          'session_id': 2,
          'start_note': None,
          'start_timestamp': '2022-01-01 13:44:00'}
