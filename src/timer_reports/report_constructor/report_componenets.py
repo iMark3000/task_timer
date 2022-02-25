@@ -92,14 +92,14 @@ class ReportHeaderSummary(ReportComponent):
         self._data['reporting_period'] = self._node.reporting_period
 
 
-def count_helper(node, count_node_type, count=0):
+def count_helper(node, count_node_type):
+    count = 0
     node_type = NODE_LOOKUP[count_node_type]
     for child in node.children:
         if type(child) == node_type:
             count += 1
-        else:
-            if len(child.children) != 0:
-                return count_helper(child, count_node_type, count=count)
+        elif child.children:
+            count += count_helper(child, count_node_type)
     return count
 
 

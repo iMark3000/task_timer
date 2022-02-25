@@ -24,85 +24,130 @@ from src.timer_reports.report_constructor.report_constructor import ReportTreeCr
 @pytest.fixture
 def node_data():
     return [
-        {'project_name': 'cat',
-         'project_id': 3,
-         'session_id': 3,
+        {'project_name': 'fish',
+         'project_id': 1,
+         'session_id': 1,
          'session_note': None,
-         'log_id': 5,
-         'start_time': '2021-11-17 11:07:11',
-         'end_time': '2021-11-17 11:07:37.923870',
+         'log_id': 1,
+         'start_timestamp': '2021-11-17 11:00:00.0',
+         'end_timestamp': '2021-11-17 12:00:00.0',
          'start_log_note': None,
          'end_log_note': None},
         {'project_name': 'cat',
+         'project_id': 2,
+         'session_id': 2,
+         'session_note': None,
+         'log_id': 2,
+         'start_timestamp': '2021-11-18 11:00:00.0',
+         'end_timestamp': '2021-11-18 11:30:00.0',
+         'start_log_note': None,
+         'end_log_note': None},
+        {'project_name': 'cat',
+         'project_id': 2,
+         'session_id': 3,
+         'session_note': None,
+         'log_id': 3,
+         'start_timestamp': '2021-11-18 13:00:00.0',
+         'end_timestamp': '2021-11-18 14:00:00.0',
+         'start_log_note': None,
+         'end_log_note': None},
+        {'project_name': 'bird',
          'project_id': 3,
          'session_id': 4,
          'session_note': None,
+         'log_id': 4,
+         'start_timestamp': '2021-11-21 13:15:00.0',
+         'end_timestamp': '2021-11-21 13:30:00.0',
+         'start_log_note': None,
+         'end_log_note': None},
+        {'project_name': 'bird',
+         'project_id': 3,
+         'session_id': 4,
+         'session_note': None,
+         'log_id': 5,
+         'start_timestamp': '2021-11-21 15:00:00.0',
+         'end_timestamp': '2021-11-21 17:00:00.0',
+         'start_log_note': None,
+         'end_log_note': None},
+        {'project_name': 'bird',
+         'project_id': 3,
+         'session_id': 5,
+         'session_note': None,
          'log_id': 6,
-         'start_time': '2021-11-17 11:26:58',
-         'end_time': '2021-11-17 11:27:10.419275',
-         'start_log_note': 'Testing this out',
-         'end_log_note': 'How do you handle this?'},
-        {'project_name': 'cat',
+         'start_timestamp': '2021-11-22 9:00:00.0',
+         'end_timestamp': '2021-11-22 10:00:00.0',
+         'start_log_note': None,
+         'end_log_note': None},
+        {'project_name': 'bird',
          'project_id': 3,
          'session_id': 5,
          'session_note': None,
          'log_id': 7,
-         'start_time': '2021-11-17 11:20:00',
-         'end_time': '2021-11-17 11:34:00',
+         'start_timestamp': '2021-11-22 12:00:00.0',
+         'end_timestamp': '2021-11-22 13:30:00.0',
          'start_log_note': None,
          'end_log_note': None},
-        {'project_name': 'cat',
+        {'project_name': 'bird',
          'project_id': 3,
-         'session_id': 5,
+         'session_id': 6,
          'session_note': None,
          'log_id': 8,
-         'start_time': '2021-11-17 11:40:00',
-         'end_time': '2021-11-17 11:55:42.765024',
+         'start_timestamp': '2021-11-23 12:00:00.0',
+         'end_timestamp': '2021-11-23 12:30:00.0',
          'start_log_note': None,
          'end_log_note': None},
-        {'project_name': 'cat',
+        {'project_name': 'bird',
          'project_id': 3,
          'session_id': 6,
          'session_note': None,
          'log_id': 9,
-         'start_time': '2021-11-17 11:20:00',
-         'end_time': '2021-11-17 11:34:00',
+         'start_timestamp': '2021-11-24 11:00:00.0',
+         'end_timestamp': '2021-11-24 13:30:00.0',
          'start_log_note': None,
          'end_log_note': None},
-        {'project_name': 'cat',
-         'project_id': 3,
-         'session_id': 6,
+        {'project_name': 'dolphin',
+         'project_id': 4,
+         'session_id': 7,
          'session_note': None,
          'log_id': 10,
-         'start_time': '2021-11-17 11:40:00',
-         'end_time': '2021-11-17 12:08:42.438854',
+         'start_timestamp': '2021-11-27 11:00:00.0',
+         'end_timestamp': '2021-11-27 11:15:00.0',
          'start_log_note': None,
          'end_log_note': None},
-        {'project_name': 'cadabada',
+        {'project_name': 'dolphin',
          'project_id': 4,
-         'session_id': 8,
+         'session_id': 7,
+         'session_note': None,
+         'log_id': 11,
+         'start_timestamp': '2021-11-28 11:00:00.0',
+         'end_timestamp': '2021-11-28 12:15:00.0',
+         'start_log_note': None,
+         'end_log_note': None},
+        {'project_name': 'dolphin',
+         'project_id': 4,
+         'session_id': 7,
          'session_note': None,
          'log_id': 12,
-         'start_time': '2021-11-17 10:23:00',
-         'end_time': '2021-11-17 11:05:00',
+         'start_timestamp': '2021-11-30 11:00:00.0',
+         'end_timestamp': '2021-11-30 11:30:00.0',
          'start_log_note': None,
          'end_log_note': None},
-        {'project_name': 'cadabada',
+        {'project_name': 'dolphin',
          'project_id': 4,
          'session_id': 8,
          'session_note': None,
          'log_id': 13,
-         'start_time': '2021-11-17 11:05:00',
-         'end_time': '2021-11-17 12:11:02.103525',
+         'start_timestamp': '2021-11-30 13:00:00.0',
+         'end_timestamp': '2021-11-30 14:00:00.0',
          'start_log_note': None,
-         'end_log_note': None}]
+         'end_log_note': None}
+        ]
 
 
 @pytest.fixture
 def create_report_prep_for_test(node_data):
-    dates = ('11/15/2021', '11/22/2021')
-    p_ids = ('4', '3')
-    return ReportPrep(dates, p_ids, node_data)
+    dates = (datetime(year=2021, month=11, day=15), datetime(year=2021, month=11, day=30))
+    return ReportPrep(dates, node_data)
 
 
 @pytest.fixture()
@@ -224,64 +269,52 @@ def test_percent_helper_up_three_levels(node_setup):
 
 
 @pytest.fixture
-def count_data(node_data):
-    root = RootNode(reporting_on='Nothing', reporting_period='From 1 to 2')
-    proj1 = ProjectNode('proj1', 1)
-    proj2 = ProjectNode('proj2', 2)
-    root.add_child(proj1)
-    root.add_child(proj2)
-
-    proj = ProjectNode(node_data['project_name'], node_data['project_id'])
-    root.add_child(proj)
-    s1 = SessionNode(2)
-    s2 = SessionNode(3)
-    proj.add_child(s1)
-    proj.add_child(s2)
-
-    session = SessionNode(node_data['session_id'])
-    proj.add_child(session)
-
-    node1 = LogNode(**node_data)
-    node1._duration = timedelta(minutes=5)
-    node2 = LogNode(**node_data)
-    node2._duration = timedelta(minutes=5)
-
-    session.add_child(node1)
-    session.add_child(node2)
-
-    return {'root': root, 'proj': proj, 'session': session}
+def count_data(create_tree):
+    root = create_tree.root
+    project = root.children[2]
+    session = project.children[0]
+    log = session.children[1]
+    return {'root': root, 'project': project, 'session': session, 'log': log}
 
 
-def test_count_help_root_log(count_data):
+def test_identify_nodes(count_data):
+    print(f'\nROOT: {count_data["root"]}')
+    print(f'PROJECT: {count_data["project"]}')
+    print(f'SESSION: {count_data["session"]}')
+    print(f'LOG: {count_data["log"]}')
+
+
+def test_count_help_root_to_log(count_data):
     node = count_data['root']
     count_node_type = 'LogNode'
     result = count_helper(node, count_node_type)
-    assert result == 2
+    print(f'RESULT: {result}')
+    assert result == 13
 
 
-def test_count_help_root_session(count_data):
+def test_count_help_root_to_session(count_data):
     node = count_data['root']
     count_node_type = 'SessionNode'
     result = count_helper(node, count_node_type)
-    assert result == 3
+    assert result == 8
 
 
 def test_count_help_root_project(count_data):
     node = count_data['root']
     count_node_type = 'ProjectNode'
     result = count_helper(node, count_node_type)
-    assert result == 3
+    assert result == 4
 
 
 def test_count_help_project_log(count_data):
-    node = count_data['proj']
+    node = count_data['project']
     count_node_type = 'LogNode'
     result = count_helper(node, count_node_type)
-    assert result == 2
+    assert result == 6
 
 
 def test_count_help_project_session(count_data):
-    node = count_data['proj']
+    node = count_data['project']
     count_node_type = 'SessionNode'
     result = count_helper(node, count_node_type)
     assert result == 3

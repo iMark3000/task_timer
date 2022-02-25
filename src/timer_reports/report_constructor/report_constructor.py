@@ -66,7 +66,7 @@ class ReportPrep:
         return datetime.strptime(time, _format)
 
     def _create_report_date_string(self):
-        _format = "%Y-%m-%d"
+        _format = "%m/%d/%Y"
         if self.report_dates[0] is None:
             return f'All time up to {datetime.strftime(self.report_dates[1], _format)}'
         elif self.report_dates[1] is None:
