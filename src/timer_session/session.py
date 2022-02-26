@@ -85,11 +85,11 @@ class Session:
         self._last_command_log_note = note
 
     @property
-    def current_session(self):
+    def current_session(self) -> bool:
         return self._current_session
 
     @current_session.setter
-    def current_session(self, _bool: bool):
+    def current_session(self, _bool: bool) -> None:
         self._current_session = _bool
 
     def __str__(self) -> str:

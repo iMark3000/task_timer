@@ -19,7 +19,8 @@ UTILITY_COMMANDS = [
     InputType.STATUS,
     InputType.FETCH,
     InputType.SWITCH,
-    InputType.PROJECTS
+    InputType.PROJECTS,
+    InputType.REMOVE
 ]
 
 UPDATE_COMMANDS = [

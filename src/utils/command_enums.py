@@ -17,6 +17,7 @@ class InputType(Enum):
     EDIT = auto()
     SWITCH = auto()  # Switches Queued Project...to use when multiples sessions feature is implemented
     MERGE = auto()  # Merges two projects (their sessions and logs) into one project
-    ADD_LOG = auto() # TODO: Will you actually implement this?
+    ADD_LOG = auto()  # TODO: Will you actually implement this?
     QUERY = auto()
-    NO_SESSION = auto() # Placeholder value for when no session is in progress
+    REMOVE = auto()  # Removes projects from session queue
+    NO_SESSION = auto()  # Placeholder value for when no session is in progress

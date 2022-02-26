@@ -55,7 +55,7 @@ class LogCommandHandler(Handler):
 
         # Closing session of all previous command types except NO_SESSION
         if self.session.last_command != InputType.NO_SESSION:
-            self._close_session()
+            self._close_session(command)
 
         # Getting new current session
         new_current_pid = self.session_manager.stop_select_new_current_session()
@@ -82,9 +82,12 @@ class LogCommandHandler(Handler):
         log = session_id, start_log_time, end_log_time, start_note, end_note
         DbUpdate().create_time_log(log)
 
-    def _close_session(self):
-        session_id = self.session.session_id
-        data = datetime.datetime.today(), session_id
+    def _close_session(self, command: StopCommand):
+        if command.time:
+            timestamp = command.time
+        else:
+            timestamp = datetime.datetime.today()
+        data = timestamp, self.session.session_id
         DbUpdate().close_session(data)
 
     def handle(self, command: LogCommand):

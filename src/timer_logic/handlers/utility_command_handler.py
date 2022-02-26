@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from .command_handler_base_class import Handler
 from src.timer_database.dbManager import DbUpdate
 from src.timer_database.dbManager import DbQueryUtility
@@ -8,6 +10,7 @@ from ...command_classes.utility_commands import ProjectsCommand
 from ...command_classes.utility_commands import NewCommand
 from ...command_classes.utility_commands import FetchProject
 from ...command_classes.utility_commands import SwitchCommand
+from ...command_classes.utility_commands import RemoveCommand
 
 from src.timer_session.sessions_manager import SessionManager
 from src.timer_session.sessions_manager import FetchSessionHelper
@@ -30,6 +33,8 @@ class UtilityCommandHandler(Handler):
             self._get_projects(command)
         elif isinstance(command, SwitchCommand):
             self._switch_project(command)
+        elif isinstance(command, RemoveCommand):
+            self._remove_project(command)
 
     def _fetch_project(self, command: FetchProject):
         project_id = (command.project_id,)
@@ -91,3 +96,25 @@ class UtilityCommandHandler(Handler):
             print(f'{command.project_id} is queued up! Use START to start a session.')
         else:
             print(f'{command.project_id} is not in queue. Use FETCH to add project or NEW to create project.')
+
+    def _remove_project(self, command: RemoveCommand):
+        prompt = input('Removing any projects with ongoing sessions will stop the session. '
+                       'Do you want to continue? (Y/N)')
+        if prompt.upper() == 'Y':
+            session = self.session_manager.get_session(command.project_id)
+            if session.last_command != InputType.NO_SESSION:
+                if session.last_command == InputType.START or session.last_command == InputType.RESUME:
+                    timestamp_for_log = datetime.now()
+                    log = (session.session_id, session.last_command_time, timestamp_for_log,
+                        session.last_command_log_note, None)
+                    DbUpdate().create_time_log(log)
+                date_for_session = datetime.today()
+                data_for_session = date_for_session, session.session_id
+                DbUpdate().close_session(data_for_session)
+                if session.current_session:
+                    new_current_pid = self.session_manager.stop_select_new_current_session()
+                    if new_current_pid is not None:
+                        self.session_manager.switch_current_session(new_current_pid)
+
+            self.session_manager.remove_session(command.project_id)
+            self.session_manager.export_sessions_to_json()
