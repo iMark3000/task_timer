@@ -65,9 +65,19 @@ class UtilityCommandArgParser(CommandArgParser):
                 self.arg_dict['project_id'] = int(self.command_args[0])
                 return super().get_command_tuple()
             except ValueError:
-                print('SWITCH needs to be an int.')
+                print('SWITCH needs an integer for Project ID.')
         else:
-            raise InvalidArgument('SWITCH requires one argument: project_id(int)')
+            raise InvalidArgument('SWITCH requires one argument: Project ID')
+
+    def _remove_args(self):
+        if self.command_args:
+            try:
+                self.arg_dict['project_id'] = int(self.command_args[0])
+                return super().get_command_tuple()
+            except ValueError:
+                print('REMOVE needs an integer for Project ID.')
+        else:
+            raise InvalidArgument('REMOVE requires one argument: Project ID')
 
     def parse(self) -> tuple:
         if self.command == InputType.STATUS:
@@ -80,3 +90,5 @@ class UtilityCommandArgParser(CommandArgParser):
             return self._project_args()
         elif self.command == InputType.SWITCH:
             return self._switch_args()
+        elif self.command == InputType.REMOVE:
+            return self._remove_args()

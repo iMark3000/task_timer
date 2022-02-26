@@ -71,3 +71,9 @@ class SwitchCommand(SessionUtilityCommands):
 
     def __init__(self, command: InputType, **kwargs):
         super().__init__(command, **kwargs)
+
+
+class RemoveCommand(SessionUtilityCommands):
+
+    def __init__(self, command: InputType, **kwargs):
+        super().__init__(command, **kwargs)
