@@ -16,11 +16,11 @@ class SessionManager:
     def __init__(self):
         self.sessions = list()
 
-    def add_session(self, session: Session):
+    def add_session(self, session: Session) -> None:
         self.sessions.append(session)
         self.sessions.sort(key=lambda x: x.project_id)
 
-    def get_current_session(self):
+    def get_current_session(self) -> Union[None, Session]:
         if len(self.sessions) == 0:
             return None
         else:
@@ -29,23 +29,31 @@ class SessionManager:
             self.sessions.sort(key=lambda x: x.project_id)
             return current_session
 
-    def export_sessions_to_json(self):
+    def get_session(self, pid: int) -> Union[None, Session]:
+        if len(self.sessions) == 0:
+            return None
+        index = self._session_bin_search(pid)
+        if index == -1:
+            return None
+        return self.sessions[index]
+
+    def export_sessions_to_json(self) -> None:
         export = ExportSessionsToJSON(self.sessions)
         export.dump_sessions_to_json()
 
-    def remove_session(self, pid: int):
+    def remove_session(self, pid: int) -> None:
         session_to_remove= self._session_bin_search(pid)
         if session_to_remove != -1:
             self.sessions.pop(session_to_remove)
         else:
             raise KeyError('Session to remove not found')
 
-    def display_sessions(self):
+    def display_sessions(self) -> None:
         print('-- Sessions in Queue --')
         for session in self.sessions:
             print(f'{session.project_name} --- {session.project_id}')
 
-    def switch_current_session(self, pid: int):
+    def switch_current_session(self, pid: int) -> None:
         current = self.get_current_session()
         if current is not None:
             find_session = self._session_bin_search(pid)
