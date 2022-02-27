@@ -85,7 +85,7 @@ class SessionManager:
 
     def stop_select_new_current_session(self) -> Union[int, None]:
         """
-        This method is called by STOP command. It is called right before the
+        This method is called by STOP and REMOVE commands. It is called right before the
         current session that is being stopped is removed from self.sessions.
         The project ID that is returned is then passed to the switch_current_session()
         method.
