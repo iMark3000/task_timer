@@ -30,8 +30,8 @@ def run_mediator(command_args: tuple):
             session_manager = start_manager()
             UtilityCommandHandler(session_manager).handle(command_obj)
         elif isinstance(command_obj, UpdateCommand):
-            # TODO: SET THIS UP
-            UpdateCommandHandler(command_obj).handle()
+            session_manager = start_manager()
+            UpdateCommandHandler(session_manager).handle(command_obj)
         elif isinstance(command_obj, ConfigCommand):
             ConfigCommandHandler().handle(command_obj)
         else:

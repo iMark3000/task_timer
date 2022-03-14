@@ -69,9 +69,6 @@ class DbUpdate(DbManager):
         conn.close()
         return result
 
-    def del_project(self):
-        pass
-
     def create_session(self, data: tuple) -> None:
         #  data -> project_ind (int) start_time(datetime) end_time(None) note(str or None)
         conn = self.dbConnect()
@@ -108,6 +105,24 @@ class DbUpdate(DbManager):
     def check_for_project(self):
         # Checks for project name
         pass
+
+    def reactivate_project(self, data: tuple):
+        # Param - (project_id,): datetime
+        conn = self.dbConnect()
+        cur = conn.cursor()
+        sql_statement = """UPDATE projects SET status = 1 WHERE project_id = ?"""
+        cur.execute(sql_statement, data)
+        conn.commit()
+        conn.close()
+
+    def deactivate_project(self, data: tuple):
+        # Param - (project_id,): datetime
+        conn = self.dbConnect()
+        cur = conn.cursor()
+        sql_statement = """UPDATE projects SET status = 0 WHERE project_id = ?"""
+        cur.execute(sql_statement, data)
+        conn.commit()
+        conn.close()
 
 
 class DbQueryReport(DbManager):

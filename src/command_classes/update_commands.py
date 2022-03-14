@@ -1,18 +1,37 @@
 from src.command_classes.commands_base_class import CommandBaseClass
+from src.utils.command_enums import InputType
 
 
 class UpdateCommand(CommandBaseClass):
-    pass
+
+    def __init__(self, command: InputType, **kwargs):
+        self._project_id = None
+        super().__init__(command, **kwargs)
+
+    @property
+    def project_id(self):
+        return self._project_id
 
 
 class DeactivateCommand(UpdateCommand):
     """Deactivates project by project ID"""
-    pass
+
+    def __init__(self, command: InputType, **kwargs):
+        super().__init__(command, **kwargs)
 
 
 class ReactivateCommand(UpdateCommand):
     """Reactivates project by project ID"""
-    pass
+
+    def __init__(self, command: InputType, **kwargs):
+        super().__init__(command, **kwargs)
+
+
+class RenameCommand(UpdateCommand):
+    """Takes in a project id and 'name' argument to rename a project"""
+
+    def __init__(self, command: InputType, **kwargs):
+        super().__init__(command, **kwargs)
 
 
 class EditCommand(UpdateCommand):
@@ -30,9 +49,4 @@ class MergeCommand(UpdateCommand):
     projects will be moved to that new project. All listed projects will be deactivated.
 
     """
-    pass
-
-
-class RenameCommand(UpdateCommand):
-    """Takes in a project id and 'name' argument to rename a project"""
     pass
