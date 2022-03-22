@@ -90,12 +90,12 @@ class UtilityCommandHandler(Handler):
             print(f'{r[0]}......{r[1]}')
 
     def _switch_project(self, command: SwitchCommand):
-        if self.session_manager.check_for_session(command.project_id):
+        try:
             self.session_manager.switch_current_session(command.project_id)
             self.session_manager.export_sessions_to_json()
             print(f'{command.project_id} is queued up! Use START to start a session.')
-        else:
-            print(f'{command.project_id} is not in queue. Use FETCH to add project or NEW to create project.')
+        except KeyError as e:
+            print(f'{e}. Use FETCH to add project to the session queue.')
 
     def _remove_project(self, command: RemoveCommand):
         prompt = input('Removing any projects with ongoing sessions will stop the session. '
@@ -111,10 +111,6 @@ class UtilityCommandHandler(Handler):
                 date_for_session = datetime.today()
                 data_for_session = date_for_session, session.session_id
                 DbUpdate().close_session(data_for_session)
-                if session.current_session:
-                    new_current_pid = self.session_manager.stop_select_new_current_session()
-                    if new_current_pid is not None:
-                        self.session_manager.switch_current_session(new_current_pid)
 
             self.session_manager.remove_session(command.project_id)
             self.session_manager.export_sessions_to_json()

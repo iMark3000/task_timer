@@ -57,11 +57,6 @@ class LogCommandHandler(Handler):
         if self.session.last_command != InputType.NO_SESSION:
             self._close_session(command)
 
-        # Getting new current session
-        new_current_pid = self.session_manager.stop_select_new_current_session()
-        if new_current_pid is not None:
-            self.session_manager.switch_current_session(new_current_pid)
-
         # Removing Session
         self.session_manager.remove_session(self.session.project_id)
         self.session_manager.export_sessions_to_json()
