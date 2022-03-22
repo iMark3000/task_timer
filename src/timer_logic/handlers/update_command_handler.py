@@ -26,5 +26,5 @@ class UpdateCommandHandler(Handler):
 
     def _deactivate_command(self, command: DeactivateCommand):
         self.db_manager.deactivate_project((command.project_id,))
-        if self.session_manager.check_for_session(command.project_id):
-            self.session_manager.clo(command.project_id)
+        self.session_manager.close_session(command.project_id)
+        self.db_manager.close_session((command.project_id,))

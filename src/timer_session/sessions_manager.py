@@ -54,20 +54,19 @@ class SessionManager:
             print(f'{session.project_name} --- {session.project_id}')
 
     def switch_current_session(self, pid: int) -> None:
-        current = self.get_current_session()
-        if current is not None:
-            find_session = self._session_bin_search(pid)
-            if find_session != -1:
-                new_current_session = self.sessions[find_session]
-                if current == new_current_session:
-                    print(f'{current.project_name} is already current')
-                else:
-                    new_current_session.current_session = True
-                    current.current_session = False
-            else:
-                raise KeyError(f'Project ID #{pid} is not in sessions.')
+        find_session_index = self._session_bin_search(pid)
+        if find_session_index != -1:
+            new_current_session = self.sessions[find_session_index]
         else:
-            raise KeyError('No Current Session found')
+            raise KeyError(f'Project ID #{pid} is not in session queue.')
+
+        current_session = self.get_current_session()
+        if current_session is not None and current_session == new_current_session:
+            print(f'{current_session.project_name} is already current')
+        else:
+            current_session.current_session = False
+
+        new_current_session.current_session = True
 
     def _session_bin_search(self, project_id: int) -> int:
         """Binary search function for session. Will return index if session exists; return -1 if not exists"""
@@ -111,6 +110,16 @@ class SessionManager:
     def check_for_session(self, pid: int):
         search = self._session_bin_search(pid)
         if search != -1:
+            return True
+        else:
+            return False
+
+    def close_session(self, pid: int) -> bool:
+        """Closes session. If session is found, the session is then closed and method returns True;
+        If no session is found, returns False"""
+
+        if self.check_for_session(pid):
+            self.remove_session(pid)
             return True
         else:
             return False
