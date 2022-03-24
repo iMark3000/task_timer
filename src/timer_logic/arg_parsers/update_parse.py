@@ -1,6 +1,7 @@
 from .arg_parse_base_class import CommandArgParser
 from src.utils.command_enums import InputType
 from src.utils.exceptions import InvalidArgument
+from src.utils.exceptions import RequiredArgMissing
 
 
 class UpdateCommandArgParser(CommandArgParser):
@@ -23,7 +24,7 @@ class UpdateCommandArgParser(CommandArgParser):
 
     def _rename(self):
         if len(self.command_args) != 2:
-            raise InvalidArgument('RENAME command takes two args: project id (prefixed with "p=" '
+            raise InvalidArgument('RENAME command takes two args: project id (with a "p=" flag'
                                   'and a new name in double qoutes')
         for arg in self.command_args:
             if 'p=' in arg:
@@ -34,6 +35,9 @@ class UpdateCommandArgParser(CommandArgParser):
                     raise InvalidArgument('Project id needs to be an integer')
             else:
                 self.arg_dict['new_name'] = arg
+
+        if 'project_id' not in self.arg_dict:
+            raise RequiredArgMissing('Rename command needs project id with a "p=" flag; ex. p=1')
 
     def _edit(self):
         pass

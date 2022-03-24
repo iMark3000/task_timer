@@ -6,6 +6,7 @@ from src.timer_logic.arg_parsers.update_parse import UpdateCommandArgParser
 from src.utils.command_enums import InputType
 
 from src.utils.exceptions import InvalidArgument
+from src.utils.exceptions import RequiredArgMissing
 
 
 def test_rename_parse():
@@ -35,4 +36,11 @@ def test_rename_parse_too_many_args():
     command = InputType.RENAME
     params = ['p=2', 'This is a new name', 'gooba goba']
     with pytest.raises(InvalidArgument) as e:
+        UpdateCommandArgParser(command, params).parse()
+
+
+def test_rename_parse_missing_project_id_flag():
+    command = InputType.RENAME
+    params = ['2', 'This is a new name']
+    with pytest.raises(RequiredArgMissing) as e:
         UpdateCommandArgParser(command, params).parse()

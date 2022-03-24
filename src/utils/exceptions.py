@@ -75,5 +75,6 @@ class UnknownPath(Exception):
 class InvalidConfigArgument(Exception):
     pass
 
+
 class ReportTemplateNotFound(Exception):
     pass

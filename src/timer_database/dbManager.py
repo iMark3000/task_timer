@@ -133,7 +133,7 @@ class DbUpdate(DbManager):
         old_data = cur.fetchone()
         old_name = old_data[1]
 
-        sql_statement = """UPDATE projects SET name = ? WHERE project_id = ?"""
+        sql_statement = """UPDATE projects SET project_name = ? WHERE project_id = ?"""
         cur.execute(sql_statement, data)
         conn.commit()
         conn.close()

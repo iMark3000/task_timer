@@ -1,6 +1,6 @@
 [
   {
-    "test_on": 0,
+    "test_on": 1,
     "test_vars": {
       "auto_fetch": 0,
       "auto_switch": 0
