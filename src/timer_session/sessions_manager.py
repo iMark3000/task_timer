@@ -82,31 +82,6 @@ class SessionManager:
                 left = mid + 1
         return -1
 
-    def stop_select_new_current_session(self) -> Union[int, None]:
-        """
-        This method is called by STOP and REMOVE commands. It is called right before the
-        current session that is being stopped is removed from self.sessions.
-        The project ID that is returned is then passed to the switch_current_session()
-        method.
-
-        If len of self.sessions is 1, the method returns None because that is
-        the current session, which is about to be removed.
-        """
-        if len(self.sessions) > 1:
-            session_with_last_command_time = [x for x in self.sessions if x.current_session is False and
-                                      x.last_command_time is not None]
-            if session_with_last_command_time:
-                session_with_last_command_time.sort(key=lambda x: x.last_command_time)
-                pid = session_with_last_command_time[0].project_id
-                return pid
-            else:
-                self.sessions.sort(key=lambda x: x.current_session)
-                pid = self.sessions[0].project_id
-                return pid
-
-        elif len(self.sessions) == 0:
-            return None
-
     def check_for_session(self, pid: int):
         search = self._session_bin_search(pid)
         if search != -1:

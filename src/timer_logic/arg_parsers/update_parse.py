@@ -18,6 +18,32 @@ class UpdateCommandArgParser(CommandArgParser):
         except ValueError:
             raise InvalidArgument('Project ID for Reactivate must be an integer')
 
+    def _deactivate(self):
+        pass
+
+    def _rename(self):
+        if len(self.command_args) != 2:
+            raise InvalidArgument('RENAME command takes two args: project id (prefixed with "p=" '
+                                  'and a new name in double qoutes')
+        for arg in self.command_args:
+            if 'p=' in arg:
+                try:
+                    pid = int(arg.split('=')[-1])
+                    self.arg_dict['project_id'] = pid
+                except ValueError:
+                    raise InvalidArgument('Project id needs to be an integer')
+            else:
+                self.arg_dict['new_name'] = arg
+
+    def _edit(self):
+        pass
+
+    def _merge(self):
+        pass
+
     def parse(self):
         if self.command == InputType.REACTIVATE:
             self._reactivate()
+        elif self.command == InputType.RENAME:
+            self._rename()
+        return super().get_command_tuple()

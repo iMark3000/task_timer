@@ -31,7 +31,12 @@ class RenameCommand(UpdateCommand):
     """Takes in a project id and 'name' argument to rename a project"""
 
     def __init__(self, command: InputType, **kwargs):
+        self._new_name = None
         super().__init__(command, **kwargs)
+
+    @property
+    def new_name(self):
+        return self._new_name
 
 
 class EditCommand(UpdateCommand):

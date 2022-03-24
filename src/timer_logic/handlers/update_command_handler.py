@@ -20,6 +20,12 @@ class UpdateCommandHandler(Handler):
             self._reactivate_command(command)
         elif isinstance(command, DeactivateCommand):
             self._deactivate_command(command)
+        elif isinstance(command, RenameCommand):
+            self._rename_command(command)
+
+    def _rename_command(self, command: RenameCommand):
+        old_name = self.db_manager.rename_project((command.new_name, command.project_id))
+        print(f'Renamed project {command.project_id} {old_name} to {command.new_name}')
 
     def _reactivate_command(self, command: ReactivateCommand):
         self.db_manager.reactivate_project((command.project_id,))

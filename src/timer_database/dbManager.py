@@ -124,6 +124,22 @@ class DbUpdate(DbManager):
         conn.commit()
         conn.close()
 
+    def rename_project(self, data: tuple):
+        # Param - (new_name, project_id)
+        conn = self.dbConnect()
+        cur = conn.cursor()
+        project_id = (data[1],)
+        cur.execute("""SELECT * FROM projects WHERE project_id = ?""", project_id)
+        old_data = cur.fetchone()
+        old_name = old_data[1]
+
+        sql_statement = """UPDATE projects SET name = ? WHERE project_id = ?"""
+        cur.execute(sql_statement, data)
+        conn.commit()
+        conn.close()
+
+        return old_name
+
 
 class DbQueryReport(DbManager):
 
