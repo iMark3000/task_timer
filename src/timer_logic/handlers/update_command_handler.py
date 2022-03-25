@@ -1,3 +1,5 @@
+import datetime
+
 from .command_handler_base_class import Handler
 
 from ...command_classes.update_commands import UpdateCommand
@@ -7,6 +9,8 @@ from ...command_classes.update_commands import RenameCommand
 from ...command_classes.update_commands import MergeCommand
 from src.timer_session.sessions_manager import SessionManager
 from src.timer_database.dbManager import DbUpdate
+
+from src.utils.command_enums import InputType
 
 
 class UpdateCommandHandler(Handler):
@@ -34,8 +38,18 @@ class UpdateCommandHandler(Handler):
 
     def _reactivate_command(self, command: ReactivateCommand):
         self.db_manager.reactivate_project((command.project_id,))
+        #print(f'{session.project_name} [{session.project_id}] has been reactivated.')
 
     def _deactivate_command(self, command: DeactivateCommand):
+        session = self.session_manager.get_session(command.project_id)
+        if session is not None:
+            if session.last_command == InputType.START or session.last_command == InputType.RESUME:
+                data = (session.session_id, session.last_command_time, datetime.datetime.now(), session.last_command_log_note, None)
+                self.db_manager.create_time_log(data)
+                stop_date = datetime.datetime.date()
+            else:
+                stop_date = session.get_session_start_date()
+            self.db_manager.close_session((stop_date, session.session_id))
+            self.session_manager.close_session(command.project_id)
         self.db_manager.deactivate_project((command.project_id,))
-        self.session_manager.close_session(command.project_id)
-        self.db_manager.close_session((command.project_id,))
+        print(f'{session.project_name} [{session.project_id}] has been deactivated.')

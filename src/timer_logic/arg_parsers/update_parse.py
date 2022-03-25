@@ -10,7 +10,7 @@ class UpdateCommandArgParser(CommandArgParser):
     def __init__(self, command: InputType, command_args: list):
         super().__init__(command, command_args)
 
-    def _reactivate(self):
+    def _reactivate_and_deactivate(self):
         if len(self.command_args) != 1:
             raise InvalidArgument('Reactivate Command only takes one argument.')
         try:
@@ -47,7 +47,9 @@ class UpdateCommandArgParser(CommandArgParser):
 
     def parse(self):
         if self.command == InputType.REACTIVATE:
-            self._reactivate()
+            self._reactivate_and_deactivate()
+        elif self.command == InputType.DEACTIVATE:
+            self._reactivate_and_deactivate()
         elif self.command == InputType.RENAME:
             self._rename()
         return super().get_command_tuple()

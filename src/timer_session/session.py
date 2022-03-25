@@ -59,6 +59,12 @@ class Session:
     def session_start_time(self, start_time: datetime) -> None:
         self._session_start_time = start_time
 
+    def get_session_start_date(self):
+        return datetime(year=self.session_start_time.year,
+                        month=self.session_start_time.month,
+                        day=self.session_start_time.day,
+                        )
+
     @property
     def last_command(self) -> InputType:
         return self._last_command
