@@ -37,8 +37,11 @@ class UpdateCommandHandler(Handler):
         print(f'Renamed project {command.project_id} -> {old_name} is now {command.new_name}')
 
     def _reactivate_command(self, command: ReactivateCommand):
-        self.db_manager.reactivate_project((command.project_id,))
-        #print(f'{session.project_name} [{session.project_id}] has been reactivated.')
+        record = self.db_manager.reactivate_project((command.project_id,))
+        if record is not None:
+            print(f'{record[1]} [{record[0]}] has been reactivated.')
+        else:
+            print(f'Project ID #{command.project_id} was not found in the database.')
 
     def _deactivate_command(self, command: DeactivateCommand):
         session = self.session_manager.get_session(command.project_id)
@@ -51,5 +54,8 @@ class UpdateCommandHandler(Handler):
                 stop_date = session.get_session_start_date()
             self.db_manager.close_session((stop_date, session.session_id))
             self.session_manager.close_session(command.project_id)
-        self.db_manager.deactivate_project((command.project_id,))
-        print(f'{session.project_name} [{session.project_id}] has been deactivated.')
+        record = self.db_manager.deactivate_project((command.project_id,))
+        if record is not None:
+            print(f'{record[1]} [{record[0]}] has been deactivated.')
+        else:
+            print(f'Project ID #{command.project_id} was not found in the database.')

@@ -106,23 +106,27 @@ class DbUpdate(DbManager):
         # Checks for project name
         pass
 
-    def reactivate_project(self, data: tuple):
+    def reactivate_project(self, data: tuple) -> tuple:
         # Param - (project_id,): datetime
         conn = self.dbConnect()
         cur = conn.cursor()
-        sql_statement = """UPDATE projects SET status = 1 WHERE project_id = ?"""
-        cur.execute(sql_statement, data)
+        sql_statement = """UPDATE projects SET status = 1 WHERE project_id = ? RETURNING *"""
+        result = cur.execute(sql_statement, data)
+        result = result.fetchone()
         conn.commit()
         conn.close()
+        return result
 
     def deactivate_project(self, data: tuple):
         # Param - (project_id,): datetime
         conn = self.dbConnect()
         cur = conn.cursor()
-        sql_statement = """UPDATE projects SET status = 0 WHERE project_id = ?"""
-        cur.execute(sql_statement, data)
+        sql_statement = """UPDATE projects SET status = 0 WHERE project_id = ? RETURNING *"""
+        result = cur.execute(sql_statement, data)
+        result = result.fetchone()
         conn.commit()
         conn.close()
+        return result
 
     def rename_project(self, data: tuple):
         # Param - (new_name, project_id)
