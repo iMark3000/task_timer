@@ -44,6 +44,39 @@ class UpdateCommandArgParser(CommandArgParser):
 
     def _merge(self):
         pass
+        """
+        Parses the following:
+            merge_to: int if existing project, str for name of new project
+            new_project: bool, default to False; True is "name=" argument is used
+            absorbed: list[int] project IDs that will be absorbed into the "merge_to" project
+        """
+        self.arg_dict['new_project'] = False
+        for index, arg in enumerate(self.command_args):
+            if 'name=' in arg:
+                self.arg_dict['merge_to'] = self.command_args.pop(index).split('=')[1]
+                self.arg_dict['new_project'] = True
+                break
+
+        if not self.arg_dict['new_project']:
+            if len(self.command_args) > 1:
+                try:
+                    self.arg_dict['merge_to'] = int(self.command_args.pop(0))
+                    self.arg_dict['absorbed'] = [int(x) for x in self.command_args]
+                except ValueError:
+                    raise InvalidArgument('MERGE command needs project ids as integers. '
+                                          'If looking to merge to a new project, use "name=" argument')
+            else:
+                raise RequiredArgMissing('Merge needs at least two project ids')
+        else:
+            if len(self.command_args) == 1:
+                raise RequiredArgMissing('Merge needs at least two project ids. '
+                                         'If using one project id with the "name=" argument, '
+                                         'then you may want to use the RENAME command')
+            else:
+                try:
+                    self.arg_dict['absorbed'] = [int(x) for x in self.command_args]
+                except ValueError:
+                    raise InvalidArgument('Non-integers detected. MERGE command needs project ids as integers.')
 
     def parse(self):
         if self.command == InputType.REACTIVATE:
@@ -52,4 +85,6 @@ class UpdateCommandArgParser(CommandArgParser):
             self._reactivate_and_deactivate()
         elif self.command == InputType.RENAME:
             self._rename()
+        elif self.command == InputType.MERGE:
+            self._merge()
         return super().get_command_tuple()
