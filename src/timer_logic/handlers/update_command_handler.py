@@ -59,3 +59,22 @@ class UpdateCommandHandler(Handler):
             print(f'{record[1]} [{record[0]}] has been deactivated.')
         else:
             print(f'Project ID #{command.project_id} was not found in the database.')
+
+    def _merge_command(self, command: MergeCommand):
+        pass
+        # if _merge_user_prompt
+            # if name, create new project and get new id, else go with first id
+            # close any open sessions with project id in list.
+            # update all sessions where project ids are in list to new id
+                # (either newly created id or existing)
+        # Else
+            # action cancelled
+
+    def _merge_message(self):
+        """Generates a message to be displayed via _merge_user_prompt"""
+        # Use merge_command_project_names() from database
+        pass
+
+    def _merge_user_prompt(self, msg):
+        """Displays generated message from _merge_message to user"""
+        pass

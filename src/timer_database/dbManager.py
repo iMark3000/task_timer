@@ -102,10 +102,6 @@ class DbUpdate(DbManager):
     def update_logs(self):
         pass
 
-    def check_for_project(self):
-        # Checks for project name
-        pass
-
     def reactivate_project(self, data: tuple) -> tuple:
         # Param - (project_id,): datetime
         conn = self.dbConnect()
@@ -143,6 +139,17 @@ class DbUpdate(DbManager):
         conn.close()
 
         return old_name
+
+    def merge_command_project_names(self, data: tuple) -> list[str]:
+        conn = self.dbConnect()
+        cur = conn.cursor()
+        statement = f'SELECT project_name FROM projects WHERE project_id IN {data}'
+        cur.execute(statement)
+        names = cur.fetchall()
+        conn.commit()
+        conn.close()
+
+        return [x[0] for x in names]
 
 
 class DbQueryReport(DbManager):
